@@ -22,18 +22,11 @@ fn impl_spanned_for_struct(
     generics: &syn::Generics,
     data: syn::DataStruct,
 ) -> TokenStream {
-    if data
-        .fields
-        .into_iter()
-        .find(|f| {
-            f.ident
-                .as_ref()
-                .unwrap_or_else(|| panic!("tuple structs are not supported"))
-                .to_string()
-                == "span"
-        })
-        .is_none()
-    {
+    if !data.fields.into_iter().any(|f| {
+        f.ident
+            .unwrap_or_else(|| panic!("tuple structs are not supported"))
+            == "span"
+    }) {
         panic!(
             "struct {} must have a `span: metal_lexer::Span` field",
             ident
