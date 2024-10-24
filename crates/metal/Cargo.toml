@@ -1,0 +1,13 @@
+[package]
+name = "metal"
+version = "0.1.0"
+edition = "2021"
+description = "The Metal CLI."
+
+[dependencies]
+tapcli = { workspace = true }
+thiserror = { workspace = true }
+
+[features]
+default = []
+dev = []

@@ -1,0 +1,7 @@
+[package]
+name = "metal-lsp"
+version = "0.1.0"
+edition = "2021"
+description = "The Language Server Protocol implementation for the Metal language."
+
+[dependencies]

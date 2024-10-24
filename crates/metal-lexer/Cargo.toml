@@ -1,0 +1,8 @@
+[package]
+name = "metal-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "The Metal language lexer and proc-macro definitions."
+
+[dependencies]
+metal-proc-macros = { workspace = true }
