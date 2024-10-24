@@ -5,8 +5,8 @@ on:
     - cron: 0 7 * * 1
   workflow_dispatch:
   push:
-    # paths:
-    #  - "./github/workflows/nightlies.yml"
+    paths:
+      - "./github/workflows/nightlies.yml"
 
 jobs:
   update_nightly:
