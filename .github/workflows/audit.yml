@@ -1,0 +1,24 @@
+name: Audit dependencies
+
+on:
+  push:
+    paths: 
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+      - '.github/workflows/audit.yml'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  merge_group:
+
+permissions: read-all
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: rui314/setup-mold@v1
+      - uses: actions-rust-lang/audit@v1

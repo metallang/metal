@@ -19,3 +19,14 @@ metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
+
+[profile.release]
+lto = "thin"
+strip = true
+codegen-units = 1
+
+# Use this profile for profiling with e.g. cargo-flamegraph
+[profile.debug_release]
+inherits = "release"
+strip = false
+debug = true
