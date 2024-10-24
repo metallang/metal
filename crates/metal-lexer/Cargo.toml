@@ -5,3 +5,4 @@ edition = "2021"
 description = "The Metal language lexer and proc-macro definitions."
 
 [dependencies]
+metal-proc-macros = { workspace = true }

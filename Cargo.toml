@@ -5,6 +5,9 @@ resolver = "2"
 [workspace.dependencies]
 tapcli = { git = "https://github.com/elenakrittik/gdtk/", rev = "699bffcd52ae85bd7297dbf552eb010ae9bc1f6e" }
 thiserror = "1.0.65"
+syn = { version = "2.0.85", features = ["full"] }
+quote = "1.0.37"
+proc-macro2 = "1.0.89"
 
 metal = { path = "crates/metal" }
 metal-ast = { path = "crates/metal-ast" }

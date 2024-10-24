@@ -1,2 +1,5 @@
-/// A span in a source file.
-pub type Span = std::ops::Range<usize>;
+mod span;
+
+pub use metal_proc_macros::{spanned, Spanned};
+
+pub use crate::span::{Span, Spanned};
