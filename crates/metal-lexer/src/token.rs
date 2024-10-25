@@ -4,6 +4,7 @@ use crate::callbacks::{convert, convert_radix, trim_quotes};
 use crate::error::Error;
 use crate::Span;
 
+/// A lexical unit of Metal code.
 pub struct Token<'src> {
     pub kind: TokenKind<'src>,
     pub span: Span,
