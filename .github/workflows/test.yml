@@ -7,16 +7,12 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false # The day will come, and this will be true
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
-        with:
-          workflow-file: 'test.yml'
-          max-deletions: 100
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1

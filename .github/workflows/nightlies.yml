@@ -16,11 +16,6 @@ jobs:
   update_nightly:
     runs-on: ubuntu-latest
     steps:
-      - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
-        with:
-          workflow-file: 'nightlies.yml'
-          max-deletions: 100
-
       - name: Checkout
         uses: actions/checkout@v4
         with:

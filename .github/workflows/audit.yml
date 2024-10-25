@@ -9,7 +9,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false # The day will come, and this will be true
 
 permissions: read-all
 
@@ -19,10 +19,6 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
-        with:
-          workflow-file: 'audit.yml'
-          max-deletions: 100
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/audit@v1
