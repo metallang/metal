@@ -38,5 +38,7 @@ runs:
           if yes:
             break
         
-        env["GITHUB_OUTPUT"] = "yes" if yes else "no"
+        env["GITHUB_OUTPUT"] = f"have-changed={'yes' if yes else 'no'}"
+
+        print(env["GITHUB_OUTPUT"])
       shell: python
