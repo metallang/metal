@@ -1,12 +1,13 @@
 use proc_macro2::{Span, TokenStream};
+use proc_macro_error2::{abort, Diagnostic};
 use quote::ToTokens;
 use syn::{
     punctuated::Punctuated, Field, FieldMutability, Fields, Ident, PathArguments, PathSegment,
     Token, Type, TypePath, Visibility,
 };
 
-pub fn spanned_impl(item: TokenStream) -> TokenStream {
-    let mut item: syn::ItemStruct = syn::parse2(item).expect("expected a struct item");
+pub fn spanned_impl(item: TokenStream) -> Result<TokenStream, Diagnostic> {
+    let mut item: syn::ItemStruct = syn::parse2(item)?;
 
     let span_ty = Type::Path(TypePath {
         qself: None,
@@ -36,8 +37,8 @@ pub fn spanned_impl(item: TokenStream) -> TokenStream {
 
     match &mut item.fields {
         Fields::Named(fields) => fields.named.push(span_field),
-        _ => panic!("tuple structs are not supported"),
+        _ => abort!(&item, "tuple structs are not supported"),
     }
 
-    item.to_token_stream()
+    Ok(item.to_token_stream())
 }
