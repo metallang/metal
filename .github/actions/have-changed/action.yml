@@ -1,0 +1,30 @@
+name: Check if paths have changed
+description: .
+inputs:
+  globs:
+    description: The paths to check for changes
+    required: true
+
+outputs:
+  have_changed:
+    description: Whether the probed paths have changed
+    value: ${{ steps.check.outputs.have_changed }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - id: check
+      run: |
+        CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD)
+        echo "$CHANGED_FILES" | while read chfile; do
+          echo "${{ inputs.globs }}" | while read fglob; do
+            case $chfile in
+              $fglob)
+                echo "have_changed=yes" >> $GITHUB_OUTPUT
+              *)
+                :
+            esac
+          done
+        done
+      shell: bash

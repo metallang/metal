@@ -2,10 +2,6 @@ name: Shear dependencies
 
 on:
   push:
-    paths: 
-        - '**/Cargo.toml'
-        - '**/Cargo.lock'
-        - '.github/workflows/shear.yml'
   merge_group:
 
 jobs:
@@ -13,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/have-changed
+        with:
+          globs: |
+            **/Cargo.toml
+            **/Cargo.lock
+            .github/workflows/shear.yml
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
