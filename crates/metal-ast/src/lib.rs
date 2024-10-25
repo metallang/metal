@@ -1,5 +1,6 @@
 //! The most honest-to-God representation of any piece of Metal code.
 
+mod codegen;
 mod expr;
 mod ty;
 
