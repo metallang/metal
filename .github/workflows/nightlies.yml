@@ -1,12 +1,12 @@
 name: Weekly nightly rotation.
 
 on:
-  schedule:
-    - cron: 0 7 * * 1
-  workflow_dispatch:
   push:
     paths:
       - "./github/workflows/nightlies.yml"
+  schedule:
+    - cron: 0 7 * * 1
+  workflow_dispatch:
 
 jobs:
   update_nightly:

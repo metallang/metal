@@ -2,9 +2,12 @@ name: Shear dependencies
 
 on:
   push:
-  workflow_dispatch:
-  merge_group:
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   shear:
