@@ -24,7 +24,7 @@ runs:
         from subprocess import check_output
 
         changed_files = check_output(["git", "diff", "--name-only", "HEAD~1..HEAD"]).decode("utf-8").splitlines()
-        globs = [glob.replace(".", "\\.").replace("**", ".*").replace("*", ".*").replace("..*", ".*") for glob in (${{ inputs.globs }}).splitlines()]
+        globs = [glob.replace(".", "\\.").replace("**", ".*").replace("*", ".*").replace("..*", ".*") for glob in ("""${{ inputs.globs }}""").splitlines()]
         yes = False
 
         for glob in globs:
