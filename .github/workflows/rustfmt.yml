@@ -16,6 +16,7 @@ jobs:
       - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
         with:
           workflow-file: 'rustfmt.yml'
+          max-deletions: 100
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
