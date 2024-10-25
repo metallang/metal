@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
         with:
-          workflow-file: 'shear.yml'
+          workflow-file: 'audit.yml'
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/audit@v1
