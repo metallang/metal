@@ -23,9 +23,9 @@ runs:
         echo "$CHANGED_FILES" | while read chfile; do
           echo "${{ inputs.globs }}" | while read fglob; do
             case $chfile in
-              $fglob)
+              ($fglob)
                 echo "have_changed=yes" >> $GITHUB_OUTPUT
-              *)
+              (*)
                 :
             esac
           done
