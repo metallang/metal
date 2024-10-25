@@ -1,25 +1,27 @@
 use proc_macro2::TokenStream;
+use proc_macro_error2::abort;
 use quote::quote;
-use syn::{DataEnum, DataStruct, DeriveInput, Generics, Ident};
+use syn::{DataEnum, DataStruct, DeriveInput, Fields, FieldsNamed, Generics, Ident};
 
 pub fn derive_spanned_impl(item: DeriveInput) -> TokenStream {
     match item.data {
         syn::Data::Struct(data) => impl_spanned_for_struct(&item.ident, &item.generics, data),
         syn::Data::Enum(data) => impl_spanned_for_enum(&item.ident, &item.generics, data),
-        syn::Data::Union(_) => unimplemented!(),
+        syn::Data::Union(_) => abort!(&item, "union structs are not supported"),
     }
 }
 
 fn impl_spanned_for_struct(ident: &Ident, generics: &Generics, data: DataStruct) -> TokenStream {
-    if !data.fields.into_iter().any(|f| {
-        f.ident
-            .unwrap_or_else(|| panic!("tuple structs are not supported"))
-            == "span"
-    }) {
-        panic!(
-            "struct {} must have a `span: metal_lexer::Span` field",
-            ident
-        );
+    let Fields::Named(FieldsNamed { named: fields, .. }) = data.fields else {
+        abort!(&data.fields, "unit and tuple structs are not supported");
+    };
+
+    if !fields
+        .into_iter()
+        .filter_map(|f| f.ident)
+        .any(|i| i == "span")
+    {
+        abort!(&ident, "struct must have a `span: metal_lexer::Span` field",);
     }
 
     quote! {

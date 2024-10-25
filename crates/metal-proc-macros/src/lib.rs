@@ -1,7 +1,6 @@
 use proc_macro::TokenStream;
+use proc_macro_error2::ResultExt;
 use syn::parse_macro_input;
-
-// TODO: use proc-macro-error2 instead of panicking
 
 mod spans;
 
@@ -13,5 +12,7 @@ pub fn derive_spanned(input: TokenStream) -> TokenStream {
 /// Add a `span: metal_lexer::Span` field to a named struct.
 #[proc_macro_attribute]
 pub fn spanned(_: TokenStream, item: TokenStream) -> TokenStream {
-    crate::spans::attribute::spanned_impl(item.into()).into()
+    crate::spans::attribute::spanned_impl(item.into())
+        .unwrap_or_abort()
+        .into()
 }
