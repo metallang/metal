@@ -1,14 +1,10 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub use inkwell;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+pub trait CodeGen {
+    fn codegen(
+        &self,
+        ctx: &inkwell::context::Context,
+        builder: &inkwell::builder::Builder,
+        module: &inkwell::module::Module
+    );
 }
