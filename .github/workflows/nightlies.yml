@@ -8,14 +8,18 @@ on:
     - cron: 0 7 * * 1
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   update_nightly:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: write
     steps:
+      - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
+        with:
+          workflow-file: 'shear.yml'
+
       - name: Checkout
         uses: actions/checkout@v4
         with:

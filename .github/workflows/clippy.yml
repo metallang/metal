@@ -1,14 +1,21 @@
+name: Clippy
+
 on:
   push:
   pull_request:
   workflow_dispatch:
 
-name: Clippy
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
+      - uses: 'MercuryTechnologies/delete-cancelled-runs@main'
+        with:
+          workflow-file: 'shear.yml'
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
