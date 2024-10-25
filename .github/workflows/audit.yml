@@ -24,6 +24,6 @@ jobs:
             **/Cargo.lock
             .github/workflows/audit.yml
       - uses: rui314/setup-mold@v1
-        if: ${{ steps.have-changed.outputs.have-changed }}
+        if: ${{ steps.have-changed.outputs.have-changed == true }}
       - uses: actions-rust-lang/audit@v1
-        if: ${{ steps.have-changed.outputs.have-changed }}
+        if: ${{ steps.have-changed.outputs.have-changed == true }}
