@@ -10,11 +10,12 @@ on:
 permissions: read-all
 
 jobs:
-  should-run:
+  audit:
     runs-on: ubuntu-latest
-    outputs:
-      should-run: ${{ steps.have-changed.outputs.have-changed == 'yes' }}
+    permissions:
+      issues: write
     steps:
+      - uses: actions/checkout@v4
       - id: have-changed
         uses: ./.github/actions/have-changed
         with:
@@ -22,14 +23,7 @@ jobs:
             **/Cargo.toml
             **/Cargo.lock
             .github/workflows/audit.yml
-
-  audit:
-    runs-on: ubuntu-latest
-    needs: should-run
-    if: ${{ needs.should-run.outputs.should-run }}
-    permissions:
-      issues: write
-    steps:
-      - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
+        if: ${{ steps.have-changed.outputs.have-changed }}
       - uses: actions-rust-lang/audit@v1
+        if: ${{ steps.have-changed.outputs.have-changed }}
