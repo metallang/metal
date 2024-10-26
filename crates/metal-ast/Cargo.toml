@@ -6,4 +6,3 @@ description = "The Metal language abstract syntax tree (AST) definition."
 
 [dependencies]
 metal-lexer = { workspace = true }
-metal-llvm = { workspace = true }

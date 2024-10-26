@@ -5,5 +5,5 @@ edition = "2021"
 description = "The Metal LLVM backend implementation."
 
 [dependencies]
-inkwell = { version = "0.5.0", features = ["llvm18-0"] }
-
+metal-ast = { workspace = true }
+llvm-sys = { version = "191" }
