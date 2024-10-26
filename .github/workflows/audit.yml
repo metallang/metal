@@ -19,5 +19,8 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v4
+      - uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "18.0"
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/audit@v1
