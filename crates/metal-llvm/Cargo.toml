@@ -6,4 +6,4 @@ description = "The Metal LLVM backend implementation."
 
 [dependencies]
 metal-ast = { workspace = true }
-llvm-sys = { version = "191" }
+llvm-sys = { workspace = true }

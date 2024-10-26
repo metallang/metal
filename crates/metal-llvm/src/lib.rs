@@ -1,2 +1,2 @@
-mod stdlib_priv;
-mod codegen;
+pub mod codegen;
+pub mod stdlib_priv;

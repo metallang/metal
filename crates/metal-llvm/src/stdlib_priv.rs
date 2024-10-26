@@ -11,21 +11,21 @@ pub trait PrivateSTDLibModule {
     /// i.e. `io`, `cmplib`, etc.
     fn libname() -> &'static str;
 
-    fn functions() -> inkwell::values::AnyValue;
+    fn functions() -> LLVMValueRef;
 }
 
 pub struct ExternalLib {
     ctx: LLVMContextRef,
     builder: LLVMBuilderRef,
-    module: LLVMModuleRef
+    module: LLVMModuleRef,
 }
 
 impl PrivateSTDLibModule for ExternalLib {
     fn libname() -> &'static str {
-        return "pext"
+        "pext"
     }
 
-    fn functions() -> inkwell::values::AnyValue {
+    fn functions() -> LLVMValueRef {
         todo!()
     }
 }
