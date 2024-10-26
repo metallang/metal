@@ -24,11 +24,10 @@ metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
+peekable = { path = "crates/peekable" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
-    "metal-ast",
-    "metal-parser",
     "metal-llvm",
     "metallic",
     "metal-formatter",
