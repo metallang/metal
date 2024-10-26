@@ -192,8 +192,17 @@ pub enum TokenKind<'src> {
     #[token("const")]
     Const,
 
+    #[token("def")]
+    Def,
+
+    #[token("defer")]
+    Defer,
+
     #[token("enum")]
     Enum,
+
+    #[token("import")]
+    Import,
 
     #[token("let")]
     Let,

@@ -239,7 +239,10 @@ fn test_control_flow() {
 fn test_keywords() {
     test_eq!("class", Ok(TokenKind::Class));
     test_eq!("const", Ok(TokenKind::Const));
+    test_eq!("def", Ok(TokenKind::Def));
+    test_eq!("defer", Ok(TokenKind::Defer));
     test_eq!("enum", Ok(TokenKind::Enum));
+    test_eq!("import", Ok(TokenKind::Import));
     test_eq!("let", Ok(TokenKind::Let));
 }
 
