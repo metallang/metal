@@ -3,6 +3,7 @@ use crate::Ident;
 // TODO: references/pointers, arrays, etc...
 
 /// A "type expression".
+#[derive(Eq, PartialEq)]
 pub enum Ty<'src> {
     /// An identifier, like `i32` in `pub items: Vec<i32> := Vec.new()`.
     Ident(Ident<'src>),
@@ -10,7 +11,8 @@ pub enum Ty<'src> {
 }
 
 // TODO: maybe split this up?
-pub enum Primitives<'src> {
+#[derive(Eq, PartialEq)]
+pub enum Primitives {
     // Integers
     I8,
     I16,
