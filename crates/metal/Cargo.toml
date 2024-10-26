@@ -7,6 +7,8 @@ description = "The Metal CLI."
 [dependencies]
 tapcli = { workspace = true }
 thiserror = { workspace = true }
+metal-lexer = { workspace = true }
+metal-parser = { workspace = true }
 
 [features]
 default = []

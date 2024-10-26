@@ -1,4 +1,4 @@
-use metal_lexer::{spanned, Span, Spanned};
+use metal_lexer::{spanned, MaybeSpanned, Span, Spanned};
 
 use crate::Item;
 
@@ -33,4 +33,22 @@ pub enum Mutability {
     Mut(Span),
     /// Immutable.
     Immut,
+}
+
+impl MaybeSpanned for Visibility {
+    fn maybe_span(&self) -> Option<&Span> {
+        match self {
+            Visibility::Pub(span) => Some(span),
+            Visibility::Local => None,
+        }
+    }
+}
+
+impl MaybeSpanned for Mutability {
+    fn maybe_span(&self) -> Option<&Span> {
+        match self {
+            Mutability::Mut(span) => Some(span),
+            Mutability::Immut => None,
+        }
+    }
 }
