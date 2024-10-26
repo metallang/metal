@@ -5,7 +5,7 @@ Prototype compiled language built in Rust with LLVM. We'll add a catchy slogan l
 ## Contributing
 
 Currently, Metal is more or less under source availability. Metal will eventually
-become fully open source, but for now, it's far too undeveloped to require an open source license.
+become fully open source, but for now, since we're the only ones using this language it's unlicensed.
 
 ## Development
 
