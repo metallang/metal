@@ -1,144 +1,179 @@
 // LLVM Codegen Library
 
-use metal_ast::Primitives;
-use std::collections::BTreeMap;
-use llvm_sys::prelude::*;
+use std::{collections::BTreeMap, ffi::CStr};
+
+use llvm_sys::{
+    core::{
+        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMBuildLoad2, LLVMDoubleTypeInContext,
+        LLVMFP128TypeInContext, LLVMFloatTypeInContext, LLVMFunctionType, LLVMIntTypeInContext,
+        LLVMPositionBuilderAtEnd, LLVMPrintModuleToString, LLVMSetLinkage, LLVMVoidTypeInContext,
+    },
+    prelude::*,
+    LLVMLinkage,
+};
 
 // TODO: move this to another file?
-struct Variable<'src> {
+pub struct Variable<'src> {
     pntr: LLVMValueRef,
-    ty: metal_ast::Ty<'src>
+    ty: metal_ast::Ty<'src>,
 }
 
 pub struct CodeGen {
     module_name: &'static str,
-    ctx: &inkwell::context::Context,
-    builder: inkwell::builder::Builder,
-    module: inkwell::module::Module
+    ctx: LLVMContextRef,
+    builder: LLVMBuilderRef,
+    module: LLVMModuleRef,
 }
 
 impl CodeGen {
-    pub fn primitive(&self, primitive: Primitives) {
-        match primitive {
-            crate::Primitives::I8 => {
-                self.ctx.i8_type()
-            },
-            crate::Primitives::I16 => {
-                self.ctx.i16_type()
-            },
-            crate::Primitives::I32 => {
-                self.ctx.i32_type()
-            },
-            crate::Primitives::I64 => {
-                self.ctx.i64_type()
-            },
-            crate::Primitives::I128 => {
-                self.ctx.i128_type()
-            },
-
-            crate::Primitives::F16 => {
-                self.ctx.f16_type()
-            },
-            crate::Primitives::F32 => {
-                self.ctx.f32_type()
-            },
-            crate::Primitives::F64 => {
-                self.ctx.f64_type()
-            },
-            crate::Primitives::F128 => {
-                self.ctx.f128_type()
-            },
-
-            crate::Primitives::String => {
-                todo!()
-            },
-            crate::Primitives::Void => {
-                self.ctx.void_type()
-            }
+    // complete codegen process
+    pub fn finish(&self) -> &'static str {
+        unsafe {
+            let ir = LLVMPrintModuleToString(self.module);
+            let cir = CStr::from_ptr(ir);
+            // TODO: specify which module specifically.
+            let string_ir = cir
+                .to_str()
+                .expect("Failed to turn LLVM module into string");
+            string_ir
         }
     }
 
-    pub fn ty(&self, ty: metal_ast::Ty) -> inkwell::types::BasicType {
+    pub fn primitive(&self, primitive: &metal_ast::Primitives) -> LLVMTypeRef {
+        match primitive {
+            metal_ast::Primitives::I8 => unsafe { LLVMIntTypeInContext(self.ctx, 8) },
+            metal_ast::Primitives::I16 => unsafe { LLVMIntTypeInContext(self.ctx, 16) },
+            metal_ast::Primitives::I32 => unsafe { LLVMIntTypeInContext(self.ctx, 32) },
+            metal_ast::Primitives::I64 => unsafe { LLVMIntTypeInContext(self.ctx, 64) },
+            metal_ast::Primitives::I128 => unsafe { LLVMIntTypeInContext(self.ctx, 128) },
+
+            metal_ast::Primitives::F32 => unsafe { LLVMFloatTypeInContext(self.ctx) },
+            metal_ast::Primitives::F64 => unsafe { LLVMDoubleTypeInContext(self.ctx) },
+            metal_ast::Primitives::F128 => unsafe { LLVMFP128TypeInContext(self.ctx) },
+
+            metal_ast::Primitives::String => {
+                todo!()
+            }
+            metal_ast::Primitives::Void => unsafe { LLVMVoidTypeInContext(self.ctx) },
+        }
+    }
+
+    pub fn ty(&self, ty: &metal_ast::Ty) -> LLVMTypeRef {
         match ty {
-            Ty::Primitive(primitive) => {
-                self.primitive(primitive);
-            },
+            metal_ast::Ty::Primitive(primitive) => self.primitive(primitive),
             _ => {
                 todo!()
             }
         }
     }
 
-    pub fn function_definition(
-        &self,
-        ty: metal_ast::FnDefStmt,
-        library: bool,
-    ) -> inkwell::values::FunctionValue<'ctx> {
-        let ret_ty = ty.return_type
+    pub fn function_definition(&self, ty: metal_ast::FnDefStmt, library: bool) -> LLVMValueRef {
+        let ret_ty = ty
+            .return_type
             .unwrap_or(metal_ast::Ty::Primitive(metal_ast::Primitives::Void));
-        let return_type = self.ty(ret_ty);
+        let return_type = self.ty(&ret_ty);
 
         let mut params = Vec::with_capacity(ty.inputs.len());
 
-        for fn_input in ty.inputs.iter() {
-            params.push(self.ty(fn_input.ty))
+        for fn_input in ty.inputs {
+            params.push(self.ty(&fn_input.ty))
         }
 
-        // TODO: variadic argument support
-        // like `*args`
-        let function_type = return_type.fn_type(params.into(), false);
         let linkage = if ty.public {
-            inkwell::module::Linkage::External
+            LLVMLinkage::LLVMExternalLinkage
         } else {
-            inkwell::module::Linkage::Internal
+            LLVMLinkage::LLVMInternalLinkage
         };
 
-        let fun_name = if library {
-            let name = "";
-            for module in self.module_name.split(".") {
-                name += format!("{}{}", module.len(), module);
+        let fun_name: String = if library {
+            let mut name = "".to_string();
+            for module in self.module_name.split('.') {
+                let m1 = module.len().to_string() + module;
+                let m = m1.as_str();
+                name += m;
             }
-            name + ty.ident.inner.len() + ty.ident.inner
+            let n = name + ty.ident.inner.len().to_string().as_str() + ty.ident.inner;
+            n
         } else {
             // this only applies to
             // main.mt, the entry point of a program.
-            ty.ident.inner
+            ty.ident.inner.to_string()
         };
 
-        let function = self.module.add_function(&self.fun_name, function_type, Some(linkage));
+        unsafe {
+            // TODO: variadic argument support
+            // like `*args`
+            let function = LLVMAddFunction(
+                self.module,
+                fun_name.as_ptr() as *const i8,
+                LLVMFunctionType(return_type, params.as_mut_ptr(), params.len() as u32, 0),
+            );
+            LLVMSetLinkage(function, linkage);
 
-        let start_block = self.ctx.append_basic_block(function, "start");
-        self.builder.position_at_end(start_block);
-        ty.body
+            let entry_block =
+                LLVMAppendBasicBlockInContext(self.ctx, function, "entry".as_ptr() as *const i8);
+            LLVMPositionBuilderAtEnd(self.builder, entry_block);
+
+            // TODO: global variables
+            let variables = BTreeMap::new();
+
+            for stmt in ty.body {
+                match stmt {
+                    // These aren't allowed inside of function bodies
+                    metal_ast::Statement::ClassDef(_) => panic!(),
+                    metal_ast::Statement::FnDef(_) => panic!(),
+                    metal_ast::Statement::Import(_) => panic!(),
+
+                    metal_ast::Statement::Expr(expr) => {
+                        self.expression(expr.expr, &variables);
+                    }
+                }
+            }
+
+            function
+        }
     }
 
     pub fn expression(
         &self,
         expr: metal_ast::Expr,
-        variables: &BTreeMap<String, Variable>
-    ) {
+        variables: &BTreeMap<String, Variable>,
+    ) -> LLVMValueRef {
         match expr {
-            metal_ast::Expr::Number { ty, value } => {
-                self.ty(ty)
-            },
-            metal_ast::Expr::Ident(ident) => {
-                match variables.get(ident.inner) {
-                    Some(v) => {
-                        self.builder.build_load(v.ty, *v.pntr, ident.inner).unwrap()
-                    },
-                    None => {
-                        panic!("If you see this, something broke  royally. The parser should prevent you from loading unknown variables!")
-                    }
+            metal_ast::Expr::Number { ty: _, value: _ } => {
+                todo!()
+            }
+            metal_ast::Expr::Ident(ident) => match variables.get(ident.inner) {
+                Some(v) => unsafe {
+                    LLVMBuildLoad2(
+                        self.builder,
+                        self.ty(&v.ty),
+                        v.pntr,
+                        ident.inner.as_ptr() as *const i8,
+                    )
+                },
+                None => {
+                    panic!("If you see this, something broke  royally. The parser should prevent you from loading unknown variables!")
                 }
             },
-            metal_ast::Expr::FnCall { fn_name, arguments, module_name } => {
-                let args = Vec::new();
+            metal_ast::Expr::FnCall {
+                fn_name: _,
+                arguments: _,
+                module_name: _,
+            } => {
+                todo!();
 
-                for inner_expr in arguments {
-                    args.push(self.expression(inner_expr, variables));
-                }
+                //let args = Vec::new();
 
-                self.builder.build_call(self.module.get_function(fn_name.inner), args.into(), fn_name.inner).unwrap()
+                //for inner_expr in arguments {
+                //    args.push(self.expression(inner_expr, variables));
+                //}
+
+                //self.builder.build_call(self.module.get_function(fn_name.inner), args.into(), fn_name.inner).unwrap();
+                //LLVMBuildCall2(
+                //    self.builder,
+
+                //)
             }
         }
     }

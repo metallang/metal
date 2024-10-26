@@ -21,7 +21,6 @@ pub enum Primitives {
     I128,
 
     // Floats
-    F16,
     F32,
     F64,
     F128,
@@ -30,5 +29,5 @@ pub enum Primitives {
     String,
 
     // Etc...
-    Void
+    Void,
 }
