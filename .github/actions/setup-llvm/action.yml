@@ -1,0 +1,13 @@
+name: "Setup LLVM"
+
+runs:
+  using: composite
+  steps:
+    - name: Download LLVM installation script
+      run: wget https://apt.llvm.org/llvm.sh
+
+    - name: Make the script executable
+      run: chmod +x llvm.sh
+
+    - name: Run the script
+      run: sudo ./llvm.sh 18
