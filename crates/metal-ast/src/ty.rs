@@ -25,9 +25,7 @@ pub enum Primitives {
     F64,
     F128,
 
-    //
-    String,
-
     // Etc...
     Void,
+    String,
 }
