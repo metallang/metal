@@ -1,10 +1,17 @@
 name: "Setup LLVM"
+description: blah
 
 runs:
   using: composite
   steps:
+    - if: ${{ runner.os == "Linux" && runner.arch == "X64" }}
+      run: echo "LLVM_URL=""https://github.com/wasmerio/llvm-custom-builds/releases/download/18.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
+      shell: bash
+    
     - run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 18
+        LLVM_DIR=$(pwd)/.llvm
+        mkdir -p $LLVM_DIR
+        curl --proto '=https' --tlsv1.2 -sSf "${{ matrix.llvm_url }}" -L -o - | tar xJv -C $LLVM_DIR
+        echo LLVM_SYS_180_PREFIX="${LLVM_DIR}" >> $GITHUB_ENV
+        echo LLVM_ENABLE=1 >> $GITHUB_ENV
       shell: bash
