@@ -4,9 +4,11 @@ use std::{collections::BTreeMap, ffi::CStr};
 
 use llvm_sys::{
     core::{
-        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMBuildLoad2, LLVMDoubleTypeInContext,
-        LLVMFP128TypeInContext, LLVMFloatTypeInContext, LLVMFunctionType, LLVMIntTypeInContext,
-        LLVMPositionBuilderAtEnd, LLVMPrintModuleToString, LLVMSetLinkage, LLVMVoidTypeInContext,
+        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMBuildCall2, LLVMBuildLoad2,
+        LLVMConstInt, LLVMDoubleTypeInContext, LLVMFP128TypeInContext, LLVMFloatTypeInContext,
+        LLVMFunctionType, LLVMGetElementType, LLVMGetNamedFunction, LLVMGetReturnType,
+        LLVMIntTypeInContext, LLVMPositionBuilderAtEnd, LLVMPrintModuleToString, LLVMSetLinkage,
+        LLVMTypeOf, LLVMVoidTypeInContext,
     },
     prelude::*,
     LLVMLinkage,
@@ -120,8 +122,8 @@ impl CodeGen {
             for stmt in ty.body {
                 match stmt {
                     // These aren't allowed inside of function bodies
-                    metal_ast::Statement::ClassDef(_) => panic!(),
-                    metal_ast::Statement::FnDef(_) => panic!(),
+                    metal_ast::Statement::ClassDef(_) => todo!(),
+                    metal_ast::Statement::FnDef(_) => todo!(),
                     metal_ast::Statement::Import(_) => panic!(),
 
                     metal_ast::Statement::Expr(expr) => {
@@ -140,9 +142,9 @@ impl CodeGen {
         variables: &BTreeMap<String, Variable>,
     ) -> LLVMValueRef {
         match expr {
-            metal_ast::Expr::Number { ty: _, value: _ } => {
-                todo!()
-            }
+            metal_ast::Expr::Number { ty, value } => unsafe {
+                LLVMConstInt(self.ty(&ty), value, 1)
+            },
             metal_ast::Expr::Ident(ident) => match variables.get(ident.inner) {
                 Some(v) => unsafe {
                     LLVMBuildLoad2(
@@ -157,23 +159,30 @@ impl CodeGen {
                 }
             },
             metal_ast::Expr::FnCall {
-                fn_name: _,
-                arguments: _,
+                fn_name,
+                arguments,
                 module_name: _,
             } => {
-                todo!();
+                let mut args = Vec::new();
 
-                //let args = Vec::new();
+                for inner_expr in arguments {
+                    args.push(self.expression(inner_expr, variables));
+                }
 
-                //for inner_expr in arguments {
-                //    args.push(self.expression(inner_expr, variables));
-                //}
-
-                //self.builder.build_call(self.module.get_function(fn_name.inner), args.into(), fn_name.inner).unwrap();
-                //LLVMBuildCall2(
-                //    self.builder,
-
-                //)
+                unsafe {
+                    let c_fn_name = fn_name.inner.as_ptr() as *const i8;
+                    // TODO: I don't know how to error-handle LLVM lol
+                    let func = LLVMGetNamedFunction(self.module, c_fn_name);
+                    let func_ty = LLVMGetElementType(LLVMTypeOf(func));
+                    LLVMBuildCall2(
+                        self.builder,
+                        LLVMGetReturnType(func_ty),
+                        func,
+                        args.as_mut_ptr(),
+                        args.len() as u32,
+                        c_fn_name,
+                    )
+                }
             }
         }
     }
