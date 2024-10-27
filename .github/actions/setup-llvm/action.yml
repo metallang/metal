@@ -12,7 +12,7 @@ runs:
       shell: bash
 
     - id: cache-llvm
-      uses: actions/cache@4
+      uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
       with:
         path: ${{ env.LLVM_DIR }}
         key: ${{ runner.os }}-${{ runner.arch }}
