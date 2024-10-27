@@ -4,8 +4,8 @@ Prototype compiled language built in Rust with LLVM.
 
 ## Contributing
 
-Currently, Metal is unlicensed and solely owned by Vincent and Lena the maintainers. Metal will eventually open up and
-become fully open source, but for now, since we're the only ones using this language it's unlicensed.
+Currently, Metal is currently not open source software. Metal will eventually open up and
+become fully open source, but for now, since we're the only ones using this language it's fully closed.
 
 ## Development
 
