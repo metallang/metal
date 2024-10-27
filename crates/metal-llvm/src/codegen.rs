@@ -5,10 +5,10 @@ use std::{collections::BTreeMap, ffi::CStr};
 use llvm_sys::{
     core::{
         LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMBuildCall2, LLVMBuildLoad2,
-        LLVMDoubleTypeInContext, LLVMFP128TypeInContext, LLVMFloatTypeInContext, LLVMFunctionType,
-        LLVMGetElementType, LLVMGetNamedFunction, LLVMGetReturnType, LLVMIntTypeInContext,
-        LLVMPositionBuilderAtEnd, LLVMPrintModuleToString, LLVMSetLinkage, LLVMTypeOf,
-        LLVMVoidTypeInContext,
+        LLVMConstInt, LLVMDoubleTypeInContext, LLVMFP128TypeInContext, LLVMFloatTypeInContext,
+        LLVMFunctionType, LLVMGetElementType, LLVMGetNamedFunction, LLVMGetReturnType,
+        LLVMIntTypeInContext, LLVMPositionBuilderAtEnd, LLVMPrintModuleToString, LLVMSetLinkage,
+        LLVMTypeOf, LLVMVoidTypeInContext,
     },
     prelude::*,
     LLVMLinkage,
@@ -142,9 +142,9 @@ impl CodeGen {
         variables: &BTreeMap<String, Variable>,
     ) -> LLVMValueRef {
         match expr {
-            metal_ast::Expr::Number { ty: _, value: _ } => {
-                todo!()
-            }
+            metal_ast::Expr::Number { ty, value } => unsafe {
+                LLVMConstInt(self.ty(&ty), value, 1)
+            },
             metal_ast::Expr::Ident(ident) => match variables.get(ident.inner) {
                 Some(v) => unsafe {
                     LLVMBuildLoad2(

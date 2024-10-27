@@ -6,7 +6,7 @@ pub enum Expr<'src> {
     Ident(Ident<'src>),
     // TODO: represent this some other way
     /// A number value, like `1` or `2.6`.
-    Number { ty: Ty<'src>, value: u128 },
+    Number { ty: Ty<'src>, value: u64 },
     // A function call
     FnCall {
         fn_name: Ident<'src>,

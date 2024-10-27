@@ -30,6 +30,7 @@ impl PrivateSTDLibModule for ExternalLib {
         "pext"
     }
 
+    #[allow(clippy::not_unsafe_ptr_arg_deref)]
     fn function(
         ident: metal_ast::Ident,
         ctx: LLVMContextRef,
