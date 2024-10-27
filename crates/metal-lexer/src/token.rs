@@ -23,28 +23,28 @@ pub enum TokenKind<'src> {
     /* Literals */
 
     #[regex(r"(\p{XID_Start}|_)\p{XID_Continue}*")]
-    Identifier(&'src str),
+    Ident(&'src str),
 
     #[regex("(?&int)", convert)]
-    Integer(u64),
+    NumLit(u64),
 
     #[regex("0b[01](_?[01])*", convert_radix::<2>)]
-    BinaryInteger(u64),
+    BinaryNumLit(u64),
 
     #[regex("0x[0-9abcdefABCDEF](_?[0-9abcdefABCDEF])*", convert_radix::<16>)]
-    HexInteger(u64),
-
-    #[regex(r"(?&float)[eE][+-]?(?&int)", convert)]
-    ScientificFloat(f64),
+    HexNumLit(u64),
 
     #[regex(r"(?&float)", convert)]
-    Float(f64),
+    FloatLit(f64),
+
+    #[regex(r"(?&float)[eE][+-]?(?&int)", convert)]
+    EFloatLit(f64),
 
     #[regex("(?&string)", trim_quotes::<false>)]
-    String(&'src str),
+    StrLit(&'src str),
 
     #[regex("true|false", convert)]
-    Boolean(bool),
+    BoolLit(bool),
 
     /* Comparison */
 
@@ -186,9 +186,6 @@ pub enum TokenKind<'src> {
 
     /* Keywords */
 
-    #[token("class")]
-    Class,
-
     #[token("const")]
     Const,
 
@@ -201,14 +198,26 @@ pub enum TokenKind<'src> {
     #[token("enum")]
     Enum,
 
-    #[token("implements")]
-    Implements,
+    #[token("func")]
+    Func,
 
     #[token("import")]
     Import,
 
     #[token("let")]
     Let,
+
+    #[token("mut")]
+    Mut,
+
+    #[token("pub")]
+    Pub,
+
+    #[token("struct")]
+    Struct,
+
+    #[token("type")]
+    Type,
 
     /* Punctuation */
 

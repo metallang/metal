@@ -17,156 +17,156 @@ macro_rules! test_eq {
 
 #[test]
 fn test_identifier() {
-    test_eq!("x", Ok(TokenKind::Identifier("x")));
-    test_eq!("xyz", Ok(TokenKind::Identifier("xyz")));
-    test_eq!("XYZ", Ok(TokenKind::Identifier("XYZ")));
-    test_eq!("X1", Ok(TokenKind::Identifier("X1")));
-    test_eq!("X1X", Ok(TokenKind::Identifier("X1X")));
-    test_eq!("X_", Ok(TokenKind::Identifier("X_")));
-    test_eq!("X_X", Ok(TokenKind::Identifier("X_X")));
-    test_eq!("_X", Ok(TokenKind::Identifier("_X")));
-    test_eq!("X1_", Ok(TokenKind::Identifier("X1_")));
-    test_eq!("X_1", Ok(TokenKind::Identifier("X_1")));
-    test_eq!("X_1X", Ok(TokenKind::Identifier("X_1X")));
-    test_eq!("X1_X", Ok(TokenKind::Identifier("X1_X")));
-    test_eq!("X__X", Ok(TokenKind::Identifier("X__X")));
-    test_eq!("X_X1", Ok(TokenKind::Identifier("X_X1")));
-    test_eq!("你", Ok(TokenKind::Identifier("你")));
-    test_eq!("你好", Ok(TokenKind::Identifier("你好")));
-    test_eq!("你1", Ok(TokenKind::Identifier("你1")));
-    test_eq!("你1你", Ok(TokenKind::Identifier("你1你")));
-    test_eq!("你_", Ok(TokenKind::Identifier("你_")));
-    test_eq!("你_你", Ok(TokenKind::Identifier("你_你")));
-    test_eq!("_你", Ok(TokenKind::Identifier("_你")));
-    test_eq!("你1_", Ok(TokenKind::Identifier("你1_")));
-    test_eq!("你_1", Ok(TokenKind::Identifier("你_1")));
-    test_eq!("你_1你", Ok(TokenKind::Identifier("你_1你")));
-    test_eq!("你1_你", Ok(TokenKind::Identifier("你1_你")));
-    test_eq!("你__你", Ok(TokenKind::Identifier("你__你")));
-    test_eq!("你_你1", Ok(TokenKind::Identifier("你_你1")));
-    test_eq!("п", Ok(TokenKind::Identifier("п")));
-    test_eq!("привет", Ok(TokenKind::Identifier("привет")));
-    test_eq!("ПРИВЕТ", Ok(TokenKind::Identifier("ПРИВЕТ")));
-    test_eq!("П1", Ok(TokenKind::Identifier("П1")));
-    test_eq!("П1П", Ok(TokenKind::Identifier("П1П")));
-    test_eq!("П_", Ok(TokenKind::Identifier("П_")));
-    test_eq!("П_П", Ok(TokenKind::Identifier("П_П")));
-    test_eq!("_П", Ok(TokenKind::Identifier("_П")));
-    test_eq!("П1_", Ok(TokenKind::Identifier("П1_")));
-    test_eq!("П_1", Ok(TokenKind::Identifier("П_1")));
-    test_eq!("П_1П", Ok(TokenKind::Identifier("П_1П")));
-    test_eq!("П1_П", Ok(TokenKind::Identifier("П1_П")));
-    test_eq!("П__П", Ok(TokenKind::Identifier("П__П")));
-    test_eq!("П_П1", Ok(TokenKind::Identifier("П_П1")));
+    test_eq!("x", Ok(TokenKind::Ident("x")));
+    test_eq!("xyz", Ok(TokenKind::Ident("xyz")));
+    test_eq!("XYZ", Ok(TokenKind::Ident("XYZ")));
+    test_eq!("X1", Ok(TokenKind::Ident("X1")));
+    test_eq!("X1X", Ok(TokenKind::Ident("X1X")));
+    test_eq!("X_", Ok(TokenKind::Ident("X_")));
+    test_eq!("X_X", Ok(TokenKind::Ident("X_X")));
+    test_eq!("_X", Ok(TokenKind::Ident("_X")));
+    test_eq!("X1_", Ok(TokenKind::Ident("X1_")));
+    test_eq!("X_1", Ok(TokenKind::Ident("X_1")));
+    test_eq!("X_1X", Ok(TokenKind::Ident("X_1X")));
+    test_eq!("X1_X", Ok(TokenKind::Ident("X1_X")));
+    test_eq!("X__X", Ok(TokenKind::Ident("X__X")));
+    test_eq!("X_X1", Ok(TokenKind::Ident("X_X1")));
+    test_eq!("你", Ok(TokenKind::Ident("你")));
+    test_eq!("你好", Ok(TokenKind::Ident("你好")));
+    test_eq!("你1", Ok(TokenKind::Ident("你1")));
+    test_eq!("你1你", Ok(TokenKind::Ident("你1你")));
+    test_eq!("你_", Ok(TokenKind::Ident("你_")));
+    test_eq!("你_你", Ok(TokenKind::Ident("你_你")));
+    test_eq!("_你", Ok(TokenKind::Ident("_你")));
+    test_eq!("你1_", Ok(TokenKind::Ident("你1_")));
+    test_eq!("你_1", Ok(TokenKind::Ident("你_1")));
+    test_eq!("你_1你", Ok(TokenKind::Ident("你_1你")));
+    test_eq!("你1_你", Ok(TokenKind::Ident("你1_你")));
+    test_eq!("你__你", Ok(TokenKind::Ident("你__你")));
+    test_eq!("你_你1", Ok(TokenKind::Ident("你_你1")));
+    test_eq!("п", Ok(TokenKind::Ident("п")));
+    test_eq!("привет", Ok(TokenKind::Ident("привет")));
+    test_eq!("ПРИВЕТ", Ok(TokenKind::Ident("ПРИВЕТ")));
+    test_eq!("П1", Ok(TokenKind::Ident("П1")));
+    test_eq!("П1П", Ok(TokenKind::Ident("П1П")));
+    test_eq!("П_", Ok(TokenKind::Ident("П_")));
+    test_eq!("П_П", Ok(TokenKind::Ident("П_П")));
+    test_eq!("_П", Ok(TokenKind::Ident("_П")));
+    test_eq!("П1_", Ok(TokenKind::Ident("П1_")));
+    test_eq!("П_1", Ok(TokenKind::Ident("П_1")));
+    test_eq!("П_1П", Ok(TokenKind::Ident("П_1П")));
+    test_eq!("П1_П", Ok(TokenKind::Ident("П1_П")));
+    test_eq!("П__П", Ok(TokenKind::Ident("П__П")));
+    test_eq!("П_П1", Ok(TokenKind::Ident("П_П1")));
 }
 
 #[test]
 fn test_integer() {
-    test_eq!("0", Ok(TokenKind::Integer(0)));
-    test_eq!("1", Ok(TokenKind::Integer(1)));
-    test_eq!("01", Ok(TokenKind::Integer(1)));
-    test_eq!("001", Ok(TokenKind::Integer(1)));
-    test_eq!("10", Ok(TokenKind::Integer(10)));
-    test_eq!("100", Ok(TokenKind::Integer(100)));
-    test_eq!("101", Ok(TokenKind::Integer(101)));
+    test_eq!("0", Ok(TokenKind::NumLit(0)));
+    test_eq!("1", Ok(TokenKind::NumLit(1)));
+    test_eq!("01", Ok(TokenKind::NumLit(1)));
+    test_eq!("001", Ok(TokenKind::NumLit(1)));
+    test_eq!("10", Ok(TokenKind::NumLit(10)));
+    test_eq!("100", Ok(TokenKind::NumLit(100)));
+    test_eq!("101", Ok(TokenKind::NumLit(101)));
 }
 
 #[test]
 fn test_binaryinteger() {
-    test_eq!("0b0", Ok(TokenKind::BinaryInteger(0)));
-    test_eq!("0b1", Ok(TokenKind::BinaryInteger(1)));
-    test_eq!("0b01", Ok(TokenKind::BinaryInteger(1)));
-    test_eq!("0b001", Ok(TokenKind::BinaryInteger(1)));
-    test_eq!("0b10", Ok(TokenKind::BinaryInteger(2)));
-    test_eq!("0b100", Ok(TokenKind::BinaryInteger(4)));
-    test_eq!("0b101", Ok(TokenKind::BinaryInteger(5)));
+    test_eq!("0b0", Ok(TokenKind::BinaryNumLit(0)));
+    test_eq!("0b1", Ok(TokenKind::BinaryNumLit(1)));
+    test_eq!("0b01", Ok(TokenKind::BinaryNumLit(1)));
+    test_eq!("0b001", Ok(TokenKind::BinaryNumLit(1)));
+    test_eq!("0b10", Ok(TokenKind::BinaryNumLit(2)));
+    test_eq!("0b100", Ok(TokenKind::BinaryNumLit(4)));
+    test_eq!("0b101", Ok(TokenKind::BinaryNumLit(5)));
 }
 
 #[test]
 fn test_hexinteger() {
-    test_eq!("0x0", Ok(TokenKind::HexInteger(0)));
-    test_eq!("0x1", Ok(TokenKind::HexInteger(1)));
-    test_eq!("0x01", Ok(TokenKind::HexInteger(1)));
-    test_eq!("0x10", Ok(TokenKind::HexInteger(16)));
-    test_eq!("0x123", Ok(TokenKind::HexInteger(291)));
-    test_eq!("0xffffff", Ok(TokenKind::HexInteger(16777215)));
-    test_eq!("0xf62fda", Ok(TokenKind::HexInteger(16134106)));
-    test_eq!("0xf62fdaa", Ok(TokenKind::HexInteger(258145706)));
+    test_eq!("0x0", Ok(TokenKind::HexNumLit(0)));
+    test_eq!("0x1", Ok(TokenKind::HexNumLit(1)));
+    test_eq!("0x01", Ok(TokenKind::HexNumLit(1)));
+    test_eq!("0x10", Ok(TokenKind::HexNumLit(16)));
+    test_eq!("0x123", Ok(TokenKind::HexNumLit(291)));
+    test_eq!("0xffffff", Ok(TokenKind::HexNumLit(16777215)));
+    test_eq!("0xf62fda", Ok(TokenKind::HexNumLit(16134106)));
+    test_eq!("0xf62fdaa", Ok(TokenKind::HexNumLit(258145706)));
 }
 
 #[test]
 fn test_scientificfloat() {
-    test_eq!("1.5e+0", Ok(TokenKind::ScientificFloat(1.5)));
-    test_eq!("1.5e+1", Ok(TokenKind::ScientificFloat(15.0)));
-    test_eq!("1.5e+2", Ok(TokenKind::ScientificFloat(150.0)));
-    test_eq!("1.5e-0", Ok(TokenKind::ScientificFloat(1.5)));
-    test_eq!("1.5e-1", Ok(TokenKind::ScientificFloat(0.15)));
-    test_eq!("1.5e-2", Ok(TokenKind::ScientificFloat(0.015)));
+    test_eq!("1.5e+0", Ok(TokenKind::EFloatLit(1.5)));
+    test_eq!("1.5e+1", Ok(TokenKind::EFloatLit(15.0)));
+    test_eq!("1.5e+2", Ok(TokenKind::EFloatLit(150.0)));
+    test_eq!("1.5e-0", Ok(TokenKind::EFloatLit(1.5)));
+    test_eq!("1.5e-1", Ok(TokenKind::EFloatLit(0.15)));
+    test_eq!("1.5e-2", Ok(TokenKind::EFloatLit(0.015)));
 }
 
 #[test]
 fn test_float() {
-    test_eq!("0.0", Ok(TokenKind::Float(0.0)));
-    test_eq!("0.1", Ok(TokenKind::Float(0.1)));
-    test_eq!("0.01", Ok(TokenKind::Float(0.01)));
-    test_eq!("1.0", Ok(TokenKind::Float(1.0)));
-    test_eq!("10.0", Ok(TokenKind::Float(10.0)));
-    test_eq!("100.0", Ok(TokenKind::Float(100.0)));
+    test_eq!("0.0", Ok(TokenKind::FloatLit(0.0)));
+    test_eq!("0.1", Ok(TokenKind::FloatLit(0.1)));
+    test_eq!("0.01", Ok(TokenKind::FloatLit(0.01)));
+    test_eq!("1.0", Ok(TokenKind::FloatLit(1.0)));
+    test_eq!("10.0", Ok(TokenKind::FloatLit(10.0)));
+    test_eq!("100.0", Ok(TokenKind::FloatLit(100.0)));
 }
 
 #[test]
 fn test_number_underscores() {
-    test_eq!("0_1", Ok(TokenKind::Integer(1)));
-    test_eq!("0_0_1", Ok(TokenKind::Integer(1)));
-    test_eq!("1_0", Ok(TokenKind::Integer(10)));
-    test_eq!("1_00", Ok(TokenKind::Integer(100)));
-    test_eq!("10_1", Ok(TokenKind::Integer(101)));
+    test_eq!("0_1", Ok(TokenKind::NumLit(1)));
+    test_eq!("0_0_1", Ok(TokenKind::NumLit(1)));
+    test_eq!("1_0", Ok(TokenKind::NumLit(10)));
+    test_eq!("1_00", Ok(TokenKind::NumLit(100)));
+    test_eq!("10_1", Ok(TokenKind::NumLit(101)));
 
-    test_eq!("0b0_1", Ok(TokenKind::BinaryInteger(1)));
-    test_eq!("0b0_0_1", Ok(TokenKind::BinaryInteger(1)));
-    test_eq!("0b1_0", Ok(TokenKind::BinaryInteger(2)));
-    test_eq!("0b1_00", Ok(TokenKind::BinaryInteger(4)));
-    test_eq!("0b10_1", Ok(TokenKind::BinaryInteger(5)));
+    test_eq!("0b0_1", Ok(TokenKind::BinaryNumLit(1)));
+    test_eq!("0b0_0_1", Ok(TokenKind::BinaryNumLit(1)));
+    test_eq!("0b1_0", Ok(TokenKind::BinaryNumLit(2)));
+    test_eq!("0b1_00", Ok(TokenKind::BinaryNumLit(4)));
+    test_eq!("0b10_1", Ok(TokenKind::BinaryNumLit(5)));
 
-    test_eq!("0x0_1", Ok(TokenKind::HexInteger(1)));
-    test_eq!("0x1_0", Ok(TokenKind::HexInteger(16)));
-    test_eq!("0x1_2_3", Ok(TokenKind::HexInteger(291)));
-    test_eq!("0xff_ff_ff", Ok(TokenKind::HexInteger(16777215)));
-    test_eq!("0xf_62_f_da", Ok(TokenKind::HexInteger(16134106)));
-    test_eq!("0xf6_2f_d_a_a", Ok(TokenKind::HexInteger(258145706)));
+    test_eq!("0x0_1", Ok(TokenKind::HexNumLit(1)));
+    test_eq!("0x1_0", Ok(TokenKind::HexNumLit(16)));
+    test_eq!("0x1_2_3", Ok(TokenKind::HexNumLit(291)));
+    test_eq!("0xff_ff_ff", Ok(TokenKind::HexNumLit(16777215)));
+    test_eq!("0xf_62_f_da", Ok(TokenKind::HexNumLit(16134106)));
+    test_eq!("0xf6_2f_d_a_a", Ok(TokenKind::HexNumLit(258145706)));
 
-    test_eq!("1.5e+0", Ok(TokenKind::ScientificFloat(1.5)));
-    test_eq!("1_5.0e+1", Ok(TokenKind::ScientificFloat(150.0)));
-    test_eq!("15.0_0e+1", Ok(TokenKind::ScientificFloat(150.0)));
-    test_eq!("1.5e-0_0", Ok(TokenKind::ScientificFloat(1.5)));
-    test_eq!("1.5e-0_1", Ok(TokenKind::ScientificFloat(0.15)));
-    test_eq!("15.0e-0_2", Ok(TokenKind::ScientificFloat(0.15)));
+    test_eq!("1.5e+0", Ok(TokenKind::EFloatLit(1.5)));
+    test_eq!("1_5.0e+1", Ok(TokenKind::EFloatLit(150.0)));
+    test_eq!("15.0_0e+1", Ok(TokenKind::EFloatLit(150.0)));
+    test_eq!("1.5e-0_0", Ok(TokenKind::EFloatLit(1.5)));
+    test_eq!("1.5e-0_1", Ok(TokenKind::EFloatLit(0.15)));
+    test_eq!("15.0e-0_2", Ok(TokenKind::EFloatLit(0.15)));
 
-    test_eq!("0.0_1", Ok(TokenKind::Float(0.01)));
-    test_eq!("1_0.0", Ok(TokenKind::Float(10.0)));
-    test_eq!("1_0_0.0", Ok(TokenKind::Float(100.0)));
-    test_eq!("10.0_0", Ok(TokenKind::Float(10.0)));
-    test_eq!("1_00.0", Ok(TokenKind::Float(100.0)));
-    test_eq!("10_0.0", Ok(TokenKind::Float(100.0)));
+    test_eq!("0.0_1", Ok(TokenKind::FloatLit(0.01)));
+    test_eq!("1_0.0", Ok(TokenKind::FloatLit(10.0)));
+    test_eq!("1_0_0.0", Ok(TokenKind::FloatLit(100.0)));
+    test_eq!("10.0_0", Ok(TokenKind::FloatLit(10.0)));
+    test_eq!("1_00.0", Ok(TokenKind::FloatLit(100.0)));
+    test_eq!("10_0.0", Ok(TokenKind::FloatLit(100.0)));
 }
 
 #[test]
 fn test_string() {
-    test_eq!(r#""hello""#, Ok(TokenKind::String("hello")));
-    test_eq!(r#""你好""#, Ok(TokenKind::String("你好")));
-    test_eq!(r#""привет""#, Ok(TokenKind::String("привет")));
+    test_eq!(r#""hello""#, Ok(TokenKind::StrLit("hello")));
+    test_eq!(r#""你好""#, Ok(TokenKind::StrLit("你好")));
+    test_eq!(r#""привет""#, Ok(TokenKind::StrLit("привет")));
     test_eq!(
         r#""~!@#$%^&*()_+-=`|""#,
-        Ok(TokenKind::String("~!@#$%^&*()_+-=`|"))
+        Ok(TokenKind::StrLit("~!@#$%^&*()_+-=`|"))
     );
-    test_eq!(r#""\r\n\f\\""#, Ok(TokenKind::String(r"\r\n\f\\"))); // TODO: unescape strings
-    test_eq!(r#""""#, Ok(TokenKind::String("")));
+    test_eq!(r#""\r\n\f\\""#, Ok(TokenKind::StrLit(r"\r\n\f\\"))); // TODO: unescape strings
+    test_eq!(r#""""#, Ok(TokenKind::StrLit("")));
 }
 
 #[test]
 fn test_boolean() {
-    test_eq!("true", Ok(TokenKind::Boolean(true)));
-    test_eq!("false", Ok(TokenKind::Boolean(false)));
+    test_eq!("true", Ok(TokenKind::BoolLit(true)));
+    test_eq!("false", Ok(TokenKind::BoolLit(false)));
 }
 
 #[test]
@@ -237,14 +237,17 @@ fn test_control_flow() {
 
 #[test]
 fn test_keywords() {
-    test_eq!("class", Ok(TokenKind::Class));
     test_eq!("const", Ok(TokenKind::Const));
     test_eq!("def", Ok(TokenKind::Def));
     test_eq!("defer", Ok(TokenKind::Defer));
     test_eq!("enum", Ok(TokenKind::Enum));
-    test_eq!("implements", Ok(TokenKind::Implements));
+    test_eq!("func", Ok(TokenKind::Func));
     test_eq!("import", Ok(TokenKind::Import));
     test_eq!("let", Ok(TokenKind::Let));
+    test_eq!("mut", Ok(TokenKind::Mut));
+    test_eq!("pub", Ok(TokenKind::Pub));
+    test_eq!("struct", Ok(TokenKind::Struct));
+    test_eq!("type", Ok(TokenKind::Type));
 }
 
 #[test]
