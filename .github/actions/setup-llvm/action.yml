@@ -4,7 +4,7 @@ description: blah
 runs:
   using: composite
   steps:
-    - if: ${{ runner.os == "Linux" && runner.arch == "X64" }}
+    - if: ${{ runner.os == 'Linux' && runner.arch == 'X64' }}
       run: echo "LLVM_URL=""https://github.com/wasmerio/llvm-custom-builds/releases/download/18.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
     
