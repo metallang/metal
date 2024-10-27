@@ -201,6 +201,9 @@ pub enum TokenKind<'src> {
     #[token("enum")]
     Enum,
 
+    #[token("implements")]
+    Implements,
+
     #[token("import")]
     Import,
 

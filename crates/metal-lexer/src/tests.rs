@@ -242,6 +242,7 @@ fn test_keywords() {
     test_eq!("def", Ok(TokenKind::Def));
     test_eq!("defer", Ok(TokenKind::Defer));
     test_eq!("enum", Ok(TokenKind::Enum));
+    test_eq!("implements", Ok(TokenKind::Implements));
     test_eq!("import", Ok(TokenKind::Import));
     test_eq!("let", Ok(TokenKind::Let));
 }
