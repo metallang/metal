@@ -13,9 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "18"
+      - uses: ./.github/actions/setup-llvm
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -24,4 +22,4 @@ jobs:
       - uses: taiki-e/install-action@nextest
 
       - run: cargo test --doc
-      - run: cargo nextest run
+      - run: cargo nextest run --profile ci
