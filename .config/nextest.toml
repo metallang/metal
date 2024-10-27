@@ -1,0 +1,6 @@
+[profile.default]
+# nextest crashes when trying to run tests of a proc-macro crate
+default-filter = "not (package(metal-proc-macros))"
+
+[profile.ci]
+fail-fast = false
