@@ -4,12 +4,21 @@ description: blah
 runs:
   using: composite
   steps:
+    - run: echo "LLVM_DIR=$(pwd)/.llvm" >> $GITHUB_ENV
+      shell: bash
+ 
     - if: ${{ runner.os == 'Linux' && runner.arch == 'X64' }}
       run: echo "LLVM_URL=""https://github.com/wasmerio/llvm-custom-builds/releases/download/18.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
-    
-    - run: |
-        LLVM_DIR=$(pwd)/.llvm
+
+    - id: cache
+      uses: actions/cache@4
+      with:
+        path: ${{ env.LLVM_DIR }}
+        key: ${{ runner.os }}-${{ runner.arch }}
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      run: |
         mkdir -p $LLVM_DIR
         curl --proto '=https' --tlsv1.2 -sSf "$LLVM_URL" -L -o - | tar xJv -C $LLVM_DIR
         echo LLVM_SYS_180_PREFIX="${LLVM_DIR}" >> $GITHUB_ENV
