@@ -21,6 +21,9 @@ runs:
       run: |
         mkdir -p $LLVM_DIR
         curl --proto '=https' --tlsv1.2 -sSf "$LLVM_URL" -L -o - | tar xJv -C $LLVM_DIR
-        echo LLVM_SYS_180_PREFIX="${LLVM_DIR}" >> $GITHUB_ENV
+      shell: bash
+
+    - run: |
+        echo LLVM_SYS_180_PREFIX="$LLVM_DIR" >> $GITHUB_ENV
         echo LLVM_ENABLE=1 >> $GITHUB_ENV
       shell: bash
