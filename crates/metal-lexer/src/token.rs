@@ -198,9 +198,6 @@ pub enum TokenKind<'src> {
     #[token("enum")]
     Enum,
 
-    #[token("func")]
-    Func,
-
     #[token("import")]
     Import,
 
