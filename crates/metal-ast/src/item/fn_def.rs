@@ -1,9 +1,6 @@
 use metal_lexer::{spanned, Spanned};
 
-use crate::{
-    misc::{Block, Ident, Visibility},
-    Expr, Ty,
-};
+use crate::{Block, Expr, Ident, Ty, Visibility};
 
 /// A function definition, such as `def main() {}`.
 #[spanned]

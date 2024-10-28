@@ -7,6 +7,20 @@ mod item;
 mod misc;
 mod ty;
 
-pub use crate::expr::{CallExpr, Expr, LitExpr};
-pub use crate::item::{ExprItem, FnDef, ImportItem, Item, StructDef};
-pub use crate::ty::Ty;
+pub use crate::{
+    expr::{
+        call::CallExpr,
+        lit::{BoolLit, LitExpr, NumLit, StrLit},
+        Expr,
+    },
+    item::{
+        enum_def::{EnumDef, EnumItem, EnumItems, EnumVariant},
+        expr::ExprItem,
+        fn_def::{FnDef, FnInput},
+        import::{ImportItem, ImportTree, MultiImport, SegmentImport},
+        struct_def::{StructDef, StructField, StructItem, StructItems},
+        Item,
+    },
+    misc::{Block, Ident, Visibility, VisibilityKind},
+    ty::Ty,
+};

@@ -1,10 +1,6 @@
 use metal_lexer::{spanned, Spanned};
 
-use crate::{
-    item::FnDef,
-    misc::{Ident, Visibility},
-    Ty,
-};
+use crate::{FnDef, Ident, Ty, Visibility};
 
 /// A struct definition, such as `struct Vec { ... }`.
 #[spanned]

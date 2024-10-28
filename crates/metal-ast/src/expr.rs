@@ -1,9 +1,7 @@
-use crate::misc::Ident;
+pub mod call;
+pub mod lit;
 
-mod call;
-mod lit;
-
-pub use crate::expr::{call::CallExpr, lit::LitExpr};
+use crate::{CallExpr, Ident, LitExpr};
 
 /// An expression, also called a value, such as `1 + 1` or `fib(20)`.
 pub enum Expr<'src> {

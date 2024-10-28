@@ -1,6 +1,6 @@
 use metal_lexer::{spanned, Spanned};
 
-use crate::item::Item;
+use crate::Item;
 
 /// An identifier, such as `i_am_a_variable`.
 #[spanned]

@@ -1,6 +1,6 @@
 use metal_lexer::{spanned, Spanned};
 
-use crate::misc::Ident;
+use crate::Ident;
 
 /// An import item, such as `import std.num`.
 #[spanned]
