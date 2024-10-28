@@ -1,6 +1,6 @@
 use metal_lexer::{spanned, Spanned};
 
-use crate::statement::Statement;
+use crate::item::Item;
 
 /// An identifier.
 #[spanned]
@@ -13,5 +13,5 @@ pub struct Ident<'src> {
 #[spanned]
 #[derive(Spanned)]
 pub struct Block<'src> {
-    pub statements: Vec<Statement<'src>>,
+    pub statements: Vec<Item<'src>>,
 }

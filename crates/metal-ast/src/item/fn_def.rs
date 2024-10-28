@@ -5,7 +5,7 @@ use crate::{
     Expr, Ty,
 };
 
-/// A function definition statement, like `main() {}`.
+/// A function definition statement, like `def main() {}`.
 #[spanned]
 #[derive(Spanned)]
 pub struct FnDefStmt<'src> {
