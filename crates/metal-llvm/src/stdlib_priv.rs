@@ -56,13 +56,14 @@ impl PrivateSTDLibModule for ExternalLib {
                 ",
                     ret_type, name, args
                 );
-                let ir = CString::new(irstr.clone()).unwrap();
+                let ir_len = irstr.len();
+                let ir = CString::new(irstr).unwrap();
 
                 unsafe {
                     let irbuf = CString::new("ir_buffer").unwrap();
                     let ir_buffer = LLVMCreateMemoryBufferWithMemoryRangeCopy(
                         ir.as_ptr(),
-                        irstr.len(),
+                        ir_len,
                         irbuf.as_ptr(),
                     );
 
