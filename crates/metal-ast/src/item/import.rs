@@ -14,7 +14,7 @@ pub struct ImportItem<'src> {
 ///
 /// # Example
 ///
-/// ```rs
+/// ```rust,ignore
 /// // Below is how imports of `import std.{num, fs.{open, close}, rand.random};` would be
 /// // represented using this structure (rust-like pseudocode).
 ///
@@ -40,11 +40,11 @@ pub struct ImportItem<'src> {
 #[derive(Spanned)]
 pub enum ImportTree<'src> {
     /// The final component of any import tree, such as `fs` in `import std.fs;`.
-    Name(Ident<'src>),
+    Name(Box<Ident<'src>>),
     /// See [SegmentImport].
-    Segment(SegmentImport<'src>),
+    Segment(Box<SegmentImport<'src>>),
     /// See [MultiImport].
-    Multiple(MultiImport<'src>),
+    Multiple(Box<MultiImport<'src>>),
 }
 
 /// A branch in an import tree, such as `{num, fs}` in `import std.{num, fs};`.
@@ -62,5 +62,5 @@ pub struct SegmentImport<'src> {
     /// The segment.
     pub segment: Ident<'src>,
     /// The continuation of this import tree.
-    pub rest: Box<ImportTree<'src>>,
+    pub rest: ImportTree<'src>,
 }

@@ -31,7 +31,7 @@ pub enum EnumBodyItem<'src> {
     FnItem(FnItem<'src>),
 }
 
-/// A [EnumItem]'s variant, such as `Some(T)`.
+/// An [EnumItem]'s variant, such as `Some(T)`.
 #[spanned]
 #[derive(Spanned)]
 pub struct EnumVariant<'src> {

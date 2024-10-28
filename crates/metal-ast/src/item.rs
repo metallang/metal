@@ -12,16 +12,16 @@ use crate::{ConstItem, EnumItem, ExprItem, FnItem, ImportItem, StructItem};
 /// An item, such as a constant definition or an import.
 #[derive(Spanned)]
 pub enum Item<'src> {
-    /// See [ConstDef].
+    /// See [ConstItem].
     Const(Box<ConstItem<'src>>),
-    /// See [EnumDef].
+    /// See [EnumItem].
     Enum(Box<EnumItem<'src>>),
     /// See [ExprItem].
     Expr(Box<ExprItem<'src>>),
-    /// See [FnDef].
-    FnDef(Box<FnItem<'src>>),
+    /// See [FnItem].
+    Fn(Box<FnItem<'src>>),
     /// See [ImportItem].
     Import(Box<ImportItem<'src>>),
-    /// See [StructDef].
-    StructDef(Box<StructItem<'src>>),
+    /// See [StructItem].
+    Struct(Box<StructItem<'src>>),
 }
