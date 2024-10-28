@@ -1,23 +1,21 @@
-use expr::ExprStmt;
-use fn_def::FnDefStmt;
-use import::ImportItem;
+mod expr;
+mod fn_def;
+mod import;
+mod struct_def;
+
 use metal_lexer::Spanned;
-use struct_def::StructDef;
 
-pub mod expr;
-pub mod fn_def;
-pub mod import;
-pub mod struct_def;
+pub use crate::item::{expr::ExprItem, fn_def::FnDef, import::ImportItem, struct_def::StructDef};
 
-#[derive(Spanned)]
 /// An item, such as a constant definition or an import.
+#[derive(Spanned)]
 pub enum Item<'src> {
     /// See [StructDefStmt].
     StructDef(Box<StructDef<'src>>),
     /// See [ExprStmt].
-    Expr(Box<ExprStmt<'src>>),
+    Expr(Box<ExprItem<'src>>),
     /// See [FnDefStmt].
-    FnDef(Box<FnDefStmt<'src>>),
+    FnDef(Box<FnDef<'src>>),
     /// See [ImportStmt].
     Import(Box<ImportItem<'src>>),
 }

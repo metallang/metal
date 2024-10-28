@@ -2,10 +2,10 @@ use metal_lexer::{spanned, Spanned};
 
 use crate::Expr;
 
-/// A standalone expression, like `print("Hello, World!")`.
+/// A standalone expression, such as `print("Hello, World!")` inside a function.
 #[spanned]
 #[derive(Spanned)]
-pub struct ExprStmt<'src> {
+pub struct ExprItem<'src> {
     /// See [Expr].
     pub expr: Expr<'src>,
 }

@@ -2,7 +2,7 @@ use metal_lexer::{spanned, Spanned};
 
 use crate::misc::Ident;
 
-/// An import statement, such as `import std.num`.
+/// An import item, such as `import std.num`.
 #[spanned]
 #[derive(Spanned)]
 pub struct ImportItem<'src> {
@@ -39,22 +39,28 @@ pub struct ImportItem<'src> {
 /// ```
 #[derive(Spanned)]
 pub enum ImportTree<'src> {
-    /// The final component of a path
+    /// The final component of any import tree, such as `fs` in `import std.fs;`.
     Name(Ident<'src>),
-    /// An intermediate
+    /// See [SegmentImport].
     Segment(SegmentImport<'src>),
+    /// See [MultiImport].
     Multiple(MultiImport<'src>),
 }
 
+/// A branch in an import tree, such as `{num, fs}` in `import std.{num, fs};`.
 #[spanned]
 #[derive(Spanned)]
 pub struct MultiImport<'src> {
+    /// The subtrees that descend from this branch.
     pub subtrees: Vec<ImportTree<'src>>,
 }
 
+/// An intermediate component of an import tree, such as `std` in `import std.fs;`.
 #[spanned]
 #[derive(Spanned)]
 pub struct SegmentImport<'src> {
+    /// The segment.
     pub segment: Ident<'src>,
+    /// The continuation of this import tree.
     pub rest: Box<ImportTree<'src>>,
 }

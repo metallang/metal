@@ -2,6 +2,6 @@ use crate::misc::Ident;
 
 /// A "type expression".
 pub enum Ty<'src> {
-    /// An identifier, like `i32` in `pub items: Vec<i32> := Vec.new()`.
-    Ident(Ident<'src>),
+    /// An identifier, like `i32` in `items: Vec<i32>`.
+    Ident(Box<Ident<'src>>),
 }

@@ -1,14 +1,15 @@
 use metal_lexer::{spanned, Spanned};
 
 use crate::{
-    misc::{Block, Ident},
+    misc::{Block, Ident, Visibility},
     Expr, Ty,
 };
 
-/// A function definition statement, like `def main() {}`.
+/// A function definition, such as `def main() {}`.
 #[spanned]
 #[derive(Spanned)]
-pub struct FnDefStmt<'src> {
+pub struct FnDef<'src> {
+    pub vis: Visibility,
     /// See [Ident].
     pub ident: Ident<'src>,
     /// See [FnInput].
@@ -19,7 +20,7 @@ pub struct FnDefStmt<'src> {
     pub body: Block<'src>,
 }
 
-/// A function input, also called a parameter, like `yes: bool = True`.
+/// A function input, also called a parameter, such as `yes: bool = True`.
 #[spanned]
 #[derive(Spanned)]
 pub struct FnInput<'src> {
