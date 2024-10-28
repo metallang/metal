@@ -1,6 +1,10 @@
-// LLVM Codegen Library
+//! LLVM Codegen Library
 
-use std::{collections::BTreeMap, ffi::CStr};
+use std::{
+    collections::BTreeMap,
+    ffi::{c_ulonglong, CStr, CString},
+    os::raw::c_uint,
+};
 
 use llvm_sys::{
     core::{
@@ -105,15 +109,18 @@ impl CodeGen {
         unsafe {
             // TODO: variadic argument support
             // like `*args`
+            let c_fun_name = CString::new(fun_name).unwrap();
+
             let function = LLVMAddFunction(
                 self.module,
-                fun_name.as_ptr() as *const i8,
-                LLVMFunctionType(return_type, params.as_mut_ptr(), params.len() as u32, 0),
+                c_fun_name.as_ptr(),
+                LLVMFunctionType(return_type, params.as_mut_ptr(), params.len() as c_uint, 0),
             );
             LLVMSetLinkage(function, linkage);
 
-            let entry_block =
-                LLVMAppendBasicBlockInContext(self.ctx, function, "entry".as_ptr() as *const i8);
+            let c_entry = CString::new("entry").unwrap();
+
+            let entry_block = LLVMAppendBasicBlockInContext(self.ctx, function, c_entry.as_ptr());
             LLVMPositionBuilderAtEnd(self.builder, entry_block);
 
             // TODO: global variables
@@ -142,45 +149,49 @@ impl CodeGen {
         variables: &BTreeMap<String, Variable>,
     ) -> LLVMValueRef {
         match expr {
-            metal_ast::Expr::Number { ty, value } => unsafe {
-                LLVMConstInt(self.ty(&ty), value, 1)
+            metal_ast::Expr::Number(num) => unsafe {
+                let sign_extend;
+                let value;
+
+                if num.value.is_negative() {
+                    sign_extend = 1;
+                    value = -num.value as u64
+                } else {
+                    sign_extend = 0;
+                    value = num.value as u64
+                }
+                LLVMConstInt(self.ty(&num.ty), value as c_ulonglong, sign_extend)
             },
             metal_ast::Expr::Ident(ident) => match variables.get(ident.inner) {
                 Some(v) => unsafe {
-                    LLVMBuildLoad2(
-                        self.builder,
-                        self.ty(&v.ty),
-                        v.pntr,
-                        ident.inner.as_ptr() as *const i8,
-                    )
+                    let c_ident_inner = CString::new(ident.inner).unwrap();
+                    LLVMBuildLoad2(self.builder, self.ty(&v.ty), v.pntr, c_ident_inner.as_ptr())
                 },
                 None => {
                     panic!("If you see this, something broke  royally. The parser should prevent you from loading unknown variables!")
                 }
             },
-            metal_ast::Expr::FnCall {
-                fn_name,
-                arguments,
-                module_name: _,
-            } => {
+            metal_ast::Expr::FnCall(fn_call) => {
                 let mut args = Vec::new();
 
-                for inner_expr in arguments {
+                for inner_expr in fn_call.arguments {
                     args.push(self.expression(inner_expr, variables));
                 }
 
                 unsafe {
-                    let c_fn_name = fn_name.inner.as_ptr() as *const i8;
-                    // TODO: I don't know how to error-handle LLVM lol
-                    let func = LLVMGetNamedFunction(self.module, c_fn_name);
+                    let c_fn_name = CString::new(fn_call.fn_name.inner).unwrap();
+                    // TODO: handle possible errors
+                    let func = LLVMGetNamedFunction(self.module, c_fn_name.as_ptr());
+                    assert!(!func.is_null());
+
                     let func_ty = LLVMGetElementType(LLVMTypeOf(func));
                     LLVMBuildCall2(
                         self.builder,
                         LLVMGetReturnType(func_ty),
                         func,
                         args.as_mut_ptr(),
-                        args.len() as u32,
-                        c_fn_name,
+                        args.len() as c_uint,
+                        c_fn_name.as_ptr(),
                     )
                 }
             }
