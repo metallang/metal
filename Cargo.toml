@@ -34,6 +34,12 @@ ignored = [
     "metal-lsp",
 ]
 
+[workspace.lints.clippy]
+wildcard_enum_match_arm = "warn"
+
+[workspace.lints.rustdoc]
+broken_intra_doc_links = "warn"
+
 [profile.release]
 lto = "thin"
 strip = true
