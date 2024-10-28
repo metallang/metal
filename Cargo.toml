@@ -22,12 +22,6 @@ metal-parser = { path = "crates/metal-parser" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
 
-[workspace.lints.clippy]
-wildcard_enum_match_arm = "warn"
-
-[workspace.lints.rustdoc]
-broken_intra_doc_links = "warn"
-
 [workspace.metadata.cargo-shear]
 ignored = [
     "metal-ast",
