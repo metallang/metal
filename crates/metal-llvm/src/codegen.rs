@@ -150,16 +150,11 @@ impl CodeGen {
     ) -> LLVMValueRef {
         match expr {
             metal_ast::Expr::Number(num) => unsafe {
-                let sign_extend;
-                let value;
-
-                if num.value.is_negative() {
-                    sign_extend = 1;
-                    value = -num.value as u64
+                let (sign_extend, value) = if num.value.is_negative() {
+                    (1, -num.value as u64)
                 } else {
-                    sign_extend = 0;
-                    value = num.value as u64
-                }
+                    (0, num.value as u64)
+                };
                 LLVMConstInt(self.ty(&num.ty), value as c_ulonglong, sign_extend)
             },
             metal_ast::Expr::Ident(ident) => match variables.get(ident.inner) {
