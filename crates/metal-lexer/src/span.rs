@@ -13,17 +13,6 @@ impl<T: Spanned> Spanned for Box<T> {
     }
 }
 
-impl<T: Spanned> Spanned for Vec<T> {
-    fn span(&self) -> &Span {
-        let span_start = self.first().unwrap().span().start;
-        let span_end = self.last().unwrap().span().end;
-        let span_box = Box::new(span!(span_start..span_end));
-        let span = Box::leak(span_box);
-
-        span
-    }
-}
-
 /// Create a `core::range::Range` using the usual range syntax.
 pub macro span {
     ($start:ident..$end:expr) => {
