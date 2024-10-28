@@ -5,7 +5,7 @@ use crate::{Expr, Ident, Ty, Visibility};
 /// A constant definition, such as `const PREALLOC: u8 = 128;`.
 #[spanned]
 #[derive(Spanned)]
-pub struct ConstDef<'src> {
+pub struct ConstItem<'src> {
     /// See [Visibility].
     pub vis: Visibility,
     /// See [Ident].

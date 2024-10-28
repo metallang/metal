@@ -2,7 +2,7 @@ use metal_lexer::{spanned, Spanned};
 
 use crate::Ident;
 
-/// An import item, such as `import std.num`.
+/// An import declaration, such as `import std.num`.
 #[spanned]
 #[derive(Spanned)]
 pub struct ImportItem<'src> {

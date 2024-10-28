@@ -5,7 +5,7 @@ use crate::{Block, Expr, Ident, Ty, Visibility};
 /// A function definition, such as `def main() {}`.
 #[spanned]
 #[derive(Spanned)]
-pub struct FnDef<'src> {
+pub struct FnItem<'src> {
     pub vis: Visibility,
     /// See [Ident].
     pub ident: Ident<'src>,
