@@ -16,7 +16,11 @@ pub trait PrivateSTDLibModule {
     /// i.e. `io`, `cmplib`, etc.
     fn libname() -> &'static str;
 
-    fn function(
+    /// # Safety
+    /// The LLVM Pointer values here can cause crashes
+    /// if set null or otherwise. Basically, only use
+    /// if you know what you're doing.
+    unsafe fn function(
         ident: metal_ast::Ident,
         ctx: LLVMContextRef,
         module: LLVMModuleRef,
@@ -31,7 +35,7 @@ impl PrivateSTDLibModule for ExternalLib {
         "pext"
     }
 
-    fn function(
+    unsafe fn function(
         ident: metal_ast::Ident,
         ctx: LLVMContextRef,
         module: LLVMModuleRef,
