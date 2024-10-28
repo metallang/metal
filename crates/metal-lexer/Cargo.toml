@@ -6,3 +6,5 @@ description = "The Metal language lexer and proc-macro definitions."
 
 [dependencies]
 metal-proc-macros = { workspace = true }
+logos = { workspace = true }
+thiserror = { workspace = true }
