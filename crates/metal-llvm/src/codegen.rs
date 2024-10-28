@@ -92,6 +92,10 @@ impl CodeGen {
         };
 
         let fun_name: String = if library {
+            // mangles the function name into the following format:
+            // module (split by submodule name length) +
+            // function name (with its length also preceding the name)
+
             let mut name = "".to_string();
             for module in self.module_name.split('.') {
                 let m1 = module.len().to_string() + module;
@@ -118,9 +122,7 @@ impl CodeGen {
             );
             LLVMSetLinkage(function, linkage);
 
-            let c_entry = CString::new("entry").unwrap();
-
-            let entry_block = LLVMAppendBasicBlockInContext(self.ctx, function, c_entry.as_ptr());
+            let entry_block = LLVMAppendBasicBlockInContext(self.ctx, function, c"entry".as_ptr());
             LLVMPositionBuilderAtEnd(self.builder, entry_block);
 
             // TODO: global variables
@@ -163,7 +165,7 @@ impl CodeGen {
                     LLVMBuildLoad2(self.builder, self.ty(&v.ty), v.pntr, c_ident_inner.as_ptr())
                 },
                 None => {
-                    panic!("If you see this, something broke  royally. The parser should prevent you from loading unknown variables!")
+                    panic!("If you see this, something broke royally. The parser should prevent you from loading unknown variables!")
                 }
             },
             metal_ast::Expr::FnCall(fn_call) => {
