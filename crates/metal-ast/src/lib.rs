@@ -14,6 +14,7 @@ pub use crate::{
         Expr,
     },
     item::{
+        const_def::ConstDef,
         enum_def::{EnumDef, EnumItem, EnumItems, EnumVariant},
         expr::ExprItem,
         fn_def::{FnDef, FnInput},
