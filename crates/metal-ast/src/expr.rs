@@ -1,4 +1,4 @@
-use crate::Ident;
+use crate::misc::Ident;
 
 /// An expression, also called a value.
 pub enum Expr<'src> {

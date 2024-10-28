@@ -1,4 +1,4 @@
-use crate::Ident;
+use crate::misc::Ident;
 
 /// A "type expression".
 pub enum Ty<'src> {
