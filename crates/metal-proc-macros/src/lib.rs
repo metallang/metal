@@ -1,3 +1,5 @@
+#![feature(extend_one, let_chains, proc_macro_quote)]
+
 use proc_macro::TokenStream;
 use proc_macro_error2::ResultExt;
 use syn::parse_macro_input;
@@ -15,4 +17,10 @@ pub fn spanned(_: TokenStream, item: TokenStream) -> TokenStream {
     crate::spans::attribute::spanned_impl(item.into())
         .unwrap_or_abort()
         .into()
+}
+
+/// Create a `core::range::Range` using the familiar range syntax.
+#[proc_macro]
+pub fn span(input: TokenStream) -> TokenStream {
+    crate::spans::instance::span_impl(input)
 }
