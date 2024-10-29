@@ -36,6 +36,7 @@ ignored = [
     "metal-lsp",
 ]
 
+
 [workspace.lints.clippy]
 wildcard_enum_match_arm = "warn"
 
