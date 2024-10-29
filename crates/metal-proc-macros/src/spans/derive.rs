@@ -25,6 +25,7 @@ fn impl_spanned_for_struct(ident: &Ident, generics: &Generics, data: DataStruct)
     }
 
     quote! {
+        #[automatically_derived]
         impl #generics ::metal_lexer::Spanned for #ident #generics {
             fn span(&self) -> &::metal_lexer::Span {
                 &self.span
@@ -43,6 +44,7 @@ fn impl_spanned_for_enum(ident: &Ident, generics: &Generics, data: DataEnum) -> 
     });
 
     quote! {
+        #[automatically_derived]
         impl #generics ::metal_lexer::Spanned for #ident #generics {
             fn span(&self) -> &::metal_lexer::Span {
                 match self {
