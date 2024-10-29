@@ -15,7 +15,7 @@ pub type Path<'src> = Vec<PathSegment<'src>>;
 
 /// An identifier.
 #[spanned]
-#[derive(Spanned)]
+#[derive(Spanned, Eq, PartialEq)]
 pub struct Ident<'src> {
     pub inner: &'src str,
 }
@@ -61,6 +61,11 @@ pub struct FnDefStmt<'src> {
     pub inputs: Vec<FnInput<'src>>,
     /// See [Ty].
     pub return_type: Option<Ty<'src>>,
+    /// Whether or not this function can be
+    /// externally accessed. Like, 'pub main() {}'
+    pub public: bool,
+    /// Where this function definition is located.
+    pub location: Path<'src>,
     /// See [Block].
     pub body: Block<'src>,
 }
