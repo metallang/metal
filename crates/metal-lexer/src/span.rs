@@ -1,3 +1,5 @@
+use crate::span;
+
 /// A span in a source file.
 pub type Span = core::range::Range<usize>;
 
@@ -21,18 +23,5 @@ impl<T: Spanned> Spanned for Vec<T> {
         let span = Box::leak(span_box);
 
         span
-    }
-}
-
-/// Create a `core::range::Range` using the usual range syntax.
-pub macro span {
-    ($start:ident..$end:expr) => {
-        $crate::span!(@priv $start, $end)
-    },
-    ($start:literal..$end:expr) => {
-        $crate::span!(@priv $start, $end)
-    },
-    (@priv $start:expr, $end:expr) => {
-        ::core::range::Range { start: $start, end: $end }
     }
 }
