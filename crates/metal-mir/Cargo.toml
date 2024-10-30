@@ -1,0 +1,10 @@
+[package]
+name = "metal-mir"
+version = "0.1.0"
+edition = "2021"
+description = "Middle-level IR for easier Metal->LLVM conversion"
+
+[dependencies]
+
+[lints]
+workspace = true
