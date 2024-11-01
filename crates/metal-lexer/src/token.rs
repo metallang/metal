@@ -13,7 +13,7 @@ pub struct Token<'src> {
 // FIXME: Switch to a manual implementation. logos, even with our fixes, is not fully sound.
 
 #[rustfmt::skip]
-#[derive(Logos, Debug, PartialEq)]
+#[derive(Logos, Debug, PartialEq, enum_as_inner::EnumAsInner)]
 #[logos(error = Error)]
 #[logos(skip " \t\r\n")]
 #[logos(subpattern int = r"[0-9](_?[0-9])*_?")]
