@@ -12,9 +12,11 @@ proc-macro2 = "1.0.89"
 proc-macro-error2 = "2.0.1"
 llvm-sys = { version = "180" }
 enum-as-inner = "0.6.1"
+wasm-encoder = "0.219.1"
 
 metal = { path = "crates/metal" }
 metal-ast = { path = "crates/metal-ast" }
+metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-formatter = { path = "crates/metal-formatter" }
 metal-lexer = { path = "crates/metal-lexer" }
 metal-linter = { path = "crates/metal-linter" }
@@ -28,6 +30,7 @@ metallic = { path = "crates/metallic" }
 ignored = [
     "metal-ast",
     "metal-parser",
+    "metal-codegen-wasm",
     "metal-llvm",
     "metallic",
     "metal-formatter",
