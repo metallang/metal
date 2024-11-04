@@ -10,7 +10,7 @@ syn = { version = "2.0.85", features = ["full"] }
 quote = "1.0.37"
 proc-macro2 = "1.0.89"
 proc-macro-error2 = "2.0.1"
-llvm-sys = { version = "180" }
+# llvm-sys = { version = "180" }
 enum-as-inner = "0.6.1"
 
 metal = { path = "crates/metal" }
