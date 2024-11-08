@@ -21,10 +21,8 @@ pub enum Primitive {
     F128,
 
     // Strings
-    Literal,
-    String,
+    Literal(u64),
 
-    // NOTE: Void is represented by an empty tuple. `()`
     // Void
     Void,
 }

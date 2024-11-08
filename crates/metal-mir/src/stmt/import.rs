@@ -5,7 +5,7 @@ use crate::{parcel::Module, types};
 
 /// Represents an import.
 /// i.e. `import std.{io.{write, writers.{websocket}}, os}`
-/// ```
+///
 /// Import {
 ///     module: ..., // std module
 ///     functions: [],
@@ -23,7 +23,7 @@ use crate::{parcel::Module, types};
 ///         }
 ///     ]
 /// }
-/// ```
+///
 #[derive(Debug, Clone)]
 pub struct Import {
     pub module: Box<Module>,

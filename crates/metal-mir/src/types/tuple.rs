@@ -13,6 +13,5 @@ pub struct Tuple {
     /// A unique identifier for this tuple.
     /// Used for naming inside of LLVM.
     pub id: String,
-    pub size: i16,
     pub types: Vec<Type>,
 }

@@ -15,6 +15,7 @@ pub enum Type {
     Function(Box<function::FunctionSignature>),
 }
 
+/// Represents an array type or group of types.
 #[derive(Debug, Clone)]
 pub enum Composite {
     Array(array::Array),
