@@ -1,4 +1,3 @@
-// FIXME: Add these back
+//! Metal library for compiling to LLVM IR using MIR.
 
-// pub mod codegen;
-// pub mod stdlib_priv;
+pub mod codegen;
