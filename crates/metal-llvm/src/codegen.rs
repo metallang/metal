@@ -34,12 +34,15 @@ impl CodeGen {
             metal_mir::types::Type::Primitive(p) => self.get_llvm_type_primitive(*p),
             metal_mir::types::Type::Composite(c) => unsafe {
                 match *c {
-                    metal_mir::types::Composite::Tuple(t) => LLVMStructTypeInContext(
-                        self.ctx,
-                        self.get_types(t.types.clone()).as_mut_ptr(),
-                        t.types.len().try_into().unwrap(),
-                        0,
-                    ),
+                    metal_mir::types::Composite::Tuple(t) => {
+                        let num_types = t.types.len();
+                        LLVMStructTypeInContext(
+                            self.ctx,
+                            self.get_types(t.types).as_mut_ptr(),
+                            num_types.try_into().unwrap(),
+                            0,
+                        )
+                    }
                     metal_mir::types::Composite::Array(a) => {
                         LLVMArrayType2(self.get_type(a.item_type), a.size)
                     }
