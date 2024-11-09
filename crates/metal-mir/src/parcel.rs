@@ -24,7 +24,7 @@ pub struct Module {
     /// Should be empty if module isn't a folder.
     pub children: Vec<Box<Module>>,
     /// An exhaustive list of the statements
-    /// the module has included.
+    /// the module includes.
     pub statements: Vec<stmt::Statement>,
     /// Signatures of all functions in this module.
     /// Used for function calls to avoid relying on

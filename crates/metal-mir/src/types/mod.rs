@@ -5,9 +5,6 @@ pub mod tuple;
 pub mod visibility;
 
 /// Represents a Metal type.
-///
-/// Methods and other such functionality for
-/// base types are provided by the corelib.
 #[derive(Debug, Clone)]
 pub enum Type {
     Composite(Box<Composite>),
