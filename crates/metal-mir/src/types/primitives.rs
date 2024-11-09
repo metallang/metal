@@ -24,7 +24,6 @@ pub enum Primitive {
     Literal,
     String,
 
-    // NOTE: Void is represented by an empty tuple. `()`
     // Void
     Void,
 }
