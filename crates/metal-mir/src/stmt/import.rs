@@ -5,7 +5,7 @@ use crate::{parcel::Module, types};
 
 /// Represents an import.
 /// i.e. `import std.{io.{write, writers.{websocket}}, os}`
-/// ```
+/// ```metal
 /// Import {
 ///     module: ..., // std module
 ///     functions: [],
