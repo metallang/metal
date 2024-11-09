@@ -1,23 +1,17 @@
-use crate::{Ident, Path, Ty};
+pub mod call;
+pub mod lit;
 
-/// An expression, also called a value.
+use metal_lexer::Spanned;
+
+use crate::{CallExpr, Ident, LitExpr};
+
+/// An expression, also called a value, such as `1 + 1` or `fib(20)`.
+#[derive(Debug, Spanned)]
 pub enum Expr<'src> {
     /// An identifier in place of an expression, like `arg` in `print(arg)`.
-    Ident(Ident<'src>),
-    // TODO: represent this some other way
-    /// A number value, like `1` or `2.6`.
-    Number(NumberExpr<'src>),
-    // A function call
-    FnCall(FnCallExpr<'src>),
-}
-
-pub struct NumberExpr<'src> {
-    pub ty: Ty<'src>,
-    pub value: i64,
-}
-
-pub struct FnCallExpr<'src> {
-    pub fn_name: Ident<'src>,
-    pub arguments: Vec<Expr<'src>>,
-    pub module_name: Path<'src>,
+    Ident(Box<Ident<'src>>),
+    /// See [LitExpr].
+    Lit(Box<LitExpr<'src>>),
+    /// See [CallExpr]. Note: In the future, this will be represented as a variant of a binary expression.
+    Call(Box<CallExpr<'src>>),
 }

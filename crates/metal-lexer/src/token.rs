@@ -5,6 +5,7 @@ use crate::error::Error;
 use crate::Span;
 
 /// A lexical unit of Metal code.
+#[derive(Debug)]
 pub struct Token<'src> {
     pub kind: TokenKind<'src>,
     pub span: Span,

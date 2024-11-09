@@ -1,10 +1,12 @@
+use parse::DevParseCommand;
+
 use crate::error::Error;
 
+mod parse;
+
 pub enum DevCommand {
-    /// A placeholder command that should be removed once at least one
-    /// other subcommand is added (i.e. this command's only purpose is
-    /// to make instantiating DevCommand possible).
-    Placeholder,
+    /// Parse a Metal source file and debug-print it's AST.
+    Parse(DevParseCommand),
 }
 
 impl tapcli::Command for DevCommand {
@@ -14,19 +16,14 @@ impl tapcli::Command for DevCommand {
         let arg = parser.next().ok_or(Error::InsufficientArguments)?;
 
         match arg.as_ref() {
-            tapcli::ArgRef::Value("placeholder") => Ok(Self::Placeholder),
+            tapcli::ArgRef::Value("parse") => Ok(Self::Parse(DevParseCommand::parse(parser)?)),
             _ => Err(Error::UnrecognizedArgument(arg)),
         }
     }
 
     fn run(self) -> Result<Self::Output, Self::Error> {
         match self {
-            DevCommand::Placeholder => {
-                eprintln!("I am a gorgeous placeholder. Normally, one would instead do ::Placeholder(cmd) => cmd.run()
-                but gorgeous placeholders are an exception, because i said so and because i am lazy. Also it's getting late.");
-
-                Ok(())
-            }
+            DevCommand::Parse(cmd) => cmd.run(),
         }
     }
 }
