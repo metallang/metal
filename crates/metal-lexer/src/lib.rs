@@ -11,7 +11,7 @@ use logos::Logos;
 pub use metal_proc_macros::{span, spanned, Spanned};
 
 pub use crate::error::Error;
-pub use crate::span::{Span, Spanned};
+pub use crate::span::{MaybeSpanned, Span, Spanned};
 pub use crate::token::{Token, TokenKind};
 
 pub fn lex(input: &str) -> impl Iterator<Item = Result<Token<'_>, Error>> {
