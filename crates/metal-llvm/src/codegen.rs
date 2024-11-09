@@ -11,18 +11,11 @@ use llvm_sys::{
 };
 use metal_mir::{stmt::functiondef::FunctionDefinition, types::Type};
 
-// TODO: move this to another file?
-//pub struct Variable {
-//    pntr: LLVMValueRef,
-//    ty: metal_mir::types::Type,
-//}
-
 pub struct CodeGen {
     module_name: &'static str,
     ctx: LLVMContextRef,
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
-    // signatures: Vec<metal_mir::types::function::FunctionSignature>
 }
 
 impl CodeGen {
@@ -107,7 +100,6 @@ impl CodeGen {
             metal_mir::stmt::Statement::FunctionDefine(def) => {
                 self.function_definition(*def);
             }
-            metal_mir::stmt::Statement::Import(_) => todo!(),
         }
     }
 
@@ -130,9 +122,7 @@ impl CodeGen {
         };
 
         let linkage = match definition.signature.vis {
-            metal_mir::types::visibility::Visibility::ParcelLevel => {
-                LLVMLinkage::LLVMInternalLinkage
-            }
+            metal_mir::types::visibility::Visibility::Parcel => LLVMLinkage::LLVMInternalLinkage,
             metal_mir::types::visibility::Visibility::Private => LLVMLinkage::LLVMInternalLinkage,
             metal_mir::types::visibility::Visibility::Public => LLVMLinkage::LLVMExternalLinkage,
         };
