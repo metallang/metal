@@ -115,7 +115,9 @@ impl CodeGen {
                 let m = m1.as_str();
                 name += m;
             }
-            let n = name + definition.signature.name.len().to_string().as_str() + definition.signature.name.as_str();
+            let n = name
+                + definition.signature.name.len().to_string().as_str()
+                + definition.signature.name.as_str();
             n
         } else {
             definition.signature.name.clone()
