@@ -41,7 +41,7 @@ impl CodeGen {
                         0,
                     ),
                     metal_mir::types::Composite::Array(a) => {
-                        LLVMArrayType2(self.get_type(a.item_type), a.default_size)
+                        LLVMArrayType2(self.get_type(a.item_type), a.size)
                     }
                 }
             },
