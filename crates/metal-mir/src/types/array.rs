@@ -6,6 +6,8 @@ use super::Type;
 /// Array { item_type: Type(...) }
 #[derive(Debug, Clone)]
 pub struct Array {
+    /// The type which is present in a list.
     pub item_type: Type,
+    /// The initially defined size/capacity of the array.
     pub default_size: u64,
 }
