@@ -1,0 +1,21 @@
+[package]
+name = "metal-ast-ng"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rowan = { workspace = true }
+extend = { workspace = true }
+ungrammar = { workspace = true }
+metal-proc-macros = { workspace = true }
+
+[build-dependencies]
+ungrammar = { workspace = true }
+quote = { workspace = true }
+heck = { workspace = true }
+proc-macro2 = { workspace = true }
+syn = { workspace = true }
+prettyplease = { workspace = true }
+
+[lints]
+workspace = true
