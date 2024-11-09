@@ -30,5 +30,6 @@ pub struct Module {
     /// Used for function calls to avoid relying on
     /// where a function is located in a module.
     pub function_signatures: Vec<types::function::FunctionSignature>,
+    /// All imports declared within this module.
     pub imports: Vec<stmt::import::Import>,
 }
