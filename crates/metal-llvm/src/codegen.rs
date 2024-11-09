@@ -1,5 +1,7 @@
 //! LLVM Codegen Library
 
+use std::ffi::CString;
+
 use llvm_sys::{
     core::{
         LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMArrayType2, LLVMDoubleTypeInContext,
@@ -29,9 +31,7 @@ impl CodeGen {
 
     pub fn get_type(&self, t: metal_mir::types::Type) -> LLVMTypeRef {
         match t {
-            metal_mir::types::Type::Primitive(p) => unsafe {
-                self.get_llvm_type_primitive(*(p.clone()))
-            },
+            metal_mir::types::Type::Primitive(p) => self.get_llvm_type_primitive(*p),
             metal_mir::types::Type::Composite(c) => unsafe {
                 match *c {
                     metal_mir::types::Composite::Tuple(t) => LLVMStructTypeInContext(
@@ -59,39 +59,47 @@ impl CodeGen {
     /// # Safety
     /// This just calls a bunch of LLVM functions to return
     /// a function.
-    pub unsafe fn get_llvm_type_primitive(
+    pub fn get_llvm_type_primitive(
         &self,
         p: metal_mir::types::primitives::Primitive,
     ) -> LLVMTypeRef {
-        match p {
-            // Integers (signed)
-            metal_mir::types::primitives::Primitive::I8 => LLVMIntTypeInContext(self.ctx, 8),
-            metal_mir::types::primitives::Primitive::I16 => LLVMIntTypeInContext(self.ctx, 16),
-            metal_mir::types::primitives::Primitive::I32 => LLVMIntTypeInContext(self.ctx, 32),
-            metal_mir::types::primitives::Primitive::I64 => LLVMIntTypeInContext(self.ctx, 64),
-            metal_mir::types::primitives::Primitive::I128 => LLVMIntTypeInContext(self.ctx, 128),
+        unsafe {
+            match p {
+                // Integers (signed)
+                metal_mir::types::primitives::Primitive::I8
+                | metal_mir::types::primitives::Primitive::U8 => LLVMIntTypeInContext(self.ctx, 8),
+                metal_mir::types::primitives::Primitive::I16
+                | metal_mir::types::primitives::Primitive::U16 => {
+                    LLVMIntTypeInContext(self.ctx, 16)
+                }
+                metal_mir::types::primitives::Primitive::I32
+                | metal_mir::types::primitives::Primitive::U32 => {
+                    LLVMIntTypeInContext(self.ctx, 32)
+                }
+                metal_mir::types::primitives::Primitive::I64
+                | metal_mir::types::primitives::Primitive::U64 => {
+                    LLVMIntTypeInContext(self.ctx, 64)
+                }
+                metal_mir::types::primitives::Primitive::I128
+                | metal_mir::types::primitives::Primitive::U128 => {
+                    LLVMIntTypeInContext(self.ctx, 128)
+                }
 
-            // Integers (unsigned)
-            metal_mir::types::primitives::Primitive::U8 => LLVMIntTypeInContext(self.ctx, 8),
-            metal_mir::types::primitives::Primitive::U16 => LLVMIntTypeInContext(self.ctx, 16),
-            metal_mir::types::primitives::Primitive::U32 => LLVMIntTypeInContext(self.ctx, 32),
-            metal_mir::types::primitives::Primitive::U64 => LLVMIntTypeInContext(self.ctx, 64),
-            metal_mir::types::primitives::Primitive::U128 => LLVMIntTypeInContext(self.ctx, 128),
+                // Floats; TODO: support f16, maybe f80 too?
+                metal_mir::types::primitives::Primitive::F32 => LLVMFloatTypeInContext(self.ctx),
+                metal_mir::types::primitives::Primitive::F64 => LLVMDoubleTypeInContext(self.ctx),
+                metal_mir::types::primitives::Primitive::F128 => LLVMFP128TypeInContext(self.ctx),
 
-            // Floats; TODO: support f16, maybe f80 too?
-            metal_mir::types::primitives::Primitive::F32 => LLVMFloatTypeInContext(self.ctx),
-            metal_mir::types::primitives::Primitive::F64 => LLVMDoubleTypeInContext(self.ctx),
-            metal_mir::types::primitives::Primitive::F128 => LLVMFP128TypeInContext(self.ctx),
+                // Strings
+                metal_mir::types::primitives::Primitive::Literal(length) => {
+                    let char_ty = LLVMIntTypeInContext(self.ctx, 8);
+                    LLVMArrayType2(char_ty, length)
+                }
 
-            // Strings
-            metal_mir::types::primitives::Primitive::Literal(length) => {
-                let char_ty = LLVMIntTypeInContext(self.ctx, 8);
-                LLVMArrayType2(char_ty, length)
+                // NOTE: Void is represented by an empty tuple. `()`
+                // Void
+                metal_mir::types::primitives::Primitive::Void => LLVMVoidTypeInContext(self.ctx),
             }
-
-            // NOTE: Void is represented by an empty tuple. `()`
-            // Void
-            metal_mir::types::primitives::Primitive::Void => LLVMVoidTypeInContext(self.ctx),
         }
     }
 
@@ -130,9 +138,11 @@ impl CodeGen {
         };
 
         unsafe {
+            let c_fun_name = CString::new(fun_name).unwrap();
+
             let function = LLVMAddFunction(
                 self.module,
-                fun_name.as_ptr() as *const i8,
+                c_fun_name.as_ptr(),
                 self.get_type(metal_mir::types::Type::Function(Box::new(
                     definition.signature.clone(),
                 ))),
