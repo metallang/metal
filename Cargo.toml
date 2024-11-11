@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.dependencies]
 tapcli = { git = "https://github.com/elenakrittik/gdtk/", rev = "699bffcd52ae85bd7297dbf552eb010ae9bc1f6e" }
 logos = { git = "https://github.com/elenakrittik/logos", rev = "533228db3e8bbc9ac27e790628844b7d423e10cb" }
-thiserror = "1.0.65"
+thiserror = "2.0.3"
 syn = { version = "2.0.85", features = ["full"] }
 quote = "1.0.37"
 proc-macro2 = "1.0.89"
