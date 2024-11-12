@@ -40,6 +40,6 @@ runs:
       shell: bash
 
     - run: |
-        echo LLVM_SYS_191_PREFIX="$(LLVM_DIR)/bin" >> $GITHUB_ENV
+        echo LLVM_SYS_191_PREFIX="$LLVM_DIR/bin" >> $GITHUB_ENV
         echo LLVM_ENABLE=1 >> $GITHUB_ENV
       shell: bash
