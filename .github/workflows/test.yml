@@ -10,7 +10,20 @@ concurrency:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest, ubuntu-20.04, macos-13, macos-latest, windows-2022
+    strategy:
+      matrix:
+        target:
+          - id: "linux-aarch64"
+            os: "ubuntu-latest"
+          - id: "linux-amd64"
+            os: "ubuntu-20.04"
+          - id: "darwin-aarch64"
+            os: "macos-latest"
+          - id: "darwin-amd64"
+            os: "macos-13"
+          - id: "windows-amd64"
+            os: "windows-2022"
+    runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-llvm
