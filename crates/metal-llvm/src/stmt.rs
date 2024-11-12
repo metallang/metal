@@ -42,7 +42,7 @@ impl CodeGenValue for FunctionDefinition {
             let entry_block = LLVMAppendBasicBlockInContext(llvm.ctx, function, c"entry".as_ptr());
             LLVMPositionBuilderAtEnd(llvm.builder, entry_block);
 
-            for stmt in self.body.clone() {
+            for stmt in &self.body {
                 stmt.codegen_value(llvm, module);
             }
 

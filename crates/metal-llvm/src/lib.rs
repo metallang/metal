@@ -26,7 +26,7 @@ pub trait CodeGenType {
 pub fn get_types(
     llvm: &LLVMRefs,
     module: &Module,
-    types: Vec<metal_mir::types::Type>,
+    types: &[metal_mir::types::Type],
 ) -> Vec<LLVMTypeRef> {
     let mut v = Vec::with_capacity(types.len());
     for t in types {
