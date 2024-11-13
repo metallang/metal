@@ -46,7 +46,7 @@ impl CodeGenValue for Expr {
                     c_fun_name.as_ptr(),
                 )
             },
-            Self::Literal(lit) => match &lit {
+            Self::Literal(lit) => match lit.as_ref() {
                 Literal::Boolean(b) => unsafe {
                     if b.value {
                         LLVMConstInt(Primitive::I8.codegen_type(llvm, module), 1, 0)
@@ -65,7 +65,7 @@ impl CodeGenValue for Expr {
                 },
                 Literal::String(s) => unsafe {
                     let s_len = s.value.len();
-                    let c_val = CString::new(s.value).unwrap();
+                    let c_val = CString::new(s.value.as_str()).unwrap();
                     LLVMConstStringInContext(llvm.ctx, c_val.as_ptr(), s_len as c_uint, 1)
                 },
             },

@@ -30,7 +30,7 @@ impl CodeGenType for Type {
         match self {
             Self::Primitive(p) => p.codegen_type(llvm, module),
             Self::Composite(c) => unsafe {
-                match &c {
+                match c.as_ref() {
                     metal_mir::types::Composite::Tuple(t) => {
                         let num_types = t.types.len();
                         LLVMStructTypeInContext(
