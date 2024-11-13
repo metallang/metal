@@ -17,7 +17,6 @@ impl CodeGenValue for FunctionDefinition {
         llvm: &crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        // NOTE: cloned due to `self.signature.clone()` during LLVMAddFunction
         let fun_name = self.signature.name.as_str();
 
         let linkage = match self.signature.vis {
