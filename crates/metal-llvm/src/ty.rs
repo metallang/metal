@@ -30,12 +30,7 @@ impl CodeGenType for Type {
         match self {
             Self::Primitive(p) => p.codegen_type(llvm, module),
             Self::Composite(c) => unsafe {
-                // Has to be cloned since we can't Unpack a referenced Box.
-                // Essentially: `**lit` doesn't work, since Copy isn't implemented
-                // for MIR types.
-                // Context: https://github.com/metallang/metal/pull/51#discussion_r1838137310
-                // https://github.com/metallang/metal/pull/51#discussion_r1838160041
-                match *c.clone() {
+                match &c {
                     metal_mir::types::Composite::Tuple(t) => {
                         let num_types = t.types.len();
                         LLVMStructTypeInContext(
