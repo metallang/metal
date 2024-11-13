@@ -12,7 +12,7 @@ use metal_mir::{
 
 use crate::{CodeGenType, CodeGenValue};
 
-fn args_to_values(llvm: &crate::LLVMRefs, module: &Module, args: &Vec<Expr>) -> Vec<LLVMValueRef> {
+fn args_to_values(llvm: &crate::LLVMRefs, module: &Module, args: &[Expr]) -> Vec<LLVMValueRef> {
     let mut v = Vec::with_capacity(args.len());
 
     for arg in args {

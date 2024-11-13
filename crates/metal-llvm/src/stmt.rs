@@ -18,7 +18,7 @@ impl CodeGenValue for FunctionDefinition {
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
         // NOTE: cloned due to `self.signature.clone()` during LLVMAddFunction
-        let fun_name = self.signature.name.clone();
+        let fun_name = self.signature.name;
 
         let linkage = match self.signature.vis {
             metal_mir::types::visibility::Visibility::Parcel => LLVMLinkage::LLVMInternalLinkage,
