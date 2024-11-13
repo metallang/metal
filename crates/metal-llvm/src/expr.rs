@@ -30,10 +30,7 @@ impl CodeGenValue for Expr {
     ) -> llvm_sys::prelude::LLVMValueRef {
         match self {
             Self::FunctionCall(fcall) => unsafe {
-                // Is cloned because `fcall.name` is behind a shared reference and String doesn't
-                // implement Copy.
-                // Context: https://github.com/metallang/metal/pull/51#discussion_r1838132115
-                let c_fun_name = CString::new(fcall.name.clone()).unwrap();
+                let c_fun_name = CString::new(fcall.name.as_str()).unwrap();
 
                 // TODO: handle possible errors
                 let func = LLVMGetNamedFunction(llvm.module, c_fun_name.as_ptr());
