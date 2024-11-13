@@ -7,10 +7,7 @@ use llvm_sys::{
     prelude::LLVMValueRef,
     LLVMLinkage,
 };
-use metal_mir::{
-    stmt::{functiondef::FunctionDefinition, Statement},
-    types::Type,
-};
+use metal_mir::stmt::{functiondef::FunctionDefinition, Statement};
 
 use super::{CodeGenType, CodeGenValue};
 
@@ -20,7 +17,7 @@ impl CodeGenValue for FunctionDefinition {
         llvm: &crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        // NOTE: cloned due to the future line `definition.signature.clone()`
+        // NOTE: cloned due to `self.signature.clone()` during LLVMAddFunction
         let fun_name = self.signature.name.clone();
 
         let linkage = match self.signature.vis {
@@ -35,7 +32,7 @@ impl CodeGenValue for FunctionDefinition {
             let function = LLVMAddFunction(
                 llvm.module,
                 c_fun_name.as_ptr(),
-                Type::Function(Box::new(self.signature.clone())).codegen_type(llvm, module),
+                self.signature.codegen_type(llvm, module),
             );
             LLVMSetLinkage(function, linkage);
 

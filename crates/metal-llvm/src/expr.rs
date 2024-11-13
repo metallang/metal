@@ -30,6 +30,9 @@ impl CodeGenValue for Expr {
     ) -> llvm_sys::prelude::LLVMValueRef {
         match self {
             Self::FunctionCall(fcall) => unsafe {
+                // Is cloned because `fcall.name` is behind a shared reference and String doesn't
+                // implement Copy.
+                // Context: https://github.com/metallang/metal/pull/51#discussion_r1838132115
                 let c_fun_name = CString::new(fcall.name.clone()).unwrap();
 
                 // TODO: handle possible errors
@@ -46,6 +49,10 @@ impl CodeGenValue for Expr {
                     c_fun_name.as_ptr(),
                 )
             },
+            // Has to be cloned since we can't Unpack a referenced Box.
+            // Essentially: `**lit` doesn't work, since Copy isn't implemented
+            // for MIR types.
+            // Context: https://github.com/metallang/metal/pull/51#discussion_r1838137310
             Self::Literal(lit) => match *lit.clone() {
                 Literal::Boolean(b) => unsafe {
                     if b.value {
