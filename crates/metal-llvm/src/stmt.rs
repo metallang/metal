@@ -2,14 +2,18 @@ use std::ffi::CString;
 
 use llvm_sys::{
     core::{
-        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMPositionBuilderAtEnd, LLVMSetLinkage,
+        LLVMAddFunction, LLVMAddGlobal, LLVMAppendBasicBlockInContext, LLVMPositionBuilderAtEnd,
+        LLVMSetInitializer, LLVMSetLinkage,
     },
     prelude::LLVMValueRef,
-    LLVMLinkage,
 };
-use metal_mir::stmt::{functiondef::FunctionDefinition, Statement};
+use metal_mir::{
+    expr::Expr,
+    stmt::{constant::Constant, functiondef::FunctionDefinition, Statement},
+};
 
 use super::{CodeGenType, CodeGenValue};
+use crate::get_linkage_from_vis;
 
 impl CodeGenValue for FunctionDefinition {
     fn codegen_value(
@@ -19,11 +23,7 @@ impl CodeGenValue for FunctionDefinition {
     ) -> LLVMValueRef {
         let fun_name = self.signature.name.as_str();
 
-        let linkage = match self.signature.vis {
-            metal_mir::types::visibility::Visibility::Parcel => LLVMLinkage::LLVMInternalLinkage,
-            metal_mir::types::visibility::Visibility::Private => LLVMLinkage::LLVMInternalLinkage,
-            metal_mir::types::visibility::Visibility::Public => LLVMLinkage::LLVMExternalLinkage,
-        };
+        let linkage = get_linkage_from_vis(&self.signature.vis);
 
         unsafe {
             let c_fun_name = CString::new(fun_name).unwrap();
@@ -47,6 +47,37 @@ impl CodeGenValue for FunctionDefinition {
     }
 }
 
+impl CodeGenValue for Constant {
+    fn codegen_value(
+        &self,
+        llvm: &crate::LLVMRefs,
+        module: &metal_mir::parcel::Module,
+    ) -> LLVMValueRef {
+        let cname = CString::new(self.name).unwrap();
+
+        unsafe {
+            let global_var = LLVMAddGlobal(
+                llvm.module,
+                self.ty.codegen_type(llvm, module),
+                cname.as_ptr(),
+            );
+
+            match self.expr {
+                Expr::Literal(_) => {
+                    let val = self.expr.codegen_value(llvm, module);
+                    LLVMSetInitializer(global_var, val);
+                }
+                _ => panic!("Expression is unsupported for use as a global variable"),
+            }
+
+            let linkage = get_linkage_from_vis(&self.vis);
+            LLVMSetLinkage(global_var, linkage);
+
+            global_var
+        }
+    }
+}
+
 impl CodeGenValue for Statement {
     fn codegen_value(
         &self,
@@ -55,6 +86,7 @@ impl CodeGenValue for Statement {
     ) -> LLVMValueRef {
         match self {
             Self::FunctionDefine(def) => def.codegen_value(llvm, module),
+            Self::Constant(c) => c.codegen_value(llvm, module),
         }
     }
 }

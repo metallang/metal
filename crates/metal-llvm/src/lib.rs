@@ -1,13 +1,16 @@
 //! Metal library for compiling to LLVM IR using MIR.
 
-use metal_mir::parcel::Module;
+use metal_mir::{parcel::Module, types::visibility::Visibility};
 
 pub mod expr;
 pub mod primitives;
 pub mod stmt;
 pub mod ty;
 
-use llvm_sys::prelude::{LLVMBuilderRef, LLVMContextRef, LLVMModuleRef, LLVMTypeRef, LLVMValueRef};
+use llvm_sys::{
+    prelude::{LLVMBuilderRef, LLVMContextRef, LLVMModuleRef, LLVMTypeRef, LLVMValueRef},
+    LLVMLinkage,
+};
 
 pub struct LLVMRefs {
     ctx: LLVMContextRef,
@@ -33,4 +36,12 @@ pub fn get_types(
         v.push(t.codegen_type(llvm, module))
     }
     v
+}
+
+pub fn get_linkage_from_vis(visibility: &Visibility) -> LLVMLinkage {
+    match visibility {
+        Visibility::Parcel => LLVMLinkage::LLVMInternalLinkage,
+        Visibility::Private => LLVMLinkage::LLVMExternalLinkage,
+        Visibility::Public => LLVMLinkage::LLVMExternalLinkage,
+    }
 }
