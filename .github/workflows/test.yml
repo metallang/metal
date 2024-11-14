@@ -19,8 +19,6 @@ jobs:
             os: "macos-latest"
           - id: "darwin-amd64"
             os: "macos-13"
-          #- id: "windows-amd64"
-            #os: "windows-2022"
     runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v4
