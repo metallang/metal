@@ -32,4 +32,8 @@ pub struct Module {
     pub function_signatures: Vec<types::function::FunctionSignature>,
     /// All imports declared within this module.
     pub imports: Vec<stmt::import::Import>,
+    /// All of the defined constants in this module.
+    pub constants: Vec<stmt::constant::Constant>,
+    /// All of the defined structs in this module.
+    pub structs: Vec<super::structure::Struct>,
 }

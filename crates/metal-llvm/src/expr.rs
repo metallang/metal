@@ -1,8 +1,13 @@
 use std::ffi::{c_uint, CString};
 
 use llvm_sys::{
-    core::{LLVMBuildCall2, LLVMConstInt, LLVMConstStringInContext2, LLVMGetNamedFunction},
+    core::{
+        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv,
+        LLVMBuildSRem, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt,
+        LLVMConstStringInContext2, LLVMGetNamedFunction,
+    },
     prelude::LLVMValueRef,
+    LLVMRealPredicate,
 };
 use metal_mir::{
     expr::{literals::Literal, Expr},
@@ -69,6 +74,97 @@ impl CodeGenValue for Expr {
                     LLVMConstStringInContext2(llvm.ctx, c_val.as_ptr(), s_len, 1)
                 },
             },
+            Self::Add(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                if m.float.unwrap() {
+                    return LLVMBuildFAdd(
+                        llvm.builder,
+                        m.a.codegen_value(llvm, module),
+                        m.b.codegen_value(llvm, module),
+                        name.as_ptr(),
+                    );
+                }
+                LLVMBuildAdd(
+                    llvm.builder,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Sub(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                LLVMBuildSub(
+                    llvm.builder,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Div(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                if m.signed.unwrap() {
+                    return LLVMBuildSDiv(
+                        llvm.builder,
+                        m.a.codegen_value(llvm, module),
+                        m.b.codegen_value(llvm, module),
+                        name.as_ptr(),
+                    );
+                }
+                LLVMBuildUDiv(
+                    llvm.builder,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Mul(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                LLVMBuildMul(
+                    llvm.builder,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Percent(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                if m.signed.unwrap() {
+                    return LLVMBuildSRem(
+                        llvm.builder,
+                        m.a.codegen_value(llvm, module),
+                        m.b.codegen_value(llvm, module),
+                        name.as_ptr(),
+                    );
+                }
+                LLVMBuildURem(
+                    llvm.builder,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Gt(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                LLVMBuildFCmp(
+                    llvm.builder,
+                    LLVMRealPredicate::LLVMRealOGT,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            Self::Lt(m) => unsafe {
+                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                LLVMBuildFCmp(
+                    llvm.builder,
+                    LLVMRealPredicate::LLVMRealOLT,
+                    m.a.codegen_value(llvm, module),
+                    m.b.codegen_value(llvm, module),
+                    name.as_ptr(),
+                )
+            },
+            // TODO: Not implemented directly into LLVM so a bit more complex.
+            Self::Exp(_) => todo!(),
         }
     }
 }
