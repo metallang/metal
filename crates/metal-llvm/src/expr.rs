@@ -1,7 +1,7 @@
 use std::ffi::{c_uint, CString};
 
 use llvm_sys::{
-    core::{LLVMBuildCall2, LLVMConstInt, LLVMConstStringInContext, LLVMGetNamedFunction},
+    core::{LLVMBuildCall2, LLVMConstInt, LLVMConstStringInContext2, LLVMGetNamedFunction},
     prelude::LLVMValueRef,
 };
 use metal_mir::{
@@ -66,7 +66,7 @@ impl CodeGenValue for Expr {
                 Literal::String(s) => unsafe {
                     let s_len = s.value.len();
                     let c_val = CString::new(s.value.as_str()).unwrap();
-                    LLVMConstStringInContext(llvm.ctx, c_val.as_ptr(), s_len as c_uint, 1)
+                    LLVMConstStringInContext2(llvm.ctx, c_val.as_ptr(), s_len, 1)
                 },
             },
         }
