@@ -6,8 +6,8 @@ pub struct FunctionSignature {
     pub name: String,
     /// Represents the type returned by this function
     pub return_type: Type,
-    /// Represents the arguments this function takes
-    pub arguments: Vec<Type>,
-    /// Represents who can use this function
+    /// Represents the inputs this function takes
+    pub inputs: Vec<Type>,
+    /// Represents the visibility of this function
     pub vis: Visibility,
 }

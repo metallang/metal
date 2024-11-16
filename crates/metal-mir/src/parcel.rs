@@ -35,5 +35,5 @@ pub struct Module {
     /// All of the defined constants in this module.
     pub constants: Vec<stmt::constant::Constant>,
     /// All of the defined structs in this module.
-    pub structs: Vec<super::structure::Struct>,
+    pub structs: Vec<super::struct_::Struct>,
 }

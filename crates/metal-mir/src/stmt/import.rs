@@ -1,4 +1,4 @@
-use crate::{parcel::Module, structure, types};
+use crate::{parcel::Module, struct_, types};
 
 /// Represents an import.
 /// i.e. `import std.{io.{write, writers.{websocket}}, os}`
@@ -28,7 +28,7 @@ pub struct Import {
     /// The functions imported
     pub functions: Vec<types::function::FunctionSignature>,
     /// The structs imported
-    pub structs: Vec<structure::Struct>,
+    pub structs: Vec<struct_::Struct>,
     /// The constants imported
     pub constants: Vec<super::constant::Constant>,
     /// The next level of imports

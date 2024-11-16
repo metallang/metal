@@ -1,4 +1,4 @@
-use crate::structure;
+use crate::struct_;
 
 pub mod array;
 pub mod function;
@@ -12,7 +12,7 @@ pub enum Type {
     Composite(Box<Composite>),
     Primitive(Box<primitives::Primitive>),
     Function(Box<function::FunctionSignature>),
-    Struct(Box<structure::Struct>),
+    Struct(Box<struct_::Struct>),
 }
 
 /// Represents an array type or group of types.

@@ -1,5 +1,5 @@
 pub mod expr;
 pub mod parcel;
 pub mod stmt;
-pub mod structure;
+pub mod struct_;
 pub mod types;

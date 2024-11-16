@@ -1,9 +1,8 @@
-use crate::types::function::FunctionSignature;
+use crate::{expr::Assignment, types::function::FunctionSignature};
 
 pub mod constant;
 pub mod functiondef;
 pub mod import;
-pub mod lets;
 
 /// Represents an external function
 #[derive(Debug, Clone)]
@@ -17,6 +16,6 @@ pub struct Extern {
 pub enum Statement {
     FunctionDefine(Box<functiondef::FunctionDefinition>),
     Constant(Box<constant::Constant>),
-    Let(Box<lets::Let>),
+    Let(Box<Assignment>),
     Extern(Box<Extern>),
 }
