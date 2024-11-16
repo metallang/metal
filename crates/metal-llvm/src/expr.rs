@@ -2,9 +2,9 @@ use std::ffi::{c_uint, CString};
 
 use llvm_sys::{
     core::{
-        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv,
-        LLVMBuildSRem, LLVMBuildStore, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt,
-        LLVMConstStringInContext2, LLVMGetNamedFunction,
+        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildLoad2, LLVMBuildMul,
+        LLVMBuildSDiv, LLVMBuildSRem, LLVMBuildStore, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem,
+        LLVMConstInt, LLVMConstStringInContext2, LLVMGetNamedFunction,
     },
     prelude::LLVMValueRef,
     LLVMRealPredicate,
@@ -79,6 +79,16 @@ impl CodeGenValue for Expr {
                     llvm.builder,
                     a.expr.codegen_value(llvm, module),
                     *llvm.locals.get(a.parent.name).unwrap(),
+                )
+            },
+            Self::Load(l) => unsafe {
+                let c_name = CString::new(l.name).unwrap();
+
+                LLVMBuildLoad2(
+                    llvm.builder,
+                    l.ty.codegen_type(llvm, module),
+                    *llvm.locals.get(l.name).unwrap(),
+                    c_name.as_ptr(),
                 )
             },
             // math

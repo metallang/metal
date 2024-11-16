@@ -1,4 +1,4 @@
-use crate::stmt::lets::Let;
+use crate::{stmt::lets::Let, types::Type};
 
 pub mod function_call;
 pub mod literals;
@@ -20,10 +20,19 @@ pub struct Assignment {
 }
 
 #[derive(Debug, Clone)]
+pub struct Load {
+    pub name: &'static str,
+    pub ty: Type,
+}
+
+#[derive(Debug, Clone)]
 pub enum Expr {
     FunctionCall(Box<function_call::FunctionCall>),
     Literal(Box<literals::Literal>),
+    /// Assign a value to a variable
     Assignment(Box<Assignment>),
+    /// Load a variable into memory registry
+    Load(Box<Load>),
     // Math
     Add(Box<MathematicalValue>),
     Sub(Box<MathematicalValue>),
