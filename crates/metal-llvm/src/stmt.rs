@@ -3,7 +3,7 @@ use std::ffi::CString;
 use llvm_sys::{
     core::{
         LLVMAddFunction, LLVMAddGlobal, LLVMAppendBasicBlockInContext, LLVMBuildAlloca,
-        LLVMPositionBuilderAtEnd, LLVMSetInitializer, LLVMSetLinkage,
+        LLVMBuildStore, LLVMPositionBuilderAtEnd, LLVMSetInitializer, LLVMSetLinkage,
     },
     prelude::LLVMValueRef,
 };
@@ -96,6 +96,9 @@ impl CodeGenValue for Statement {
                     l.ty.codegen_type(llvm, module),
                     c_name.as_ptr(),
                 );
+                if let Some(e) = &l.expr {
+                    LLVMBuildStore(llvm.builder, e.codegen_value(llvm, module), a);
+                }
                 llvm.locals.insert(l.name, a);
                 a
             },
