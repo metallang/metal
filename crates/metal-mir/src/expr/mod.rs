@@ -1,3 +1,5 @@
+use crate::stmt::lets::Let;
+
 pub mod function_call;
 pub mod literals;
 
@@ -11,9 +13,17 @@ pub struct MathematicalValue {
 }
 
 #[derive(Debug, Clone)]
+pub struct Assignment {
+    pub name: &'static str,
+    pub expr: Expr,
+    pub parent: Let,
+}
+
+#[derive(Debug, Clone)]
 pub enum Expr {
     FunctionCall(Box<function_call::FunctionCall>),
     Literal(Box<literals::Literal>),
+    Assignment(Box<Assignment>),
     // Math
     Add(Box<MathematicalValue>),
     Sub(Box<MathematicalValue>),

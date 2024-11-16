@@ -1,5 +1,7 @@
 //! Metal library for compiling to LLVM IR using MIR.
 
+use std::collections::HashMap;
+
 use metal_mir::{parcel::Module, types::visibility::Visibility};
 
 pub mod expr;
@@ -16,10 +18,11 @@ pub struct LLVMRefs {
     ctx: LLVMContextRef,
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
+    locals: HashMap<&'static str, LLVMValueRef>,
 }
 
 pub trait CodeGenValue {
-    fn codegen_value(&self, llvm: &LLVMRefs, module: &Module) -> LLVMValueRef;
+    fn codegen_value(&self, llvm: &mut LLVMRefs, module: &Module) -> LLVMValueRef;
 }
 
 pub trait CodeGenType {

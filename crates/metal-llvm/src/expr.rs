@@ -2,7 +2,9 @@ use std::ffi::{c_uint, CString};
 
 use llvm_sys::{
     core::{
-        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv, LLVMBuildSRem, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt, LLVMConstStringInContext2, LLVMGetNamedFunction
+        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv,
+        LLVMBuildSRem, LLVMBuildStore, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt,
+        LLVMConstStringInContext2, LLVMGetNamedFunction,
     },
     prelude::LLVMValueRef,
     LLVMRealPredicate,
@@ -15,7 +17,7 @@ use metal_mir::{
 
 use crate::{CodeGenType, CodeGenValue};
 
-fn args_to_values(llvm: &crate::LLVMRefs, module: &Module, args: &[Expr]) -> Vec<LLVMValueRef> {
+fn args_to_values(llvm: &mut crate::LLVMRefs, module: &Module, args: &[Expr]) -> Vec<LLVMValueRef> {
     let mut v = Vec::with_capacity(args.len());
 
     for arg in args {
@@ -28,7 +30,7 @@ fn args_to_values(llvm: &crate::LLVMRefs, module: &Module, args: &[Expr]) -> Vec
 impl CodeGenValue for Expr {
     fn codegen_value(
         &self,
-        llvm: &crate::LLVMRefs,
+        llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMValueRef {
         match self {
@@ -72,6 +74,14 @@ impl CodeGenValue for Expr {
                     LLVMConstStringInContext2(llvm.ctx, c_val.as_ptr(), s_len, 1)
                 },
             },
+            Self::Assignment(a) => unsafe {
+                LLVMBuildStore(
+                    llvm.builder,
+                    a.expr.codegen_value(llvm, module),
+                    *llvm.locals.get(a.parent.name).unwrap(),
+                )
+            },
+            // math
             Self::Add(m) => unsafe {
                 let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
                 if m.float.unwrap() {
@@ -160,7 +170,7 @@ impl CodeGenValue for Expr {
                     m.b.codegen_value(llvm, module),
                     name.as_ptr(),
                 )
-            }
+            },
         }
     }
 }
