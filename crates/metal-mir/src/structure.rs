@@ -1,4 +1,3 @@
-use crate::stmt::functiondef::FunctionDefinition;
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the properties of a struct.
@@ -36,13 +35,4 @@ pub struct Struct {
     pub properties: Option<Vec<StructProperty>>,
     /// Module-level struct visibility.
     pub vis: Visibility,
-    /// Functions defined within this function.
-    pub functions: Vec<FunctionDefinition>,
-    /// Whether or not this struct should directly
-    /// be created within this module using its `properties`
-    /// or only be represented by `impl_type`.
-    pub is_impl: bool,
-    /// The type which should be given as `self` in
-    /// function arguments. Should be None if `is_impl` is false.
-    pub impl_type: Option<Box<Type>>,
 }
