@@ -22,5 +22,4 @@ pub enum Expr {
     Percent(Box<MathematicalValue>),
     Gt(Box<MathematicalValue>),
     Lt(Box<MathematicalValue>),
-    Exp(Box<MathematicalValue>),
 }

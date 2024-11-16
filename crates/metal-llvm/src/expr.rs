@@ -2,9 +2,7 @@ use std::ffi::{c_uint, CString};
 
 use llvm_sys::{
     core::{
-        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv,
-        LLVMBuildSRem, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt,
-        LLVMConstStringInContext2, LLVMGetNamedFunction,
+        LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildMul, LLVMBuildSDiv, LLVMBuildSRem, LLVMBuildSub, LLVMBuildUDiv, LLVMBuildURem, LLVMConstInt, LLVMConstStringInContext2, LLVMGetNamedFunction
     },
     prelude::LLVMValueRef,
     LLVMRealPredicate,
@@ -162,9 +160,7 @@ impl CodeGenValue for Expr {
                     m.b.codegen_value(llvm, module),
                     name.as_ptr(),
                 )
-            },
-            // TODO: Not implemented directly into LLVM so a bit more complex.
-            Self::Exp(_) => todo!(),
+            }
         }
     }
 }
