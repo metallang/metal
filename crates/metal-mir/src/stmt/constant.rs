@@ -3,6 +3,7 @@ use crate::{
     types::{visibility::Visibility, Type},
 };
 
+/// An immutable global constant value
 #[derive(Debug, Clone)]
 pub struct Constant {
     /// The name of this constant.
