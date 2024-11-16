@@ -99,6 +99,14 @@ impl CodeGenValue for Statement {
                 llvm.locals.insert(l.name, a);
                 a
             },
+            Self::Extern(e) => unsafe {
+                let c_name = CString::new(e.name).unwrap();
+                LLVMAddFunction(
+                    llvm.module,
+                    c_name.as_ptr(),
+                    e.sig.codegen_type(llvm, module),
+                )
+            },
         }
     }
 }
