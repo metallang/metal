@@ -22,8 +22,8 @@ pub struct StructField {
 pub struct Struct {
     /// The name of this struct.
     pub name: &'static str,
-    /// Fields of this struct.
-    pub properties: Vec<StructField>,
+    /// The fields of this struct.
+    pub fields: Vec<StructField>,
     /// The visibility of this struct.
     pub vis: Visibility,
 }
