@@ -1,7 +1,4 @@
-use crate::{parcel::Module, types};
-
-// TODO: support global variables
-// TODO: support structs & enums
+use crate::{parcel::Module, struct_, types};
 
 /// Represents an import.
 /// i.e. `import std.{io.{write, writers.{websocket}}, os}`
@@ -26,7 +23,14 @@ use crate::{parcel::Module, types};
 /// ```
 #[derive(Debug, Clone)]
 pub struct Import {
+    /// The module imported.
     pub module: Box<Module>,
+    /// The functions imported.
     pub functions: Vec<types::function::FunctionSignature>,
+    /// The structs imported.
+    pub structs: Vec<struct_::Struct>,
+    /// The constants imported.
+    pub constants: Vec<super::constant::Constant>,
+    /// The next level of imports.
     pub children: Vec<Import>,
 }
