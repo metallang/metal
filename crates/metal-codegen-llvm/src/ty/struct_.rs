@@ -1,5 +1,4 @@
-// Copyright (c) Metal contributors
-// Licensed under the MIT License. See LICENSE file in the project root for details.
+// SPDX-License-Identifier: MIT
 
 use llvm_sys::{core::LLVMStructTypeInContext, prelude::LLVMTypeRef};
 use metal_mir::struct_::{Struct, StructField};

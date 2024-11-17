@@ -1,3 +1,5 @@
+-- SPDX-License-Identifier: MIT
+
 -- A block of items
 block = "{" ~ item* ~ "}";
 -- An identifier

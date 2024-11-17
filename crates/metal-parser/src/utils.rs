@@ -1,5 +1,4 @@
-// Copyright (c) Metal contributors
-// Licensed under the MIT License. See LICENSE file in the project root for details.
+// SPDX-License-Identifier: MIT
 
 use metal_lexer::Token;
 use peekable::Peekable;
