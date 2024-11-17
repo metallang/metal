@@ -21,7 +21,6 @@ metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
 metal-lexer = { path = "crates/metal-lexer" }
 metal-linter = { path = "crates/metal-linter" }
-metal-llvm = { path = "crates/metal-llvm" }
 metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
