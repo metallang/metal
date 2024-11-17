@@ -15,7 +15,7 @@ pub enum Type {
     Struct(Box<struct_::Struct>),
 }
 
-/// Represents an array type or group of types.
+/// Represents an array type or a group of types.
 #[derive(Debug, Clone)]
 pub enum Composite {
     Array(array::Array),

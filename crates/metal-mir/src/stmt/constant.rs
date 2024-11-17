@@ -3,7 +3,7 @@ use crate::{
     types::{primitives::Primitive, visibility::Visibility},
 };
 
-/// An immutable global constant value
+/// An immutable global constant value.
 #[derive(Debug, Clone)]
 pub struct Constant {
     /// The name of this constant.

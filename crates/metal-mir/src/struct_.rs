@@ -1,7 +1,6 @@
 use crate::types::{visibility::Visibility, Type};
 
-/// Represents the fields of a struct.
-/// i.e. `a: B`
+/// Represents the fields of a struct, i.e. `a: B`.
 #[derive(Debug, Clone)]
 pub struct StructField {
     /// The name of the struct field, i.e. `a`.
@@ -10,8 +9,8 @@ pub struct StructField {
     pub ty: Type,
 }
 
-/// Represents a struct in Metal.
-/// i.e.:
+/// Represents a struct in Metal, i.e.
+/// 
 /// ```metal
 /// pub struct A {
 ///     b: String,

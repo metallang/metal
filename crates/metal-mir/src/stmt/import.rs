@@ -23,14 +23,14 @@ use crate::{parcel::Module, struct_, types};
 /// ```
 #[derive(Debug, Clone)]
 pub struct Import {
-    /// The module imported
+    /// The module imported.
     pub module: Box<Module>,
-    /// The functions imported
+    /// The functions imported.
     pub functions: Vec<types::function::FunctionSignature>,
-    /// The structs imported
+    /// The structs imported.
     pub structs: Vec<struct_::Struct>,
-    /// The constants imported
+    /// The constants imported.
     pub constants: Vec<super::constant::Constant>,
-    /// The next level of imports
+    /// The next level of imports.
     pub children: Vec<Import>,
 }
