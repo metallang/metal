@@ -18,23 +18,15 @@ impl CodeGenType for FunctionSignature {
         unsafe {
             let len = self.inputs.len();
 
-            let types_to_convert = types_to_ref_types(&len, &self.inputs);
+            let mut types_to_convert = get_types(llvm, module, &len, &self.inputs);
             LLVMFunctionType(
                 self.return_type.codegen_type(llvm, module),
-                get_types(llvm, module, &types_to_convert).as_mut_ptr(),
+                types_to_convert.as_mut_ptr(),
                 len.try_into().unwrap(),
                 0,
             )
         }
     }
-}
-
-fn types_to_ref_types<'a>(cap: &usize, fields: &'a Vec<Type>) -> Vec<&'a Type> {
-    let mut types_to_convert = Vec::with_capacity(*cap);
-    for prop in fields {
-        types_to_convert.push(prop);
-    }
-    types_to_convert
 }
 
 fn get_types_struct(
@@ -49,13 +41,13 @@ fn get_types_struct(
         types_to_convert.push(&prop.ty);
     }
 
-    (num_props, get_types(llvm, module, &types_to_convert))
+    (
+        num_props,
+        get_types(llvm, module, &num_props, types_to_convert),
+    )
 }
 
 impl CodeGenType for Struct {
-    /// ## Panics
-    /// panics if `properties` doesn't exist, meaning
-    /// this struct doesn't have real representation.
     fn codegen_type(
         &self,
         llvm: &crate::LLVMRefs,
@@ -88,8 +80,7 @@ impl CodeGenType for Type {
                         let num_types = t.types.len();
                         LLVMStructTypeInContext(
                             llvm.ctx,
-                            get_types(llvm, module, &types_to_ref_types(&num_types, &t.types))
-                                .as_mut_ptr(),
+                            get_types(llvm, module, &num_types, &t.types).as_mut_ptr(),
                             num_types.try_into().unwrap(),
                             0,
                         )

@@ -2,7 +2,10 @@
 
 use std::collections::HashMap;
 
-use metal_mir::{parcel::Module, types::visibility::Visibility};
+use metal_mir::{
+    parcel::Module,
+    types::{visibility::Visibility, Type},
+};
 
 pub mod expr;
 pub mod primitives;
@@ -29,12 +32,13 @@ pub trait CodeGenType {
     fn codegen_type(&self, llvm: &LLVMRefs, module: &Module) -> LLVMTypeRef;
 }
 
-pub fn get_types(
+pub fn get_types<'a>(
     llvm: &LLVMRefs,
     module: &Module,
-    types: &[&metal_mir::types::Type],
+    cap: &usize,
+    types: impl IntoIterator<Item = &'a Type>,
 ) -> Vec<LLVMTypeRef> {
-    let mut v = Vec::with_capacity(types.len());
+    let mut v = Vec::with_capacity(*cap);
     for t in types {
         v.push(t.codegen_type(llvm, module))
     }

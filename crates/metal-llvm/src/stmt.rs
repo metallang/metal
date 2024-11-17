@@ -103,12 +103,8 @@ impl CodeGenValue for Statement {
                 a
             },
             Self::Extern(e) => unsafe {
-                let c_name = CString::new(e.name).unwrap();
-                LLVMAddFunction(
-                    llvm.module,
-                    c_name.as_ptr(),
-                    e.sig.codegen_type(llvm, module),
-                )
+                let c_name = CString::new(e.name.as_str()).unwrap();
+                LLVMAddFunction(llvm.module, c_name.as_ptr(), e.codegen_type(llvm, module))
             },
         }
     }

@@ -4,9 +4,9 @@ use crate::types::{visibility::Visibility, Type};
 /// i.e. `a: B`
 #[derive(Debug, Clone)]
 pub struct StructField {
-    /// name of the struct property. i.e.: `a`
+    /// name of the struct field. i.e.: `a`
     pub name: &'static str,
-    /// the type of this struct property. i.e. `String`
+    /// the type of this struct field. i.e. `String`
     pub ty: Type,
 }
 
@@ -22,8 +22,8 @@ pub struct StructField {
 pub struct Struct {
     /// The name of this struct.
     pub name: &'static str,
-    /// Properties of this struct.
+    /// Fields of this struct.
     pub properties: Vec<StructField>,
-    /// Module-level struct visibility.
+    /// The visibility of this struct.
     pub vis: Visibility,
 }
