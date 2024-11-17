@@ -53,7 +53,7 @@ impl CodeGenType for Struct {
         llvm: &crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMTypeRef {
-        let (num_props, mut types) = get_types_struct(llvm, module, &self.properties);
+        let (num_props, mut types) = get_types_struct(llvm, module, &self.fields);
 
         unsafe {
             LLVMStructTypeInContext(
