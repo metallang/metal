@@ -10,7 +10,7 @@ pub struct StructField {
 }
 
 /// Represents a struct in Metal, i.e.
-/// 
+///
 /// ```metal
 /// pub struct A {
 ///     b: String,
