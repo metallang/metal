@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_lexer::Token;
 use peekable::Peekable;
 

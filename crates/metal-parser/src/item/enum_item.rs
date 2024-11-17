@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{EnumBody, EnumBodyItem, EnumItem, EnumVariant, Visibility};
 use metal_lexer::{span, MaybeSpanned, Spanned, TokenKind};
 

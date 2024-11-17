@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![feature(decl_macro, stmt_expr_attributes, new_range_api)]
 
 mod block;

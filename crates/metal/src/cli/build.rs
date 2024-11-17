@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::error::Error;
 
 // If the command needs not to store any data, it is recommended to add a private

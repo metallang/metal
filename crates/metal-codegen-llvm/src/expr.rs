@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use std::ffi::{c_uint, CString};
 
 use llvm_sys::{

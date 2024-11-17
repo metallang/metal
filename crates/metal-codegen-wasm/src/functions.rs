@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::FnItem;
 use wasm_encoder::{CodeSection, Function, FunctionSection, Instruction, Module};
 

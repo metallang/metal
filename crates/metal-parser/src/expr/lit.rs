@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{BoolLit, LitExpr, NumLit, StrLit};
 use metal_lexer::{Token, TokenKind};
 

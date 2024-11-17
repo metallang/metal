@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::ConstItem;
 use wasm_encoder::{GlobalSection, GlobalType, Module, ValType};
 

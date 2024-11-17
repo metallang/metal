@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use super::{visibility::Visibility, Type};
 
 #[derive(Debug, Clone)]

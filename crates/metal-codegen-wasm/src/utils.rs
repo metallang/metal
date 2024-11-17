@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{Expr, LitExpr, Ty};
 use wasm_encoder::{ConstExpr, ValType};
 

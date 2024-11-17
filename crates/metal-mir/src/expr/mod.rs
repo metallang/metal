@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::types::Type;
 
 pub mod function_call;

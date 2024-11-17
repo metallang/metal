@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use std::str::FromStr;
 
 use crate::token::TokenKind;

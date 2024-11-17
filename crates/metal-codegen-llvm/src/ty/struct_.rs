@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use llvm_sys::{core::LLVMStructTypeInContext, prelude::LLVMTypeRef};
 use metal_mir::struct_::{Struct, StructField};
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![feature(extend_one, let_chains, proc_macro_quote)]
 
 use proc_macro::TokenStream;

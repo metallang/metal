@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pub mod const_item;
 pub mod enum_item;
 pub mod fn_item;

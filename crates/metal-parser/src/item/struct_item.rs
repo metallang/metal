@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{StructBody, StructBodyItem, StructField, StructItem, Visibility};
 use metal_lexer::{span, MaybeSpanned, Spanned, TokenKind};
 

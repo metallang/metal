@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Unrecognized argument: {0}")]

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /// Represents the visibility of an item.
 #[derive(Debug, Clone, Copy)]
 pub enum Visibility {

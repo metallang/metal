@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::TokenKind;
 
 macro_rules! test_eq {

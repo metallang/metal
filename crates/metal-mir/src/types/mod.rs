@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::struct_;
 
 pub mod array;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{
     expr::Expr,
     types::{primitives::Primitive, visibility::Visibility},

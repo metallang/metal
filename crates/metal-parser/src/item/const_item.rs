@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{ConstItem, Visibility};
 use metal_lexer::{span, MaybeSpanned, TokenKind};
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{expr::Assignment, types::function::FunctionSignature};
 
 pub mod constant;

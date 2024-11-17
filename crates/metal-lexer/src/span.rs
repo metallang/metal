@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /// A span in a source file.
 pub type Span = core::range::Range<usize>;
 

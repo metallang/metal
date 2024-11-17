@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{ImportItem, ImportTree, MultiImport, SegmentImport, Visibility};
 use metal_lexer::{span, MaybeSpanned, Spanned, TokenKind};
 

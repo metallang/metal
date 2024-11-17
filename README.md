@@ -4,8 +4,9 @@ Prototype compiled language built in Rust with LLVM.
 
 ## Contributing
 
-Currently, Metal is currently not open source software. Metal will eventually open up and
-become fully open source, but for the time being, it's not open for contributions.
+As an open source project, we welcome contributions! However, because the project is still in it's early days,
+the development is rather turbulent. For that reason, we suggest you to first let us know of your intentions by
+opening an issue, or [joining our Discord](https://discord.gg/fDCMSbgpsB) and saying "hello" there. Thanks!
 
 ## Development
 

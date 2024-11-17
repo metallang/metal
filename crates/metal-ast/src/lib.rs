@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 //! The most honest-to-God representation of any piece of Metal code.
 
 #![feature(decl_macro)]

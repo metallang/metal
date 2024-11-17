@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use proc_macro::{quote, Spacing, TokenStream, TokenTree};
 
 pub fn span_impl(input: TokenStream) -> TokenStream {

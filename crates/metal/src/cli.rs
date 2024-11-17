@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::cli::build::BuildCommand;
 #[cfg(any(debug_assertions, feature = "dev"))]
 use crate::cli::dev::DevCommand;

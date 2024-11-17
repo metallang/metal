@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /// Represents the basic types of the language.
 #[derive(Debug, Clone, Copy)]
 pub enum Primitive {

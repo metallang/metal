@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use llvm_sys::core::{
     LLVMArrayType2, LLVMDoubleTypeInContext, LLVMFP128TypeInContext, LLVMFloatTypeInContext,
     LLVMIntTypeInContext, LLVMVoidTypeInContext,

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /// Trait version of [std::iter::Peekable].
 pub trait Peekable: Iterator {
     fn peek(&mut self) -> Option<&Self::Item>;

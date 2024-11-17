@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use proc_macro2::{Span, TokenStream};
 use proc_macro_error2::{abort, Diagnostic};
 use quote::ToTokens;

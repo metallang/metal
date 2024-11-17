@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_lexer::Spanned;
 
 /// A literal expression, such as `true` or `"entry"`.

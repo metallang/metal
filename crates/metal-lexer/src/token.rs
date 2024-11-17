@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use logos::Logos;
 
 use crate::callbacks::{convert, convert_radix, trim_quotes};

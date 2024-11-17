@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{Item, Visibility};
 use metal_lexer::TokenKind;
 

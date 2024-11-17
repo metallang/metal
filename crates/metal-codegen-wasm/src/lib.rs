@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 mod constants;
 mod functions;
 mod utils;

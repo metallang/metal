@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 //! Contains representation of Metal Parcels and modules.
 
 use crate::{stmt, types};

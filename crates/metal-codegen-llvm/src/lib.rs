@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 //! Metal library for compiling to LLVM IR using MIR.
 
 use std::collections::HashMap;

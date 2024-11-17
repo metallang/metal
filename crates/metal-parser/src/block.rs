@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{Block, Item};
 use metal_lexer::{span, TokenKind};
 

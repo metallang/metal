@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use super::Type;
 
 // NOTE: The definitions here for a tuple simply tell the backend

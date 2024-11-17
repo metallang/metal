@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{parcel::Module, struct_, types};
 
 /// Represents an import.

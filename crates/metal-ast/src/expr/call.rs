@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_lexer::{spanned, Spanned};
 
 use crate::Expr;

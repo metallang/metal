@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the fields of a struct, i.e. `a: B`.

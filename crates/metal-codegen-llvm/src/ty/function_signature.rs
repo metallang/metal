@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use llvm_sys::core::LLVMFunctionType;
 use metal_mir::types::function::FunctionSignature;
 

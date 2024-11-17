@@ -1,3 +1,3 @@
-fn main() {
-    println!("Hello, world!");
-}
+// SPDX-License-Identifier: MIT
+
+fn main() {}

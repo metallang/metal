@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use parse::DevParseCommand;
 
 use crate::error::Error;

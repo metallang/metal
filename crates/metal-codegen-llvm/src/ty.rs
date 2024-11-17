@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use llvm_sys::core::{LLVMArrayType2, LLVMStructTypeInContext};
 use metal_mir::types::Type;
 
