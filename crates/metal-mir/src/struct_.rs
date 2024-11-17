@@ -4,9 +4,9 @@ use crate::types::{visibility::Visibility, Type};
 /// i.e. `a: B`
 #[derive(Debug, Clone)]
 pub struct StructField {
-    /// name of the struct field. i.e.: `a`
+    /// The name of the struct field, i.e. `a`.
     pub name: &'static str,
-    /// the type of this struct field. i.e. `String`
+    /// The type of this struct field, i.e. `String`.
     pub ty: Type,
 }
 
