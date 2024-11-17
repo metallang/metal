@@ -36,7 +36,7 @@ impl CodeGenValue for Expr {
     ) -> llvm_sys::prelude::LLVMValueRef {
         match self {
             Self::FunctionCall(fcall) => unsafe {
-                let c_fun_name = CString::new(fcall.name.as_str()).unwrap();
+                let c_fun_name = CString::new(fcall.signature.name.as_str()).unwrap();
 
                 // TODO: handle possible errors
                 let func = LLVMGetNamedFunction(llvm.module, c_fun_name.as_ptr());
