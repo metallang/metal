@@ -1,13 +1,13 @@
 use crate::types;
 
-/// Represents a literal
+/// Represents a literal.
 #[derive(Debug, Clone)]
 pub enum Literal {
-    /// Represents a literal number. i.e.: `1`
+    /// Represents a literal number, i.e. `1`.
     Number(Number),
-    /// Represents a literal immutable string. i.e. `"a"`
+    /// Represents a literal immutable string, i.e. `"a"`.
     String(StringLiteral),
-    /// Represents a boolean. `true` and `false`
+    /// Represents a boolean value, i.e. `true` or `false`.
     Boolean(Bool),
 }
 
