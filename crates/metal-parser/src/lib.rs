@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 #![feature(decl_macro, stmt_expr_attributes, new_range_api)]
 
 mod block;

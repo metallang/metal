@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 /// Represents the visibility of an item.
 #[derive(Debug, Clone, Copy)]
 pub enum Visibility {

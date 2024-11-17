@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 use metal_ast::{StructBody, StructBodyItem, StructField, StructItem, Visibility};
 use metal_lexer::{span, MaybeSpanned, Spanned, TokenKind};
 

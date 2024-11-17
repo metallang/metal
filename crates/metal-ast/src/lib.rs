@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 //! The most honest-to-God representation of any piece of Metal code.
 
 #![feature(decl_macro)]

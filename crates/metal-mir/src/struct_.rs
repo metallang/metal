@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the fields of a struct, i.e. `a: B`.

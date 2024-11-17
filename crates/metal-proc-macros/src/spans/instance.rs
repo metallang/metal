@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 use proc_macro::{quote, Spacing, TokenStream, TokenTree};
 
 pub fn span_impl(input: TokenStream) -> TokenStream {

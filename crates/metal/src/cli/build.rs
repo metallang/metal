@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 use crate::error::Error;
 
 // If the command needs not to store any data, it is recommended to add a private

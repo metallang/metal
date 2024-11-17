@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 use logos::Logos;
 
 use crate::callbacks::{convert, convert_radix, trim_quotes};

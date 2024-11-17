@@ -1,3 +1,6 @@
+// Copyright (c) Metal contributors
+// Licensed under the MIT License. See LICENSE file in the project root for details.
+
 /// Trait version of [std::iter::Peekable].
 pub trait Peekable: Iterator {
     fn peek(&mut self) -> Option<&Self::Item>;
