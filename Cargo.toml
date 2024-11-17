@@ -17,10 +17,10 @@ wasm-encoder = "0.219.1"
 metal = { path = "crates/metal" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
+metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
 metal-lexer = { path = "crates/metal-lexer" }
 metal-linter = { path = "crates/metal-linter" }
-metal-llvm = { path = "crates/metal-llvm" }
 metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
@@ -33,8 +33,8 @@ ignored = [
 
     "metal-ast",
     "metal-parser",
+    "metal-codegen-llvm",
     "metal-codegen-wasm",
-    "metal-llvm",
     "metallic",
     "metal-formatter",
     "metal",

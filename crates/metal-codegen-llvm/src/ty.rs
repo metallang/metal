@@ -1,25 +1,10 @@
-use llvm_sys::core::{LLVMArrayType2, LLVMFunctionType, LLVMStructTypeInContext};
-use metal_mir::types::{function::FunctionSignature, Type};
+use llvm_sys::core::{LLVMArrayType2, LLVMStructTypeInContext};
+use metal_mir::types::Type;
 
 use super::{get_types, CodeGenType};
 
-impl CodeGenType for FunctionSignature {
-    fn codegen_type(
-        &self,
-        llvm: &crate::LLVMRefs,
-        module: &metal_mir::parcel::Module,
-    ) -> llvm_sys::prelude::LLVMTypeRef {
-        unsafe {
-            let len = self.arguments.len();
-            LLVMFunctionType(
-                self.return_type.codegen_type(llvm, module),
-                get_types(llvm, module, &self.arguments).as_mut_ptr(),
-                len.try_into().unwrap(),
-                0,
-            )
-        }
-    }
-}
+pub mod function_signature;
+pub mod struct_;
 
 impl CodeGenType for Type {
     fn codegen_type(
@@ -35,7 +20,7 @@ impl CodeGenType for Type {
                         let num_types = t.types.len();
                         LLVMStructTypeInContext(
                             llvm.ctx,
-                            get_types(llvm, module, &t.types).as_mut_ptr(),
+                            get_types(llvm, module, &num_types, &t.types).as_mut_ptr(),
                             num_types.try_into().unwrap(),
                             0,
                         )
@@ -46,6 +31,7 @@ impl CodeGenType for Type {
                 }
             },
             Self::Function(f) => f.codegen_type(llvm, module),
+            Self::Struct(s) => s.codegen_type(llvm, module),
         }
     }
 }
