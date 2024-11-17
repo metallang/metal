@@ -2,12 +2,12 @@ use super::{visibility::Visibility, Type};
 
 #[derive(Debug, Clone)]
 pub struct FunctionSignature {
-    /// Function name
+    /// The name of this function.
     pub name: String,
-    /// Represents the type returned by this function
+    /// The type returned by this function.
     pub return_type: Type,
-    /// Represents the inputs this function takes
+    /// The inputs this function takes.
     pub inputs: Vec<Type>,
-    /// Represents the visibility of this function
+    /// The visibility of this function.
     pub vis: Visibility,
 }
