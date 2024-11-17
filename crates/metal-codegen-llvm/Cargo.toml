@@ -1,0 +1,9 @@
+[package]
+name = "metal-codegen-llvm"
+version = "0.1.0"
+edition = "2021"
+description = "Support for turning MIR into LLVM IR"
+
+[dependencies]
+metal-mir = { workspace = true }
+llvm-sys = { workspace = true }

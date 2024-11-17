@@ -17,6 +17,7 @@ wasm-encoder = "0.219.1"
 metal = { path = "crates/metal" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
+metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
 metal-lexer = { path = "crates/metal-lexer" }
 metal-linter = { path = "crates/metal-linter" }
