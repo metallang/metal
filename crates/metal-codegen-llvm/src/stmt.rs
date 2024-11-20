@@ -23,11 +23,8 @@ impl CodeGenValue for Statement {
             Self::Constant(c) => c.llvm_value(llvm, module),
             Self::Let(l) => unsafe {
                 let c_name = CString::new(l.name).unwrap();
-                let a = LLVMBuildAlloca(
-                    llvm.builder,
-                    l.ty.llvm_type(llvm, module),
-                    c_name.as_ptr(),
-                );
+                let a =
+                    LLVMBuildAlloca(llvm.builder, l.ty.llvm_type(llvm, module), c_name.as_ptr());
                 if let Some(e) = &l.expr {
                     LLVMBuildStore(llvm.builder, e.llvm_value(llvm, module), a);
                 }

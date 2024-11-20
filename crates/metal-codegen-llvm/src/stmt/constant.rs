@@ -20,11 +20,8 @@ impl CodeGenValue for Constant {
         let cname = CString::new(self.name).unwrap();
 
         unsafe {
-            let global_var = LLVMAddGlobal(
-                llvm.module,
-                self.ty.llvm_type(llvm, module),
-                cname.as_ptr(),
-            );
+            let global_var =
+                LLVMAddGlobal(llvm.module, self.ty.llvm_type(llvm, module), cname.as_ptr());
 
             match self.expr {
                 Expr::Literal(_) => {
