@@ -24,7 +24,7 @@ fn get_types_struct(
 }
 
 impl CodeGenType for Struct {
-    fn codegen_type(
+    fn llvm_type(
         &self,
         llvm: &crate::LLVMRefs,
         module: &metal_mir::parcel::Module,

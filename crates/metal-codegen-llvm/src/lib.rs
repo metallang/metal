@@ -27,11 +27,11 @@ pub struct LLVMRefs {
 }
 
 pub trait CodeGenValue {
-    fn codegen_value(&self, llvm: &mut LLVMRefs, module: &Module) -> LLVMValueRef;
+    fn llvm_value(&self, llvm: &mut LLVMRefs, module: &Module) -> LLVMValueRef;
 }
 
 pub trait CodeGenType {
-    fn codegen_type(&self, llvm: &LLVMRefs, module: &Module) -> LLVMTypeRef;
+    fn llvm_type(&self, llvm: &LLVMRefs, module: &Module) -> LLVMTypeRef;
 }
 
 pub fn get_types<'a>(
@@ -42,7 +42,7 @@ pub fn get_types<'a>(
 ) -> Vec<LLVMTypeRef> {
     let mut v = Vec::with_capacity(*cap);
     for t in types {
-        v.push(t.codegen_type(llvm, module))
+        v.push(t.llvm_type(llvm, module))
     }
     v
 }
