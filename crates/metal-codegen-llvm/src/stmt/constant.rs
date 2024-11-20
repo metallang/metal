@@ -12,7 +12,7 @@ use super::{CodeGenType, CodeGenValue};
 use crate::get_linkage_from_vis;
 
 impl CodeGenValue for Constant {
-    fn codegen_value(
+    fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
@@ -22,13 +22,13 @@ impl CodeGenValue for Constant {
         unsafe {
             let global_var = LLVMAddGlobal(
                 llvm.module,
-                self.ty.codegen_type(llvm, module),
+                self.ty.llvm_type(llvm, module),
                 cname.as_ptr(),
             );
 
             match self.expr {
                 Expr::Literal(_) => {
-                    let val = self.expr.codegen_value(llvm, module);
+                    let val = self.expr.llvm_value(llvm, module);
                     LLVMSetInitializer(global_var, val);
                 }
                 _ => panic!("Expression is unsupported for use as a global variable"),

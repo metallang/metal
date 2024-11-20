@@ -24,14 +24,14 @@ fn args_to_values(llvm: &mut crate::LLVMRefs, module: &Module, args: &[Expr]) ->
     let mut v = Vec::with_capacity(args.len());
 
     for arg in args {
-        v.push(arg.codegen_value(llvm, module));
+        v.push(arg.llvm_value(llvm, module));
     }
 
     v
 }
 
 impl CodeGenValue for Expr {
-    fn codegen_value(
+    fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
@@ -47,7 +47,7 @@ impl CodeGenValue for Expr {
                 let args_num = fcall.arguments.len();
                 LLVMBuildCall2(
                     llvm.builder,
-                    fcall.signature.return_type.codegen_type(llvm, module),
+                    fcall.signature.return_type.llvm_type(llvm, module),
                     func,
                     args_to_values(llvm, module, &fcall.arguments).as_mut_ptr(),
                     args_num as c_uint,
@@ -57,9 +57,9 @@ impl CodeGenValue for Expr {
             Self::Literal(lit) => match lit.as_ref() {
                 Literal::Boolean(b) => unsafe {
                     if b.value {
-                        LLVMConstInt(Primitive::I8.codegen_type(llvm, module), 1, 0)
+                        LLVMConstInt(Primitive::I8.llvm_type(llvm, module), 1, 0)
                     } else {
-                        LLVMConstInt(Primitive::I8.codegen_type(llvm, module), 0, 0)
+                        LLVMConstInt(Primitive::I8.llvm_type(llvm, module), 0, 0)
                     }
                 },
                 Literal::Number(n) => unsafe {
@@ -69,7 +69,7 @@ impl CodeGenValue for Expr {
                         (0, n.value as u64)
                     };
 
-                    LLVMConstInt(n.primitive.codegen_type(llvm, module), value, sign_extend)
+                    LLVMConstInt(n.primitive.llvm_type(llvm, module), value, sign_extend)
                 },
                 Literal::String(s) => unsafe {
                     let s_len = s.value.len();
@@ -80,7 +80,7 @@ impl CodeGenValue for Expr {
             Self::Assignment(a) => unsafe {
                 LLVMBuildStore(
                     llvm.builder,
-                    a.expr.as_ref().unwrap().codegen_value(llvm, module),
+                    a.expr.as_ref().unwrap().llvm_value(llvm, module),
                     *llvm.locals.get(a.name).unwrap(),
                 )
             },
@@ -89,7 +89,7 @@ impl CodeGenValue for Expr {
 
                 LLVMBuildLoad2(
                     llvm.builder,
-                    l.ty.codegen_type(llvm, module),
+                    l.ty.llvm_type(llvm, module),
                     *llvm.locals.get(l.name).unwrap(),
                     c_name.as_ptr(),
                 )
@@ -100,15 +100,15 @@ impl CodeGenValue for Expr {
                 if m.float {
                     return LLVMBuildFAdd(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 LLVMBuildAdd(
                     llvm.builder,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -117,15 +117,15 @@ impl CodeGenValue for Expr {
                 if m.float {
                     return LLVMBuildFSub(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 LLVMBuildSub(
                     llvm.builder,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -134,23 +134,23 @@ impl CodeGenValue for Expr {
                 if m.float {
                     return LLVMBuildFDiv(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 if m.signed {
                     return LLVMBuildSDiv(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 LLVMBuildUDiv(
                     llvm.builder,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -159,15 +159,15 @@ impl CodeGenValue for Expr {
                 if m.float {
                     return LLVMBuildFMul(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 LLVMBuildMul(
                     llvm.builder,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -176,23 +176,23 @@ impl CodeGenValue for Expr {
                 if m.float {
                     LLVMBuildFRem(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 if m.signed {
                     return LLVMBuildSRem(
                         llvm.builder,
-                        m.a.codegen_value(llvm, module),
-                        m.b.codegen_value(llvm, module),
+                        m.a.llvm_value(llvm, module),
+                        m.b.llvm_value(llvm, module),
                         name.as_ptr(),
                     );
                 }
                 LLVMBuildURem(
                     llvm.builder,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -201,8 +201,8 @@ impl CodeGenValue for Expr {
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOGT,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },
@@ -211,8 +211,8 @@ impl CodeGenValue for Expr {
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOLT,
-                    m.a.codegen_value(llvm, module),
-                    m.b.codegen_value(llvm, module),
+                    m.a.llvm_value(llvm, module),
+                    m.b.llvm_value(llvm, module),
                     name.as_ptr(),
                 )
             },

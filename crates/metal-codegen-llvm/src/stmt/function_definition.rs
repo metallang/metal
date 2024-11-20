@@ -14,7 +14,7 @@ use super::{CodeGenType, CodeGenValue};
 use crate::get_linkage_from_vis;
 
 impl CodeGenValue for FunctionDefinition {
-    fn codegen_value(
+    fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
@@ -29,7 +29,7 @@ impl CodeGenValue for FunctionDefinition {
             let function = LLVMAddFunction(
                 llvm.module,
                 c_fun_name.as_ptr(),
-                self.signature.codegen_type(llvm, module),
+                self.signature.llvm_type(llvm, module),
             );
             LLVMSetLinkage(function, linkage);
 
@@ -39,7 +39,7 @@ impl CodeGenValue for FunctionDefinition {
             llvm.locals.clear();
 
             for stmt in &self.body {
-                stmt.codegen_value(llvm, module);
+                stmt.llvm_value(llvm, module);
             }
 
             function
