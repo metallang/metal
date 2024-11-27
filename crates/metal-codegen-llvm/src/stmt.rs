@@ -12,7 +12,7 @@ use super::{CodeGenType, CodeGenValue};
 pub mod constant;
 pub mod function_definition;
 
-impl CodeGenValue for Statement {
+impl CodeGenValue for Statement<'_> {
     fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,

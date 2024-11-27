@@ -9,8 +9,8 @@ pub mod return_;
 
 /// Represents a statement in Metal code.
 #[derive(Debug, Clone)]
-pub enum Statement {
-    FunctionDefine(Box<functiondef::FunctionDefinition>),
+pub enum Statement<'a> {
+    FunctionDefine(Box<functiondef::FunctionDefinition<'a>>),
     Constant(Box<constant::Constant>),
     Let(Box<Assignment>),
     Extern(Box<FunctionSignature>),
