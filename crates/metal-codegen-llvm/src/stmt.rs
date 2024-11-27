@@ -37,7 +37,7 @@ impl CodeGenValue for Statement<'_> {
             },
             Self::Return(expr) => unsafe {
                 if let Some(e) = expr {
-                    LLVMBuildRet(llvm.builder, (*e).0.llvm_value(llvm, module))
+                    LLVMBuildRet(llvm.builder, e.0.llvm_value(llvm, module))
                 } else {
                     LLVMBuildRetVoid(llvm.builder)
                 }
