@@ -115,7 +115,6 @@ mod tests {
         let module = get_empty_module("empty".to_string(), None);
         let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
         assert_ne!(compiled, "".to_string());
-        println!("compiled module: \n\n{}", compiled);
     }
 
     #[test]
@@ -161,7 +160,6 @@ mod tests {
 
         let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
         assert_ne!(compiled, "".to_string());
-        println!("compiled module: \n\n{}", compiled);
     }
 
     #[test]
@@ -239,6 +237,5 @@ mod tests {
 
         let compiled = String::from_utf8(compile_module(&last_module, true)).unwrap();
         assert_ne!(compiled, "".to_string());
-        println!("compiled module: \n\n{}", compiled);
     }
 }

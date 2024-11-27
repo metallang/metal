@@ -36,7 +36,7 @@ impl CodeGenValue for Statement<'_> {
                 LLVMAddFunction(llvm.module, c_name.as_ptr(), e.llvm_type(llvm, module))
             },
             Self::Return(expr) => unsafe {
-                if let Some(e) = expr.to_owned() {
+                if let Some(e) = expr {
                     LLVMBuildRet(llvm.builder, (*e).0.llvm_value(llvm, module))
                 } else {
                     LLVMBuildRetVoid(llvm.builder)

@@ -54,7 +54,8 @@ impl LLVMErrorMessage {
         }
     }
 
-    pub fn llvm(&self) -> *mut i8 {
+    /// Returns a representation which can be used in LLVM functions.
+    pub fn llvm(&self) -> *mut c_char {
         self.ptr
     }
 
