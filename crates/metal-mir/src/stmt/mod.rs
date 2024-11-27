@@ -14,5 +14,5 @@ pub enum Statement {
     Constant(Box<constant::Constant>),
     Let(Box<Assignment>),
     Extern(Box<FunctionSignature>),
-    Return(Box<return_::Return>),
+    Return(Option<Box<return_::Return>>),
 }

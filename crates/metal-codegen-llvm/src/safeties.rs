@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 //! Safe Rust abstractions for several LLVM types
 
-use std::slice;
+use std::{
+    ffi::{c_char, CStr},
+    slice,
+};
 
 use llvm_sys::{
-    core::{LLVMDisposeMemoryBuffer, LLVMGetBufferSize, LLVMGetBufferStart},
+    core::{LLVMDisposeMemoryBuffer, LLVMDisposeMessage, LLVMGetBufferSize, LLVMGetBufferStart},
     prelude::LLVMMemoryBufferRef,
 };
 
@@ -31,5 +34,37 @@ impl MemoryBuffer {
 impl Drop for MemoryBuffer {
     fn drop(&mut self) {
         unsafe { LLVMDisposeMemoryBuffer(self.llvm_buf) };
+    }
+}
+
+pub struct LLVMErrorMessage {
+    ptr: *mut c_char,
+}
+
+impl Default for LLVMErrorMessage {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl LLVMErrorMessage {
+    pub fn new() -> Self {
+        Self {
+            ptr: std::ptr::null_mut(),
+        }
+    }
+
+    pub fn llvm(&self) -> *mut i8 {
+        self.ptr
+    }
+
+    pub fn message(&self) -> String {
+        unsafe { CStr::from_ptr(self.ptr).to_string_lossy().to_string() }
+    }
+}
+
+impl Drop for LLVMErrorMessage {
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeMessage(self.ptr) };
     }
 }

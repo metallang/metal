@@ -3,7 +3,7 @@
 use std::ffi::CString;
 
 use llvm_sys::{
-    core::{LLVMAddFunction, LLVMBuildAlloca, LLVMBuildRet, LLVMBuildStore},
+    core::{LLVMAddFunction, LLVMBuildAlloca, LLVMBuildRet, LLVMBuildRetVoid, LLVMBuildStore},
     prelude::LLVMValueRef,
 };
 use metal_mir::stmt::Statement;
@@ -36,8 +36,11 @@ impl CodeGenValue for Statement {
                 LLVMAddFunction(llvm.module, c_name.as_ptr(), e.llvm_type(llvm, module))
             },
             Self::Return(expr) => unsafe {
-                let e = expr.to_owned();
-                LLVMBuildRet(llvm.builder, (*e).0.llvm_value(llvm, module))
+                if let Some(e) = expr.to_owned() {
+                    LLVMBuildRet(llvm.builder, (*e).0.llvm_value(llvm, module))
+                } else {
+                    LLVMBuildRetVoid(llvm.builder)
+                }
             },
         }
     }

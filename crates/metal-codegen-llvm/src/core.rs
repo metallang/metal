@@ -3,10 +3,13 @@
 
 use std::ffi::CString;
 
-use llvm_sys::{bit_writer, core::LLVMPrintModuleToString};
+use llvm_sys::{analysis::LLVMVerifyModule, bit_writer, core::LLVMPrintModuleToString};
 use metal_mir::parcel::Module;
 
-use crate::{safeties::MemoryBuffer, CodeGenValue, LLVMRefs};
+use crate::{
+    safeties::{LLVMErrorMessage, MemoryBuffer},
+    CodeGenValue, LLVMRefs,
+};
 
 /// Compiles an LLVM module and returns either human-readable
 /// LLVM IR or LLVM bytecode depending on `human_readable`.
@@ -15,6 +18,19 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
     for stmt in &module.statements {
         stmt.llvm_value(&mut llvm, module);
+    }
+
+    let error = LLVMErrorMessage::new();
+    let valid = unsafe {
+        LLVMVerifyModule(
+            llvm.module,
+            llvm_sys::analysis::LLVMVerifierFailureAction::LLVMPrintMessageAction,
+            &mut error.llvm(),
+        )
+    };
+
+    if valid != 0 {
+        panic!("LLVM compilation error: \n\n{}", error.message());
     }
 
     if human_readable {
@@ -31,9 +47,9 @@ mod tests {
     use metal_mir::{
         expr::{
             literals::{Literal, Number},
-            Assignment, Expr, Load, MathematicalValue,
+            Assignment, Expr, MathematicalValue,
         },
-        stmt::{constant::Constant, functiondef::FunctionDefinition, return_::Return, Statement},
+        stmt::{constant::Constant, functiondef::FunctionDefinition, Statement},
         types::{function::FunctionSignature, primitives::Primitive, Type},
     };
 
@@ -92,10 +108,7 @@ mod tests {
                         result_var_name: Some("a_variable"),
                     }))),
                 })),
-                Statement::Return(Box::new(Return(Expr::Load(Box::new(Load {
-                    name: "a_variable",
-                    ty: Type::Primitive(Box::new(Primitive::U8)),
-                }))))),
+                Statement::Return(None),
             ]
             .to_vec(),
         };
