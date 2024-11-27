@@ -19,7 +19,6 @@ impl MemoryBuffer {
     }
 
     /// Turns an LLVM buffer into a Vec<u8>
-    #[inline]
     pub fn to_vec(&self) -> Vec<u8> {
         unsafe {
             let start = LLVMGetBufferStart(self.llvm_buf) as *const u8;

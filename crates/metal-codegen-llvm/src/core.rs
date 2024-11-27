@@ -10,7 +10,6 @@ use crate::{safeties::MemoryBuffer, CodeGenValue, LLVMRefs};
 
 /// Compiles an LLVM module and returns either human-readable
 /// LLVM IR or LLVM bytecode depending on `human_readable`.
-#[inline]
 pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
     let mut llvm = LLVMRefs::new(module);
 
