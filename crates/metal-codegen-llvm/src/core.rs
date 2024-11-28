@@ -39,7 +39,7 @@ impl<'a> PathBuilder<'a> {
 
 pub fn get_module_full_name(module: &Module) -> String {
     let mut builder = PathBuilder::new();
-    let mut last_module = &Some(Box::new(module));
+    let mut last_module = &Some(module);
 
     while let Some(module) = last_module {
         builder.push(module.name.as_str());
