@@ -21,7 +21,7 @@ impl CodeGenValue for FunctionDefinition<'_> {
     ) -> LLVMValueRef {
         let fun_name = if self.signature.name != "main" {
             let module_name = get_module_full_name(module);
-            String::new() + module_name.as_str() + "." + self.signature.name.as_str()
+            module_name + "." + self.signature.name.as_str()
         } else {
             self.signature.name.clone()
         };
