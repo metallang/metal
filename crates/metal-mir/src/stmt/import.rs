@@ -24,9 +24,9 @@ use crate::{parcel::Module, struct_, types};
 /// }
 /// ```
 #[derive(Debug, Clone)]
-pub struct Import {
+pub struct Import<'a> {
     /// The module imported.
-    pub module: Box<Module>,
+    pub module: Box<Module<'a>>,
     /// The functions imported.
     pub functions: Vec<types::function::FunctionSignature>,
     /// The structs imported.
@@ -34,5 +34,5 @@ pub struct Import {
     /// The constants imported.
     pub constants: Vec<super::constant::Constant>,
     /// The next level of imports.
-    pub children: Vec<Import>,
+    pub children: Vec<Import<'a>>,
 }

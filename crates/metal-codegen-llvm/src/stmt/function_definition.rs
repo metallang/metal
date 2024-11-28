@@ -11,15 +11,20 @@ use llvm_sys::{
 use metal_mir::stmt::functiondef::FunctionDefinition;
 
 use super::{CodeGenType, CodeGenValue};
-use crate::get_linkage_from_vis;
+use crate::{core::get_module_full_name, get_linkage_from_vis};
 
-impl CodeGenValue for FunctionDefinition {
+impl CodeGenValue for FunctionDefinition<'_> {
     fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let fun_name = self.signature.name.as_str();
+        let fun_name = if self.signature.name != "main" {
+            let module_name = get_module_full_name(module);
+            module_name + "." + self.signature.name.as_str()
+        } else {
+            self.signature.name.clone()
+        };
 
         let linkage = get_linkage_from_vis(&self.signature.vis);
 
