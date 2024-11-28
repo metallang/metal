@@ -41,13 +41,9 @@ pub fn get_module_full_name(module: &Module) -> String {
     let mut builder = PathBuilder::new();
     let mut last_module = &Some(Box::new(module));
 
-    loop {
-        if let Some(module) = last_module {
-            builder.push(module.name.as_str());
-            last_module = &module.parent;
-            continue;
-        }
-        break;
+    while let Some(module) = last_module {
+        builder.push(module.name.as_str());
+        last_module = &module.parent;
     }
 
     builder.finish()
