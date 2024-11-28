@@ -96,7 +96,7 @@ mod tests {
     fn get_empty_module<'a>(name: String, parent: Option<&'a Module<'a>>) -> Module<'a> {
         Module {
             name,
-            parent: parent.map(Box::new),
+            parent,
             children: Vec::new(),
             statements: Vec::new(),
             function_signatures: Vec::new(),
