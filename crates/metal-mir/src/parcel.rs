@@ -21,7 +21,7 @@ pub struct Module<'a> {
     pub name: String,
     /// If this is a submodule
     /// includes the higher-level parent.
-    pub parent: Option<Box<&'a Module<'a>>>,
+    pub parent: Option<&'a Module<'a>>,
     /// Submodules inside of this module.
     /// Should be empty if module isn't a folder.
     pub children: Vec<&'a Module<'a>>,
