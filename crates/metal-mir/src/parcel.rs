@@ -24,7 +24,7 @@ pub struct Module<'a> {
     pub parent: Option<Box<&'a Module<'a>>>,
     /// Submodules inside of this module.
     /// Should be empty if module isn't a folder.
-    pub children: Vec<Box<&'a Module<'a>>>,
+    pub children: Vec<&'a Module<'a>>,
     /// An exhaustive list of the statements
     /// the module includes.
     pub statements: Vec<&'a stmt::Statement<'a>>,
