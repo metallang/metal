@@ -12,7 +12,6 @@ pub struct Parcel {
     pub name: String,
     /// Modules included in
     /// this parcel.
-    
     pub modules: Vec<Module>,
 }
 

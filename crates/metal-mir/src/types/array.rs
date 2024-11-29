@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Array {
     /// The type which is present in a list.
-    
     pub item_type: Type,
     /// The initially defined size/capacity of the array.
     pub size: u64,
