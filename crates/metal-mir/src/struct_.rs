@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 
+use serde::{Deserialize, Serialize};
+
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the fields of a struct, i.e. `a: B`.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StructField {
     /// The name of the struct field, i.e. `a`.
-    pub name: &'static str,
+    pub name: String,
     /// The type of this struct field, i.e. `String`.
     pub ty: Type,
 }
@@ -19,10 +21,10 @@ pub struct StructField {
 ///     pub c: i32
 /// }
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Struct {
     /// The name of this struct.
-    pub name: &'static str,
+    pub name: String,
     /// The fields of this struct.
     pub fields: Vec<StructField>,
     /// The visibility of this struct.

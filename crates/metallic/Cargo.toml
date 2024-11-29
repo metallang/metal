@@ -5,3 +5,11 @@ edition = "2021"
 description = "The Metal compiler frontend."
 
 [dependencies]
+tapcli = { workspace = true }
+thiserror = { workspace = true }
+metal-mir = { workspace = true }
+metal-codegen-llvm = { workspace = true }
+metal-codegen-wasm = { workspace = true }
+ron = { workspace = true }
+serde = { workspace = true }
+llvm-sys = { workspace = true }

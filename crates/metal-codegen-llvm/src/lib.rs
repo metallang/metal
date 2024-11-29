@@ -29,7 +29,7 @@ pub struct LLVMRefs {
     ctx: LLVMContextRef,
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
-    locals: HashMap<&'static str, LLVMValueRef>,
+    locals: HashMap<String, LLVMValueRef>,
 }
 
 impl LLVMRefs {

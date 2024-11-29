@@ -17,7 +17,7 @@ impl CodeGenValue for Constant {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let cname = CString::new(self.name).unwrap();
+        let cname = CString::new(self.name.as_str()).unwrap();
 
         unsafe {
             let global_var =

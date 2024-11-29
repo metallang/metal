@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 
 use crate::types;
+use serde::{Deserialize, Serialize};
 
 /// Represents a literal.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Literal {
     /// Represents a literal number, i.e. `1`.
     Number(Number),
@@ -13,7 +14,7 @@ pub enum Literal {
     Boolean(Bool),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Number {
     /// The primitive type of this number.
     pub primitive: types::primitives::Primitive,
@@ -21,13 +22,13 @@ pub struct Number {
     pub value: i64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StringLiteral {
     /// The string value.
     pub value: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Bool {
     /// The boolean value.
     pub value: bool,

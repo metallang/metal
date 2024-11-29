@@ -1,0 +1,49 @@
+(
+  name: "electricity.rocks",
+  parent: None,
+  children: [],
+  statements: [
+    FunctionDefine(
+        (
+            signature: (
+                name: "power_up",
+                return_type: Primitive(I8),
+                inputs: {
+                    "first": Primitive(I8),
+                    "second": Primitive(I8)
+                },
+                vis: Public
+            ),
+            body: [
+                Return(Some(
+                    Return(Variable(Load(
+                        name: "first",
+                        ty: Primitive(I8)
+                    )))
+                ))
+            ]
+        )
+    )
+  ],
+  function_signatures: [
+    (
+        name: "power_up",
+        return_type: Primitive(I8),
+        inputs: {
+            "first": Primitive(I8),
+            "second": Primitive(I8)
+        },
+        vis: Public
+    )
+  ],
+  imports: [],
+  constants: [
+    (
+        name: "hello_world",
+        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
+        ty: I8,
+        vis: Public
+    )
+  ],
+  structs: []
+)

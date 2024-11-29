@@ -81,22 +81,25 @@ impl CodeGenValue for Expr {
                 LLVMBuildStore(
                     llvm.builder,
                     a.expr.as_ref().unwrap().llvm_value(llvm, module),
-                    *llvm.locals.get(a.name).unwrap(),
+                    *llvm.locals.get(&a.name).unwrap(),
                 )
             },
             Self::Load(l) => unsafe {
-                let c_name = CString::new(l.name).unwrap();
+                let c_name = CString::new(l.name.as_str()).unwrap();
 
                 LLVMBuildLoad2(
                     llvm.builder,
                     l.ty.llvm_type(llvm, module),
-                    *llvm.locals.get(l.name).unwrap(),
+                    *llvm.locals.get(&l.name).unwrap(),
                     c_name.as_ptr(),
                 )
             },
+            Self::Variable(v) => {
+                *llvm.locals.get(&v.name).unwrap()
+            }
             // math
             Self::Add(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 if m.float {
                     return LLVMBuildFAdd(
                         llvm.builder,
@@ -113,7 +116,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Sub(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 if m.float {
                     return LLVMBuildFSub(
                         llvm.builder,
@@ -130,7 +133,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Div(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 if m.float {
                     return LLVMBuildFDiv(
                         llvm.builder,
@@ -155,7 +158,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Mul(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 if m.float {
                     return LLVMBuildFMul(
                         llvm.builder,
@@ -172,7 +175,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Percent(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 if m.float {
                     LLVMBuildFRem(
                         llvm.builder,
@@ -197,7 +200,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Gt(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOGT,
@@ -207,7 +210,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Lt(m) => unsafe {
-                let name = CString::new(m.result_var_name.unwrap_or("")).unwrap();
+                let name = CString::new(m.result_var_name.clone().unwrap_or("".to_string())).unwrap();
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOLT,

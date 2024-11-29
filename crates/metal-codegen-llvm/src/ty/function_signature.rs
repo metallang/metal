@@ -14,7 +14,7 @@ impl CodeGenType for FunctionSignature {
         unsafe {
             let len = self.inputs.len();
 
-            let mut types_to_convert = get_types(llvm, module, &len, &self.inputs);
+            let mut types_to_convert = get_types(llvm, module, &len, &mut self.inputs.values());
             LLVMFunctionType(
                 self.return_type.llvm_type(llvm, module),
                 types_to_convert.as_mut_ptr(),

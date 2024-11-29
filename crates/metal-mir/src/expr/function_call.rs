@@ -2,9 +2,10 @@
 
 use super::Expr;
 use crate::types;
+use serde::{Deserialize, Serialize};
 
 /// Represents a call to a function.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FunctionCall {
     /// The function signature to call.
     pub signature: types::function::FunctionSignature,

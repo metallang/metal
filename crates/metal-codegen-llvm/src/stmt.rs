@@ -12,7 +12,7 @@ use super::{CodeGenType, CodeGenValue};
 pub mod constant;
 pub mod function_definition;
 
-impl CodeGenValue for Statement<'_> {
+impl CodeGenValue for Statement {
     fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
@@ -22,13 +22,13 @@ impl CodeGenValue for Statement<'_> {
             Self::FunctionDefine(def) => def.llvm_value(llvm, module),
             Self::Constant(c) => c.llvm_value(llvm, module),
             Self::Let(l) => unsafe {
-                let c_name = CString::new(l.name).unwrap();
+                let c_name = CString::new(l.name.as_str()).unwrap();
                 let a =
                     LLVMBuildAlloca(llvm.builder, l.ty.llvm_type(llvm, module), c_name.as_ptr());
                 if let Some(e) = &l.expr {
                     LLVMBuildStore(llvm.builder, e.llvm_value(llvm, module), a);
                 }
-                llvm.locals.insert(l.name, a);
+                llvm.locals.insert(l.name.clone(), a);
                 a
             },
             Self::Extern(e) => unsafe {

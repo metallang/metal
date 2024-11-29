@@ -37,9 +37,9 @@ impl<'a> PathBuilder<'a> {
     }
 }
 
-pub fn get_module_full_name(module: &Module) -> String {
+pub fn get_module_full_name(module: Module) -> String {
     let mut builder = PathBuilder::new();
-    let mut last_module = &Some(module);
+    let mut last_module = &Some(Box::new(module));
 
     while let Some(module) = last_module {
         builder.push(module.name.as_str());
@@ -82,6 +82,8 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use metal_mir::{
         expr::{
             literals::{Literal, Number},
@@ -93,10 +95,10 @@ mod tests {
 
     use super::*;
 
-    fn get_empty_module<'a>(name: String, parent: Option<&'a Module<'a>>) -> Module<'a> {
+    fn get_empty_module<'a>(name: String, parent: Option<Module>) -> Module {
         Module {
             name,
-            parent,
+            parent: parent.map(|v| Box::new(v)),
             children: Vec::new(),
             statements: Vec::new(),
             function_signatures: Vec::new(),
@@ -121,15 +123,14 @@ mod tests {
         let sig = FunctionSignature {
             name: "main".to_string(),
             return_type: Type::Primitive(Box::new(Primitive::Void)),
-            inputs: Vec::new(),
+            inputs: HashMap::new(),
             vis: metal_mir::types::visibility::Visibility::Public,
         };
         let def = FunctionDefinition {
-            module: module.clone(),
             signature: sig.clone(),
             body: [
                 Statement::Let(Box::new(Assignment {
-                    name: "a_variable",
+                    name: "a_variable".to_string(),
                     ty: Type::Primitive(Box::new(Primitive::U8)),
                     expr: Some(Expr::Add(Box::new(MathematicalValue {
                         a: Expr::Literal(Box::new(Literal::Number(Number {
@@ -142,7 +143,7 @@ mod tests {
                         }))),
                         signed: false,
                         float: false,
-                        result_var_name: Some("a_variable"),
+                        result_var_name: Some("a_variable".to_string()),
                     }))),
                 })),
                 Statement::Return(None),
@@ -151,8 +152,8 @@ mod tests {
         };
         let stmt = Statement::FunctionDefine(Box::new(def));
 
-        module.function_signatures.push(&sig);
-        module.statements.push(&stmt);
+        module.function_signatures.push(Box::new(sig));
+        module.statements.push(Box::new(stmt));
 
         let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
         assert_ne!(compiled, "".to_string());
@@ -163,7 +164,7 @@ mod tests {
     fn test_panic_global_var_expr() {
         let mut module = get_empty_module("testing".to_string(), None);
         let global_var = Constant {
-            name: "some_constant",
+            name: "some_constant".to_string(),
             expr: Expr::Div(Box::new(MathematicalValue {
                 a: Expr::Literal(Box::new(Literal::Number(Number {
                     primitive: Primitive::I32,
@@ -175,14 +176,14 @@ mod tests {
                 }))),
                 signed: true,
                 float: false,
-                result_var_name: Some("some_constant"),
+                result_var_name: Some("some_constant".to_string()),
             })),
             ty: Primitive::I32,
             vis: metal_mir::types::visibility::Visibility::Private,
         };
         let stmt = Statement::Constant(Box::new(global_var));
 
-        module.statements.push(&stmt);
+        module.statements.push(Box::new(stmt));
 
         compile_module(&module, true);
     }
@@ -191,22 +192,21 @@ mod tests {
     fn test_nested_module_function() {
         // NOTE `children` is not appended to cause Rust sucks.
         let module = get_empty_module("core".to_string(), None);
-        let another_module = get_empty_module("lib".to_string(), Some(&module));
-        let mut last_module = get_empty_module("str".to_string(), Some(&another_module));
+        let another_module = get_empty_module("lib".to_string(), Some(module.clone()));
+        let mut last_module = get_empty_module("str".to_string(), Some(another_module.clone()));
 
         // add function to module
         let sig = FunctionSignature {
             name: "turn_into".to_string(),
             return_type: Type::Primitive(Box::new(Primitive::Void)),
-            inputs: Vec::new(),
+            inputs: HashMap::new(),
             vis: metal_mir::types::visibility::Visibility::Public,
         };
         let def = FunctionDefinition {
-            module: last_module.clone(),
             signature: sig.clone(),
             body: [
                 Statement::Let(Box::new(Assignment {
-                    name: "a_variable",
+                    name: "a_variable".to_string(),
                     ty: Type::Primitive(Box::new(Primitive::U8)),
                     expr: Some(Expr::Add(Box::new(MathematicalValue {
                         a: Expr::Literal(Box::new(Literal::Number(Number {
@@ -219,7 +219,7 @@ mod tests {
                         }))),
                         signed: false,
                         float: false,
-                        result_var_name: Some("a_variable"),
+                        result_var_name: Some("a_variable".to_string()),
                     }))),
                 })),
                 Statement::Return(None),
@@ -228,8 +228,8 @@ mod tests {
         };
         let stmt = Statement::FunctionDefine(Box::new(def));
 
-        last_module.function_signatures.push(&sig);
-        last_module.statements.push(&stmt);
+        last_module.function_signatures.push(Box::new(sig));
+        last_module.statements.push(Box::new(stmt));
 
         let compiled = String::from_utf8(compile_module(&last_module, true)).unwrap();
         assert_ne!(compiled, "".to_string());
