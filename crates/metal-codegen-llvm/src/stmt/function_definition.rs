@@ -44,11 +44,8 @@ impl CodeGenValue for FunctionDefinition {
 
             llvm.locals.clear();
 
-            let mut idx = 0;
-
-            for (input_name, _) in self.signature.inputs.iter() {
-                let param = LLVMGetParam(function, idx);
-                idx += 1;
+            for (idx, (input_name, _)) in self.signature.inputs.iter().enumerate() {
+                let param = LLVMGetParam(function, idx as u32);
                 let c_name = CString::new(input_name.as_str()).unwrap();
                 LLVMSetValueName2(param, c_name.as_ptr(), c_name.count_bytes());
                 llvm.locals.insert(input_name.to_string(), param);
