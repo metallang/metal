@@ -2,8 +2,9 @@
 
 //! Contains representation of Metal Parcels and modules.
 
-use crate::{stmt, types};
 use serde::{Deserialize, Serialize};
+
+use crate::{stmt, types};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Parcel {

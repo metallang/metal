@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-use crate::struct_;
 use serde::{Deserialize, Serialize};
+
+use crate::struct_;
 
 pub mod array;
 pub mod function;

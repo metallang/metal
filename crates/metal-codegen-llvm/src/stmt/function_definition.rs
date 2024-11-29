@@ -4,7 +4,8 @@ use std::ffi::CString;
 
 use llvm_sys::{
     core::{
-        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMGetParam, LLVMPositionBuilderAtEnd, LLVMSetLinkage, LLVMSetValueName2
+        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMGetParam, LLVMPositionBuilderAtEnd,
+        LLVMSetLinkage, LLVMSetValueName2,
     },
     prelude::LLVMValueRef,
 };
@@ -51,7 +52,7 @@ impl CodeGenValue for FunctionDefinition {
                 let c_name = CString::new(input_name.as_str()).unwrap();
                 LLVMSetValueName2(param, c_name.as_ptr(), c_name.count_bytes());
                 llvm.locals.insert(input_name.to_string(), param);
-            };
+            }
 
             for stmt in &self.body {
                 stmt.llvm_value(llvm, module);

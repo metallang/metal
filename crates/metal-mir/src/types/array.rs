@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-use super::Type;
 use serde::{Deserialize, Serialize};
+
+use super::Type;
 
 /// Represents a basic array type.
 ///

@@ -2,8 +2,9 @@
 
 use std::collections::HashMap;
 
-use super::{visibility::Visibility, Type};
 use serde::{Deserialize, Serialize};
+
+use super::{visibility::Visibility, Type};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FunctionSignature {

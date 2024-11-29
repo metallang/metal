@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-use crate::types;
 use serde::{Deserialize, Serialize};
+
+use crate::types;
 
 /// Represents a literal.
 #[derive(Debug, Clone, Serialize, Deserialize)]
