@@ -1,0 +1,144 @@
+Name =
+  '@ident'
+
+Visibility =
+  'pub'?
+
+Mutability =
+  'mut'?
+
+ExprSpecifier =
+  '=' Expr
+
+TypeQualifier =
+  ':' Type
+
+Block =
+  '{' Item '}'
+
+Item =
+  ConstItem | EnumItem | Expr | FnItem | ImportItem | StructItem
+
+ConstItem =
+  vis:Visibility 'const' Name ty:TypeQualifier? value:ExprSpecifier
+
+EnumItem =
+  vis:Visibility 'enum' Name '{' body:EnumBody? '}'
+
+EnumBody =
+  (EnumBodyItem (',' EnumBodyItem)* ','?)
+
+EnumBodyItem =
+  EnumVariant | FnItem
+
+EnumVariant =
+  Name data_ty:EnumVariantType?
+
+EnumVariantType =
+  ('(' Type ')')
+
+FnItem =
+  vis:Visibility 'def' Name sig:FnSignature body:Block
+
+FnSignature =
+  '(' inputs:(FnInput (',' FnInput)* ','?)? ')' return_ty:TypeQualifier?
+
+FnInput =
+  mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
+
+ImportItem =
+  vis:Visibility 'import' tree:ImportTree ';'
+
+ImportTree =
+  ImportLeaf | ImportSegment | ImportBranch
+
+ImportLeaf =
+  Name
+
+ImportSegment =
+  segment:Name '.' rest:ImportTree
+
+ImportBranch =
+  '{' subtrees:(ImportTree (',' ImportTree)* ','?)? '}'
+
+StructItem =
+  vis:Visibility 'struct' Name '{' body:StructBody '}'
+
+StructBody =
+  StructBodyItem (',' StructBodyItem)* ','?
+
+StructBodyItem =
+  StructField | FnItem
+
+StructField =
+  vis:Visibility Name ty:TypeQualifier
+
+Type =
+  Name
+
+Expr =
+  Name | PrefixExpr | BinaryExpr | CallExpr | LitExpr
+
+PrefixExpr =
+  op:PrefixOp Expr
+
+PrefixOp =
+  '+' | '-' | '!' | '~'
+
+BinaryExpr =
+  lhs:Expr op:BinaryOp rhs:Expr
+
+BinaryOp =
+  // assignment
+  '='
+| '+='
+| '-='
+| '/='
+| '*='
+| '**='
+| '%='
+| '^='
+| '&='
+| '|='
+| '<<='
+| '>>='
+  // math
+| '+'
+| '-'
+| '/'
+| '*'
+| '**'
+| '%'
+  // logic
+| '&&'
+| '||'
+| '=='
+| '!='
+  // comparison
+| '>'
+| '>='
+| '<'
+| '<='
+  // bitwise
+| '^'
+| '&'
+| '|'
+| '<<'
+| '>>'
+  // range
+| '..'
+  // special
+  '.'
+
+CallExpr =
+  Expr '(' (Expr ','?)* ')'
+
+// no BoolLit, `true` and `false` are regular values
+LitExpr =
+  NumLit | StrLit
+
+NumLit =
+  '@number'
+
+StrLit =
+  '@string'

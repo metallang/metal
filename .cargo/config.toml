@@ -1,0 +1,5 @@
+[alias]
+c = "check --workspace --exclude metal-codegen-llvm"
+b = "build --workspace --exclude metal-codegen-llvm"
+r = "run --workspace --exclude metal-codegen-llvm"
+d = "doc --workspace --exclude metal-codegen-llvm"
