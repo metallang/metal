@@ -13,7 +13,7 @@ use metal_codegen_llvm::core::compile_module;
 use metal_mir::parcel::Module;
 use ron::de::from_reader;
 
-use crate::error::Error;
+use crate::{error::Error, target::Target};
 
 pub enum InputType {
     Metal,
@@ -66,15 +66,32 @@ impl tapcli::Command for BuildCommand {
     }
 
     fn run<'a>(self) -> Result<Self::Output, Self::Error> {
-        fs::create_dir_all(PathBuf::from_str("./target/ice").unwrap()).unwrap();
+        Target::setup();
+
         if let InputType::MIR = self.input_type {
             let mut modules = Vec::new();
 
             for path in self.relative_paths.iter() {
-                let file = File::open(path).unwrap();
+                if fs::metadata(path).unwrap().is_dir() {
+                    let read_dir = fs::read_dir(path).unwrap();
+                    for entry in read_dir.into_iter().flatten() {
+                        if entry.metadata().unwrap().is_dir() {
+                            continue;
+                        };
 
-                let module: Module = from_reader(file).unwrap();
-                modules.push(module);
+                        let p = entry.path();
+
+                        let file = File::open(p).unwrap();
+
+                        let module: Module = from_reader(file).unwrap();
+                        modules.push(module);
+                    }
+                } else {
+                    let file = File::open(path).unwrap();
+
+                    let module: Module = from_reader(file).unwrap();
+                    modules.push(module);
+                }
             }
 
             // TODO: move this into LLVM codegen once rykv comes around.
@@ -84,14 +101,11 @@ impl tapcli::Command for BuildCommand {
                 assert_ne!(1, LLVM_InitializeNativeAsmParser());
             }
 
+            Target::refresh_llvm();
             for module in modules.iter() {
                 let llvm_ir = compile_module(module, true);
 
-                fs::write(
-                    &("./target/ice/".to_string() + &module.name + ".ll"),
-                    &llvm_ir,
-                )
-                .unwrap();
+                Target::write_llvm_ir(&module.name, &llvm_ir);
             }
 
             println!("Success! Relevant modules have been loaded into the target ICE");
