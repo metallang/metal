@@ -1,37 +1,42 @@
 (
-  name: "electricity.rocks",
+  name: "test_variables",
+  filename: "test_variables.mt",
   parent: None,
   children: [],
   statements: [
     FunctionDefine(
         (
             signature: (
-                name: "power_up",
+                name: "return_input_variable",
                 return_type: Primitive(I8),
                 inputs: {
-                    "first": Primitive(I8),
-                    "second": Primitive(I8)
+                    "var": Primitive(I8),
                 },
                 vis: Public
             ),
             body: [
                 Return(Some(
                     Return(Variable(Load(
-                        name: "first",
+                        name: "var",
                         ty: Primitive(I8)
                     )))
                 ))
             ]
         )
-    )
+    ),
+    Constant((
+        name: "test_constant",
+        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
+        ty: I8,
+        vis: Public
+    ))
   ],
   function_signatures: [
     (
-        name: "power_up",
+        name: "return_input_variable",
         return_type: Primitive(I8),
         inputs: {
-            "first": Primitive(I8),
-            "second": Primitive(I8)
+            "var": Primitive(I8),
         },
         vis: Public
     )
@@ -39,7 +44,7 @@
   imports: [],
   constants: [
     (
-        name: "hello_world",
+        name: "test_constant",
         expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
         ty: I8,
         vis: Public

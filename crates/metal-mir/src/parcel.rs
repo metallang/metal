@@ -21,6 +21,9 @@ pub struct Module {
     /// Module name.
     /// i.e. `io`
     pub name: String,
+    /// Module file name.
+    /// i.e. `io.mt`
+    pub filename: String,
     /// If this is a submodule
     /// includes the higher-level parent.
     pub parent: Option<Box<Module>>,

@@ -3,7 +3,11 @@
 
 use std::{borrow::Cow, ffi::CString};
 
-use llvm_sys::{analysis::LLVMVerifyModule, bit_writer, core::LLVMPrintModuleToString};
+use llvm_sys::{
+    analysis::LLVMVerifyModule,
+    bit_writer,
+    core::{LLVMPrintModuleToString, LLVMSetSourceFileName},
+};
 use metal_mir::parcel::Module;
 
 use crate::{
@@ -54,6 +58,10 @@ pub fn get_module_full_name(module: Module) -> String {
 pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
     let mut llvm = LLVMRefs::new(module);
 
+    let c_filename = CString::new(module.filename.as_str()).unwrap();
+
+    unsafe { LLVMSetSourceFileName(llvm.module, c_filename.as_ptr(), c_filename.count_bytes()) };
+
     for stmt in &module.statements {
         stmt.llvm_value(&mut llvm, module);
     }
@@ -95,9 +103,10 @@ mod tests {
 
     use super::*;
 
-    fn get_empty_module<'a>(name: String, parent: Option<Module>) -> Module {
+    fn get_empty_module(name: String, parent: Option<Module>) -> Module {
         Module {
-            name,
+            name: name.clone(),
+            filename: name,
             parent: parent.map(Box::new),
             children: Vec::new(),
             statements: Vec::new(),
