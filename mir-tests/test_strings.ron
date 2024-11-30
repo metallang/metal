@@ -1,0 +1,44 @@
+(
+  name: "test_strings",
+  filename: "test_strings.mt",
+  parent: None,
+  children: [],
+  statements: [
+    FunctionDefine(
+        (
+            signature: (
+                name: "return_literal_string",
+                return_type: Primitive(Literal(14)),
+                inputs: {},
+                vis: Public
+            ),
+            body: [
+                Let((
+                    name: "my_string",
+                    ty: Primitive(Literal(14)),
+                    expr: Some(Literal(String(StringLiteral(
+                        value: "thisisa string"
+                    ))))
+                )),
+                Return(Some(
+                    Return(Load((
+                        name: "my_string",
+                        ty: Primitive(Literal(14))
+                    )))
+                ))
+            ]
+        )
+    )
+  ],
+  function_signatures: [
+    (
+        name: "return_input_variable",
+        return_type: Primitive(Literal(14)),
+        inputs: {},
+        vis: Public
+    )
+  ],
+  imports: [],
+  constants: [],
+  structs: []
+)
