@@ -14,7 +14,6 @@ const GITIGNORE_CONTENTS: &str = "*";
 impl Target {
     pub fn setup() {
         // ensure the directories all exist
-        fs::create_dir_all("./target/ice").unwrap();
         fs::create_dir_all("./target/.llvm").unwrap();
 
         if !fs::exists("./target/CACHEDIR.TAG").unwrap() {
@@ -25,10 +24,6 @@ impl Target {
         }
     }
 
-    pub fn refresh_ice() {
-        fs::remove_dir_all("./target/ice").unwrap();
-        fs::create_dir_all("./target/ice").unwrap();
-    }
 
     pub fn refresh_llvm() {
         fs::remove_dir_all("./target/.llvm").unwrap();

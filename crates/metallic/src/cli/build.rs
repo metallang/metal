@@ -55,7 +55,6 @@ impl tapcli::Command for BuildCommand {
                     cmd.input_type = InputType::from(value);
                 }
                 tapcli::ArgRef::Value(val) => {
-                    println!("{}", val);
                     cmd.relative_paths.push(PathBuf::from_str(val).unwrap());
                 }
                 _ => return Err(Error::UnrecognizedArgument(arg)),
