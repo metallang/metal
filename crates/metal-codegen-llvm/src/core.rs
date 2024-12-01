@@ -90,7 +90,7 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
 
     use metal_mir::{
         expr::{
@@ -132,7 +132,7 @@ mod tests {
         let sig = FunctionSignature {
             name: "main".to_string(),
             return_type: Type::Primitive(Box::new(Primitive::Void)),
-            inputs: HashMap::new(),
+            inputs: BTreeMap::new(),
             vis: metal_mir::types::visibility::Visibility::Public,
         };
         let def = FunctionDefinition {
@@ -199,16 +199,17 @@ mod tests {
 
     #[test]
     fn test_nested_module_function() {
-        // NOTE `children` is not appended to cause Rust sucks.
+        // NOTE `children` is not appended as to avoid lengthy duplication
+        // of modules as this test doesn't use the children
         let module = get_empty_module("core".to_string(), None);
-        let another_module = get_empty_module("lib".to_string(), Some(module.clone()));
-        let mut last_module = get_empty_module("str".to_string(), Some(another_module.clone()));
+        let another_module = get_empty_module("lib".to_string(), Some(module));
+        let mut last_module = get_empty_module("str".to_string(), Some(another_module));
 
         // add function to module
         let sig = FunctionSignature {
             name: "turn_into".to_string(),
             return_type: Type::Primitive(Box::new(Primitive::Void)),
-            inputs: HashMap::new(),
+            inputs: BTreeMap::new(),
             vis: metal_mir::types::visibility::Visibility::Public,
         };
         let def = FunctionDefinition {

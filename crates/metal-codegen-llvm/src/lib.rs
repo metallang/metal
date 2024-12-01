@@ -2,7 +2,7 @@
 
 //! Metal library for compiling to LLVM IR using MIR.
 
-use std::{collections::HashMap, ffi::CString};
+use std::{collections::BTreeMap, ffi::CString};
 
 use metal_mir::{
     parcel::Module,
@@ -29,7 +29,7 @@ pub struct LLVMRefs {
     ctx: LLVMContextRef,
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
-    locals: HashMap<String, LLVMValueRef>,
+    locals: BTreeMap<String, LLVMValueRef>,
 }
 
 impl LLVMRefs {
@@ -41,7 +41,7 @@ impl LLVMRefs {
                 ctx,
                 builder: LLVMCreateBuilder(),
                 module: LLVMModuleCreateWithNameInContext(module_name.as_ptr(), ctx),
-                locals: HashMap::new(),
+                locals: BTreeMap::new(),
             }
         }
     }

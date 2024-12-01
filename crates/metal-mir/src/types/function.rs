@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +13,7 @@ pub struct FunctionSignature {
     /// The type returned by this function.
     pub return_type: Type,
     /// The inputs this function takes.
-    pub inputs: HashMap<String, Type>,
+    pub inputs: BTreeMap<String, Type>,
     /// The visibility of this function.
     pub vis: Visibility,
 }

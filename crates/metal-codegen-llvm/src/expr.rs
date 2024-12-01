@@ -36,6 +36,14 @@ impl CodeGenValue for Expr {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMValueRef {
+        let get_var_name = |result_var_name: &Option<String>| {
+            if let Some(rname) = result_var_name {
+                CString::new(rname.as_str()).unwrap()
+            } else {
+                CString::new("").unwrap()
+            }
+        };
+
         match self {
             Self::FunctionCall(fcall) => unsafe {
                 let c_fun_name = CString::new(fcall.signature.name.as_str()).unwrap();
@@ -97,11 +105,7 @@ impl CodeGenValue for Expr {
             Self::Variable(v) => *llvm.locals.get(&v.name).unwrap(),
             // math
             Self::Add(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 if m.float {
                     return LLVMBuildFAdd(
                         llvm.builder,
@@ -118,11 +122,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Sub(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 if m.float {
                     return LLVMBuildFSub(
                         llvm.builder,
@@ -139,11 +139,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Div(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 if m.float {
                     return LLVMBuildFDiv(
                         llvm.builder,
@@ -168,11 +164,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Mul(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 if m.float {
                     return LLVMBuildFMul(
                         llvm.builder,
@@ -189,11 +181,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Percent(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 if m.float {
                     LLVMBuildFRem(
                         llvm.builder,
@@ -218,11 +206,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Gt(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOGT,
@@ -232,11 +216,7 @@ impl CodeGenValue for Expr {
                 )
             },
             Self::Lt(m) => unsafe {
-                let name = if let Some(rname) = &m.result_var_name {
-                    CString::new(rname.as_str()).unwrap()
-                } else {
-                    CString::new("").unwrap()
-                };
+                let name = get_var_name(&m.result_var_name);
                 LLVMBuildFCmp(
                     llvm.builder,
                     LLVMRealPredicate::LLVMRealOLT,

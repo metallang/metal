@@ -20,15 +20,17 @@ pub enum InputType {
     MIR,
 }
 
-impl From<tapcli::Arg> for InputType {
-    fn from(value: tapcli::Arg) -> Self {
+impl TryFrom<tapcli::Arg> for InputType {
+    type Error = Error;
+
+    fn try_from(value: tapcli::Arg) -> Result<Self, Self::Error> {
         match value {
             tapcli::Arg::Value(val) => match val.as_str() {
-                "metal" => Self::Metal,
-                "mir" => Self::MIR,
-                _ => panic!("input type is unsupported"),
+                "metal" => Ok(Self::Metal),
+                "mir" => Ok(Self::MIR),
+                _ => Err(Error::UnsupportedInputType(val)),
             },
-            _ => panic!("unexpected next argument"),
+            _ => Err(Error::UnrecognizedArgument(value)),
         }
     }
 }
@@ -52,9 +54,11 @@ impl tapcli::Command for BuildCommand {
                 tapcli::ArgRef::Long("input-type") | tapcli::ArgRef::Short('i') => {
                     let value = parser.next().ok_or(Error::InsufficientArguments)?;
 
-                    cmd.input_type = InputType::from(value);
+                    cmd.input_type = InputType::try_from(value)?;
                 }
                 tapcli::ArgRef::Value(val) => {
+                    // NOTE: PathBuf returns an Infallible here.
+                    // So as the name suggests this unwrap *shouldn't* fail.
                     cmd.relative_paths.push(PathBuf::from_str(val).unwrap());
                 }
                 _ => return Err(Error::UnrecognizedArgument(arg)),
@@ -65,50 +69,57 @@ impl tapcli::Command for BuildCommand {
     }
 
     fn run<'a>(self) -> Result<Self::Output, Self::Error> {
-        Target::setup();
+        Target::setup().map_err(Error::TargetError)?;
 
-        if let InputType::MIR = self.input_type {
-            let mut modules = Vec::new();
+        match self.input_type {
+            InputType::MIR => {
+                let mut modules = Vec::new();
 
-            for path in self.relative_paths.iter() {
-                if fs::metadata(path).unwrap().is_dir() {
-                    let read_dir = fs::read_dir(path).unwrap();
-                    for entry in read_dir.into_iter().flatten() {
-                        if entry.metadata().unwrap().is_dir() {
-                            continue;
-                        };
+                for path in self.relative_paths.iter() {
+                    if fs::metadata(path).map_err(Error::IOError)?.is_dir() {
+                        let read_dir = fs::read_dir(path).map_err(Error::IOError)?;
+                        for entry in read_dir.into_iter().flatten() {
+                            // TODO: recursive folder searching.
+                            if entry.metadata().map_err(Error::IOError)?.is_dir() {
+                                continue;
+                            };
 
-                        let p = entry.path();
+                            let p = entry.path();
 
-                        let file = File::open(p).unwrap();
+                            let file = File::open(p).map_err(Error::IOError)?;
 
-                        let module: Module = from_reader(file).unwrap();
+                            let module: Module =
+                                from_reader(file).map_err(Error::DeserializationError)?;
+                            modules.push(module);
+                        }
+                    } else {
+                        let file = File::open(path).map_err(Error::IOError)?;
+
+                        let module: Module =
+                            from_reader(file).map_err(Error::DeserializationError)?;
                         modules.push(module);
                     }
-                } else {
-                    let file = File::open(path).unwrap();
-
-                    let module: Module = from_reader(file).unwrap();
-                    modules.push(module);
                 }
+
+                // TODO: move this into LLVM codegen once rykv comes around.
+                unsafe {
+                    assert_ne!(1, LLVM_InitializeNativeTarget());
+                    assert_ne!(1, LLVM_InitializeNativeAsmPrinter());
+                    assert_ne!(1, LLVM_InitializeNativeAsmParser());
+                }
+
+                Target::reset_llvm().map_err(Error::TargetError)?;
+                for module in modules.iter() {
+                    let llvm_ir = compile_module(module, true);
+
+                    Target::write_llvm_ir(&module.name, &llvm_ir).map_err(Error::TargetError)?;
+                }
+
+                println!("Compilation results have been written to target");
             }
-
-            // TODO: move this into LLVM codegen once rykv comes around.
-            unsafe {
-                assert_ne!(1, LLVM_InitializeNativeTarget());
-                assert_ne!(1, LLVM_InitializeNativeAsmPrinter());
-                assert_ne!(1, LLVM_InitializeNativeAsmParser());
-            }
-
-            Target::refresh_llvm();
-            for module in modules.iter() {
-                let llvm_ir = compile_module(module, true);
-
-                Target::write_llvm_ir(&module.name, &llvm_ir);
-            }
-
-            println!("Success! Relevant modules have been loaded into the target ICE");
+            _ => return Err(Error::Unimplemented("metal".to_string())),
         }
+
         Ok(())
     }
 }
