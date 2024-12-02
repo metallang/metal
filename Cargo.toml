@@ -12,7 +12,7 @@ proc-macro2 = "1.0.89"
 proc-macro-error2 = "2.0.1"
 llvm-sys = { version = "191", features = ["force-static"] }
 enum-as-inner = "0.6.1"
-wasm-encoder = "0.220.0"
+wasm-encoder = "0.221.0"
 ron = "0.8"
 serde = { version = "1", features = ["derive"] }
 
