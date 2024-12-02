@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
+use serde::{Deserialize, Serialize};
 
 /// Represents the visibility of an item.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum Visibility {
     /// Public for any module to use.
     Public,

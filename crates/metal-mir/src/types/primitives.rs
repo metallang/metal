@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
+use serde::{Deserialize, Serialize};
 
 /// Represents the basic types of the language.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum Primitive {
     // Integers (signed)
     I8,

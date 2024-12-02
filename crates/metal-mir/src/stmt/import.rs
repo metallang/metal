@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+use serde::{Deserialize, Serialize};
 
 use crate::{parcel::Module, struct_, types};
 
@@ -23,10 +24,10 @@ use crate::{parcel::Module, struct_, types};
 ///     ]
 /// }
 /// ```
-#[derive(Debug, Clone)]
-pub struct Import<'a> {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Import {
     /// The module imported.
-    pub module: Box<Module<'a>>,
+    pub module: Box<Module>,
     /// The functions imported.
     pub functions: Vec<types::function::FunctionSignature>,
     /// The structs imported.
@@ -34,5 +35,5 @@ pub struct Import<'a> {
     /// The constants imported.
     pub constants: Vec<super::constant::Constant>,
     /// The next level of imports.
-    pub children: Vec<Import<'a>>,
+    pub children: Vec<Import>,
 }
