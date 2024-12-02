@@ -5,6 +5,7 @@ edition = "2021"
 description = "Middle-level IR for easier Metal->LLVM conversion"
 
 [dependencies]
+serde = { workspace = true }
 
 [lints]
 workspace = true

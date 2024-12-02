@@ -1,0 +1,54 @@
+(
+  name: "test_variables",
+  filename: "test_variables.mt",
+  parent: None,
+  children: [],
+  statements: [
+    FunctionDefine(
+        (
+            signature: (
+                name: "return_input_variable",
+                return_type: Primitive(I8),
+                inputs: {
+                    "var": Primitive(I8),
+                },
+                vis: Public
+            ),
+            body: [
+                Return(Some(
+                    Return(Variable(Load(
+                        name: "var",
+                        ty: Primitive(I8)
+                    )))
+                ))
+            ]
+        )
+    ),
+    Constant((
+        name: "test_constant",
+        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
+        ty: I8,
+        vis: Public
+    ))
+  ],
+  function_signatures: [
+    (
+        name: "return_input_variable",
+        return_type: Primitive(I8),
+        inputs: {
+            "var": Primitive(I8),
+        },
+        vis: Public
+    )
+  ],
+  imports: [],
+  constants: [
+    (
+        name: "test_constant",
+        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
+        ty: I8,
+        vis: Public
+    )
+  ],
+  structs: []
+)

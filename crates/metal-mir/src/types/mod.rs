@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+use serde::{Deserialize, Serialize};
+
 use crate::struct_;
 
 pub mod array;
@@ -9,7 +11,7 @@ pub mod tuple;
 pub mod visibility;
 
 /// Represents a Metal type.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Type {
     Composite(Box<Composite>),
     Primitive(Box<primitives::Primitive>),
@@ -18,7 +20,7 @@ pub enum Type {
 }
 
 /// Represents an array type or a group of types.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Composite {
     Array(array::Array),
     Tuple(tuple::Tuple),
