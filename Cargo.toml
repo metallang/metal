@@ -14,7 +14,7 @@ llvm-sys = { version = "191" }
 enum-as-inner = "0.6.1"
 wasm-encoder = "0.221.0"
 
-metal = { path = "crates/metal" }
+drill = { path = "crates/drill" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
@@ -27,6 +27,7 @@ metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
 peekable = { path = "crates/peekable" }
+debug-to-display = { path = "crates/debug-to-display" }
 
 [workspace.metadata.cargo-shear]
 ignored = [

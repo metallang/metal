@@ -1,14 +1,15 @@
 [package]
-name = "metal"
+name = "drill"
 version = "0.1.0"
 edition = "2021"
-description = "The Metal CLI."
+description = "The Metal Package Manager"
 
 [dependencies]
 tapcli = { workspace = true }
 thiserror = { workspace = true }
 metal-lexer = { workspace = true }
 metal-parser = { workspace = true }
+debug-to-display = { workspace = true }
 
 [features]
 default = []
