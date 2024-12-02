@@ -18,14 +18,14 @@ pub enum Error {
     UnsupportedInputType(String),
 
     #[error("System IO Error: {0}")]
-    IOError(io::Error),
+    IOError(#[from] io::Error),
 
     #[error("Failed to deserialize MIR: {0}")]
-    DeserializationError(SpannedError),
+    DeserializationError(#[from] SpannedError),
 
     #[error("Feature not yet implemented: {0}")]
     Unimplemented(String),
 
     #[error("{0}")]
-    TargetError(TargetError),
+    TargetError(#[from] TargetError),
 }

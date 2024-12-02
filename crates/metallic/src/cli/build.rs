@@ -57,9 +57,7 @@ impl tapcli::Command for BuildCommand {
                     cmd.input_type = InputType::try_from(value)?;
                 }
                 tapcli::ArgRef::Value(val) => {
-                    // NOTE: PathBuf returns an Infallible here.
-                    // So as the name suggests this unwrap *shouldn't* fail.
-                    cmd.relative_paths.push(PathBuf::from_str(val).unwrap());
+                    cmd.relative_paths.push(PathBuf::from(val));
                 }
                 _ => return Err(Error::UnrecognizedArgument(arg)),
             }
