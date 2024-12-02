@@ -1,0 +1,7 @@
+[pkg]
+name = "drill"
+version = "0.0.0"
+description = "The Metal Package Manager"
+
+[deps]
+std = { git = "github.com/metallang/std", tag = "master" }
