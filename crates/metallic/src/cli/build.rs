@@ -3,7 +3,6 @@
 use std::{
     fs::{self, File},
     path::PathBuf,
-    str::FromStr,
 };
 
 use llvm_sys::target::{
@@ -67,34 +66,32 @@ impl tapcli::Command for BuildCommand {
     }
 
     fn run<'a>(self) -> Result<Self::Output, Self::Error> {
-        Target::setup().map_err(Error::TargetError)?;
+        Target::setup()?;
 
         match self.input_type {
             InputType::MIR => {
                 let mut modules = Vec::new();
 
                 for path in self.relative_paths.iter() {
-                    if fs::metadata(path).map_err(Error::IOError)?.is_dir() {
-                        let read_dir = fs::read_dir(path).map_err(Error::IOError)?;
+                    if fs::metadata(path)?.is_dir() {
+                        let read_dir = fs::read_dir(path)?;
                         for entry in read_dir.into_iter().flatten() {
                             // TODO: recursive folder searching.
-                            if entry.metadata().map_err(Error::IOError)?.is_dir() {
+                            if entry.metadata()?.is_dir() {
                                 continue;
                             };
 
                             let p = entry.path();
 
-                            let file = File::open(p).map_err(Error::IOError)?;
+                            let file = File::open(p)?;
 
-                            let module: Module =
-                                from_reader(file).map_err(Error::DeserializationError)?;
+                            let module: Module = from_reader(file)?;
                             modules.push(module);
                         }
                     } else {
-                        let file = File::open(path).map_err(Error::IOError)?;
+                        let file = File::open(path)?;
 
-                        let module: Module =
-                            from_reader(file).map_err(Error::DeserializationError)?;
+                        let module: Module = from_reader(file)?;
                         modules.push(module);
                     }
                 }
@@ -106,11 +103,11 @@ impl tapcli::Command for BuildCommand {
                     assert_ne!(1, LLVM_InitializeNativeAsmParser());
                 }
 
-                Target::reset_llvm().map_err(Error::TargetError)?;
+                Target::reset_llvm()?;
                 for module in modules.iter() {
                     let llvm_ir = compile_module(module, true);
 
-                    Target::write_llvm_ir(&module.name, &llvm_ir).map_err(Error::TargetError)?;
+                    Target::write_llvm_ir(&module.name, &llvm_ir)?;
                 }
 
                 println!("Compilation results have been written to target");

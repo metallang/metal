@@ -4,14 +4,8 @@ use std::{fs, io};
 
 #[derive(Debug, thiserror::Error)]
 pub enum TargetError {
-    #[error("Failed to create target directory. IO Error: {0}")]
-    SetupFailure(io::Error),
-    #[error("Failed to write target ignores. IO Error: {0}")]
-    TargetIgnoreFailure(io::Error),
-    #[error("Failed to reset LLVM cache. IO Error: {0}")]
-    LLVMResetFailure(io::Error),
-    #[error("Failed to write to LLVM cache. IO Error: {0}")]
-    LLVMWriteFailure(io::Error),
+    #[error("Failed to write or read to target. IO Error: {0}")]
+    TargetIgnoreFailure(#[from] io::Error),
 }
 
 type TargetResult<T> = Result<T, TargetError>;
@@ -28,22 +22,20 @@ const GITIGNORE_CONTENTS: &str = "*";
 impl Target {
     pub fn setup() -> TargetResult<()> {
         // ensure the directories all exist
-        fs::create_dir_all("./target/.llvm-cache").map_err(TargetError::SetupFailure)?;
+        fs::create_dir_all("./target/.llvm-cache")?;
 
-        if !fs::exists("./target/CACHEDIR.TAG").map_err(TargetError::TargetIgnoreFailure)? {
-            fs::write("./target/CACHEDIR.TAG", CACHEDIR_CONTENTS)
-                .map_err(TargetError::TargetIgnoreFailure)?;
+        if !fs::exists("./target/CACHEDIR.TAG")? {
+            fs::write("./target/CACHEDIR.TAG", CACHEDIR_CONTENTS)?;
         }
-        if !fs::exists("./target/.gitignore").map_err(TargetError::TargetIgnoreFailure)? {
-            fs::write("./target/.gitignore", GITIGNORE_CONTENTS)
-                .map_err(TargetError::TargetIgnoreFailure)?;
+        if !fs::exists("./target/.gitignore")? {
+            fs::write("./target/.gitignore", GITIGNORE_CONTENTS)?;
         }
         Ok(())
     }
 
     pub fn reset_llvm() -> TargetResult<()> {
-        fs::remove_dir_all("./target/.llvm-cache").map_err(TargetError::LLVMResetFailure)?;
-        fs::create_dir_all("./target/.llvm-cache").map_err(TargetError::LLVMResetFailure)?;
+        fs::remove_dir_all("./target/.llvm-cache")?;
+        fs::create_dir_all("./target/.llvm-cache")?;
         Ok(())
     }
 
@@ -51,8 +43,7 @@ impl Target {
         fs::write(
             "./target/.llvm-cache/".to_string() + module + ".ll",
             contents,
-        )
-        .map_err(TargetError::LLVMWriteFailure)?;
+        )?;
         Ok(())
     }
 }
