@@ -17,6 +17,7 @@ ron = "0.8"
 serde = { version = "1", features = ["derive"] }
 semver = "1"
 
+drill = { path = "crates/drill" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
@@ -33,14 +34,13 @@ debug-to-display = { path = "crates/debug-to-display" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
-
     "metal-ast",
     "metal-parser",
     "metal-codegen-llvm",
     "metal-codegen-wasm",
     "metallic",
     "metal-formatter",
-    "metal",
+    "drill",
     "metal-linter",
     "metal-lsp",
 ]
