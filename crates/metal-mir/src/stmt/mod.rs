@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+use serde::{Deserialize, Serialize};
 
 use crate::{expr::Assignment, types::function::FunctionSignature};
 
@@ -8,9 +9,9 @@ pub mod import;
 pub mod return_;
 
 /// Represents a statement in Metal code.
-#[derive(Debug, Clone)]
-pub enum Statement<'a> {
-    FunctionDefine(Box<functiondef::FunctionDefinition<'a>>),
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum Statement {
+    FunctionDefine(Box<functiondef::FunctionDefinition>),
     Constant(Box<constant::Constant>),
     Let(Box<Assignment>),
     Extern(Box<FunctionSignature>),
