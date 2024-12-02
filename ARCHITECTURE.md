@@ -1,5 +1,8 @@
 # Metal Architecture
 
+This is a high-level overview and generalization of Metal's core architecture. It is not representative of how different components of Metal interact with each other,
+and is definitely not a standard. This is purely for education and as a high-level language resource.
+
 Metal is split up into four general pieces:
 
 - User frontend (`drill`, `metallic`, etc.)
