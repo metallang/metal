@@ -6,22 +6,24 @@ use std::{borrow::Cow, collections::HashMap, ffi::CString};
 use llvm_sys::{
     analysis::LLVMVerifyModule,
     bit_writer,
-    core::{LLVMPrintModuleToString, LLVMSetSourceFileName}, prelude::LLVMTypeRef,
+    core::{LLVMPrintModuleToString, LLVMSetSourceFileName},
+    prelude::LLVMTypeRef,
 };
 use metal_mir::{parcel::Module, struct_::Struct};
 
 use crate::{
-    safeties::{LLVMErrorMessage, MemoryBuffer}, CodeGenType, CodeGenValue, LLVMRefs
+    safeties::{LLVMErrorMessage, MemoryBuffer},
+    CodeGenType, CodeGenValue, LLVMRefs,
 };
 
 pub struct StructRepository {
-    structs: HashMap<String, LLVMTypeRef>
+    structs: HashMap<String, LLVMTypeRef>,
 }
 
 impl StructRepository {
     pub fn new() -> Self {
         Self {
-            structs: HashMap::new()
+            structs: HashMap::new(),
         }
     }
 
@@ -30,14 +32,16 @@ impl StructRepository {
     }
 
     pub fn get(&self, name: &str) -> Option<LLVMTypeRef> {
-        if let Some(r) = self.structs.get(name) {
-            Some(*r)
-        } else {
-            None
-        }
+        self.structs.get(name).copied()
     }
 
-    pub fn get_or_insert(&mut self, name: String, struct_: &Struct, llvm: &mut LLVMRefs, module: &Module) -> LLVMTypeRef {
+    pub fn get_or_insert(
+        &mut self,
+        name: String,
+        struct_: &Struct,
+        llvm: &mut LLVMRefs,
+        module: &Module,
+    ) -> LLVMTypeRef {
         if let Some(struct_) = self.get(&name) {
             struct_
         } else {
@@ -45,6 +49,12 @@ impl StructRepository {
             self.insert(name, ty);
             ty
         }
+    }
+}
+
+impl Default for StructRepository {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -129,7 +139,7 @@ mod tests {
             name: name.clone(),
             filename: name,
             statements: Vec::new(),
-            imports: Vec::new()
+            imports: Vec::new(),
         }
     }
 

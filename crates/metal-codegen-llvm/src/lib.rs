@@ -31,7 +31,7 @@ pub struct LLVMRefs {
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
     locals: BTreeMap<String, LLVMValueRef>,
-    struct_repo: StructRepository
+    struct_repo: StructRepository,
 }
 
 impl LLVMRefs {
@@ -44,7 +44,7 @@ impl LLVMRefs {
                 builder: LLVMCreateBuilder(),
                 module: LLVMModuleCreateWithNameInContext(module_name.as_ptr(), ctx),
                 locals: BTreeMap::new(),
-                struct_repo: StructRepository::new()
+                struct_repo: StructRepository::new(),
             }
         }
     }
