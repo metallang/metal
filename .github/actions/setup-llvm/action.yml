@@ -26,7 +26,7 @@ runs:
       shell: bash
 
     - if: ${{ runner.os == 'Windows' && runner.arch == 'X64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-build-windows/releases/download/19.1.0/llvm-darwin-aarch64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-build-windows/archive/refs/tags/19.1.0.tar.gz" >> $GITHUB_ENV
       shell: bash
 
     - id: cache-llvm
