@@ -29,7 +29,6 @@ metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
 peekable = { path = "crates/peekable" }
-drill = { path = "crates/drill" } # do we add this to `workspace.metadata.cargo-shear.ignored`?
 
 [workspace.metadata.cargo-shear]
 ignored = [
