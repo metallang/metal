@@ -26,7 +26,7 @@ runs:
       shell: bash
 
     - if: ${{ runner.os == 'Windows' && runner.arch == 'X64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-build-windows/archive/refs/tags/19.1.0.tar.gz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=https://github.com/anavereum/llvm-custom-build-windows/archive/refs/tags/19.1.0.tar.gz" >> $GITHUB_ENV
       shell: bash
 
     - id: cache-llvm
@@ -45,7 +45,7 @@ runs:
       run: |
         curl --proto '=https' --tlsv1.2 -sSf "$env:LLVM_URL" -L -o llvm.tar.gz
         mkdir -p $env:LLVM_DIR
-        bsdtar -xvzf llvm.tar.gz -C $env:LLVM_DIR
+        tar -xvzf llvm.tar.gz -C $env:LLVM_DIR
       shell: bash
 
     - run: |
