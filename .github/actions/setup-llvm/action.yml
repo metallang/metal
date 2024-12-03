@@ -44,7 +44,7 @@ runs:
     - if: ${{ steps.cache-llvm.outputs.cache-hit != 'true' && runner.os == 'Windows' }}
       run: |
         mkdir -p $LLVM_DIR
-        curl --proto '=https' --tlsv1.2 -sSf "$LLVM_URL" -L -o - | tar -xvzf -C $LLVM_DIR
+        curl --proto '=https' --tlsv1.2 -sSf "$LLVM_URL" -L -o - | tar -zxvf -C $LLVM_DIR
       shell: bash
 
     - run: |
