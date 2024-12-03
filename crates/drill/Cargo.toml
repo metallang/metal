@@ -1,0 +1,10 @@
+[package]
+name = "drill"
+version = "0.1.0"
+edition = "2021"
+description = "The Metal installer. The equivalent to rustup."
+
+[dependencies]
+
+[lints]
+workspace = true
