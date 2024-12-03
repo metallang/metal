@@ -1,12 +1,7 @@
-use std::process::Command;
-
-fn main() -> Result<(), std::io::Error> {
+fn main() -> Result<(), metal_ast_ungram::Error> {
     println!("cargo::rerun-if-changed=./metal.ungram");
 
-    // Command::new("cargo")
-    //     .args(["run", "-p", "scripts", "--bin", "ungram"])
-    //     .spawn()?
-    //     .wait()?;
+    metal_ast_ungram::run()?;
 
     Ok(())
 }

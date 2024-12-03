@@ -9,5 +9,8 @@ extend = { workspace = true }
 ungrammar = { workspace = true }
 metal-proc-macros = { workspace = true }
 
+[build-dependencies]
+metal-ast-ungram = { workspace = true }
+
 [lints]
 workspace = true

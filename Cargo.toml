@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*", "scripts"]
+members = ["crates/*"]
 resolver = "2"
 
 [workspace.dependencies]
@@ -21,6 +21,7 @@ extend = "1.2.0"
 
 metal = { path = "crates/metal" }
 metal-ast = { path = "crates/metal-ast" }
+metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
@@ -35,7 +36,6 @@ peekable = { path = "crates/peekable" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
-
     "metal-ast",
     "metal-parser",
     "metal-codegen-llvm",
