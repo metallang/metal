@@ -1,3 +1,12 @@
+use colored::Colorize;
+
+mod cli;
+mod error;
+
 fn main() {
-    println!("Hello, world!");
+    let result = cli::main::app();
+
+    if let Err(error) = result {
+        eprintln!("{}: {}", "Error".red(), error)
+    }
 }
