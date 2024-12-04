@@ -17,7 +17,7 @@ ron = "0.8"
 serde = { version = "1", features = ["derive"] }
 semver = "1"
 
-drill = { path = "crates/drill" }
+cart = { path = "crates/cart" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
@@ -40,7 +40,7 @@ ignored = [
     "metal-codegen-wasm",
     "metallic",
     "metal-formatter",
-    "drill",
+    "cart",
     "metal-linter",
     "metal-lsp",
 ]

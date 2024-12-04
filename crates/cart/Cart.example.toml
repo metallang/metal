@@ -1,5 +1,5 @@
 [pkg]
-name = "drill"
+name = "cart"
 version = "0.0.0"
 description = "The Metal Package Manager"
 

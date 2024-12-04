@@ -1,5 +1,5 @@
 [package]
-name = "drill"
+name = "cart"
 version = "0.1.0"
 edition = "2021"
 description = "The Metal Package Manager"
