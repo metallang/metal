@@ -11,3 +11,4 @@ metal-mir = { workspace = true }
 metal-codegen-llvm = { workspace = true }
 ron = { workspace = true }
 llvm-sys = { workspace = true }
+debug-to-display = { workspace = true }
