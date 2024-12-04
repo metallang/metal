@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::stmt;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Parcel {
     /// Parcel name.
     /// i.e. `std`
@@ -16,7 +16,7 @@ pub struct Parcel {
     pub modules: Vec<Module>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Module {
     /// Module name.
     /// i.e. `std.io`

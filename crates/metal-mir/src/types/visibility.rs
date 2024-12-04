@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Represents the visibility of an item.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Visibility {
     /// Public for any module to use.
     Public,

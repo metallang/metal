@@ -8,7 +8,7 @@ use super::Type;
 ///
 /// i.e.: [1, 2, 3]
 /// Array { item_type: Type(...) }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Array {
     /// The type which is present in a list.
     pub item_type: Type,
