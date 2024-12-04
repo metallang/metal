@@ -1,0 +1,14 @@
+[package]
+name = "drill"
+version = "0.1.0"
+edition = "2021"
+description = "Metal's installer. An equivalent to Rustup."
+
+[dependencies]
+tapcli = { workspace = true }
+thiserror = { workspace = true }
+
+colored = "2.1.0"
+
+[lints]
+workspace = true
