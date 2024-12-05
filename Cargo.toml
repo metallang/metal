@@ -15,8 +15,11 @@ enum-as-inner = "0.6.1"
 wasm-encoder = "0.221.0"
 ron = "0.8"
 serde = { version = "1", features = ["derive"] }
+salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8eab92de89edf4073b03601" }
+rkyv = "0.8"
 
 metal = { path = "crates/metal" }
+metal-analyzer = { path = "crates/metal-analyzer" }
 metal-ast = { path = "crates/metal-ast" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
@@ -32,7 +35,7 @@ peekable = { path = "crates/peekable" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
-
+    "metal-analyzer",
     "metal-ast",
     "metal-parser",
     "metal-codegen-llvm",
