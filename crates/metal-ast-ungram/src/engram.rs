@@ -2,7 +2,7 @@ use std::ops::Index;
 
 use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
-use ungrammar::{Grammar, Node, NodeData, Token, TokenData};
+use ungrammar::{Grammar, Node, NodeData, Rule, Token, TokenData};
 
 /// A convenience wrapper around [Grammar].
 pub struct Engram(Grammar);
@@ -41,6 +41,22 @@ impl Index<&Node> for Engram {
     }
 }
 
+/// Additional methods for [Rule].
+#[extend::ext]
+pub impl Rule {
+    /// "Unwraps" potential "layers" around the inner [simple rule](is_simple)
+    /// and returns it. If this rule is not a simple rule, returns `None`.
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn unwrap_simple(&self) -> Option<&Rule> {
+        match self {
+            rule @ (Rule::Node(_) | Rule::Token(_)) => Some(rule),
+            Rule::Opt(rule) => rule.as_ref().unwrap_simple(),
+            Rule::Labeled { rule, .. } => rule.as_ref().unwrap_simple(),
+            _ => None,
+        }
+    }
+}
+
 /// Additional methods for [TokenData].
 #[extend::ext(name = TokenExt)]
 pub impl TokenData {
@@ -54,8 +70,8 @@ pub impl TokenData {
     }
     /// Returns an identifier to be used as the name of the accessor method
     /// corresponding to this token.
-    fn as_fn_ident(&self) -> Ident {
-        let name = token_name(&self.name);
+    fn as_fn_ident(&self, label: Option<&str>) -> Ident {
+        let name = token_name(label.unwrap_or(&self.name));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
@@ -83,8 +99,8 @@ pub impl NodeData {
     }
     /// Returns an identifier to be used as the name of the accessor method
     /// corresponding to this node.
-    fn as_fn_ident(&self) -> Ident {
-        let name = node_name(&self.name);
+    fn as_fn_ident(&self, label: Option<&str>) -> Ident {
+        let name = node_name(label.unwrap_or(&self.name));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
