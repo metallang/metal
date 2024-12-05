@@ -1,0 +1,13 @@
+[package]
+name = "metal-analyzer"
+version = "0.1.0"
+edition = "2024"
+description = "The Metal AST Analyzer."
+
+[dependencies]
+salsa = { workspace = true }
+metal-mir = { workspace = true }
+rkyv = { workspace = true }
+
+[lints]
+workspace = true
