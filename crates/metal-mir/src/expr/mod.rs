@@ -8,7 +8,7 @@ pub mod function_call;
 pub mod literals;
 
 /// Represents a mathematical value.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct MathematicalValue {
     /// Represents the left hand side of the expression.
     pub a: Expr,
@@ -24,7 +24,7 @@ pub struct MathematicalValue {
 
 /// Represents a stack allocation for `name` using `type` and an
 /// optional assignment afterwards using `expr`, or a variable assignment.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Assignment {
     /// The variable name to use.
     pub name: String,
@@ -35,7 +35,7 @@ pub struct Assignment {
 }
 
 /// Represents loading a pointer into the memory register.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Load {
     /// The variable/local to load.
     pub name: String,
@@ -43,7 +43,7 @@ pub struct Load {
     pub ty: Type,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Expr {
     FunctionCall(Box<function_call::FunctionCall>),
     Literal(Box<literals::Literal>),

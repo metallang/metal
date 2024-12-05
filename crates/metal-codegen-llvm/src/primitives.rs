@@ -11,7 +11,7 @@ use crate::CodeGenType;
 impl CodeGenType for Primitive {
     fn llvm_type(
         &self,
-        llvm: &crate::LLVMRefs,
+        llvm: &mut crate::LLVMRefs,
         _module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMTypeRef {
         unsafe {

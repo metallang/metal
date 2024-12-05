@@ -11,7 +11,7 @@ pub mod struct_;
 impl CodeGenType for Type {
     fn llvm_type(
         &self,
-        llvm: &crate::LLVMRefs,
+        llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMTypeRef {
         match self {

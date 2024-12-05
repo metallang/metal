@@ -8,7 +8,7 @@ use super::{get_types, CodeGenType};
 impl CodeGenType for FunctionSignature {
     fn llvm_type(
         &self,
-        llvm: &crate::LLVMRefs,
+        llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMTypeRef {
         unsafe {

@@ -11,7 +11,7 @@ pub mod tuple;
 pub mod visibility;
 
 /// Represents a Metal type.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Type {
     Composite(Box<Composite>),
     Primitive(Box<primitives::Primitive>),
@@ -20,7 +20,7 @@ pub enum Type {
 }
 
 /// Represents an array type or a group of types.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Composite {
     Array(array::Array),
     Tuple(tuple::Tuple),
