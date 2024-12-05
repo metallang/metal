@@ -34,8 +34,7 @@ impl CodeGenType for Struct {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> llvm_sys::prelude::LLVMTypeRef {
-        let full_name =
-            module.name.clone() + "." + self.name.as_str();
+        let full_name = module.name.clone() + "." + self.name.as_str();
         if let Some(s) = llvm.struct_repo.get(&full_name) {
             return s;
         }
