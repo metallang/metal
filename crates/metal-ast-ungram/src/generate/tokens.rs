@@ -11,6 +11,7 @@ pub fn generate_token_items(grammar: &Engram) -> TokenStream {
         let doc = format!(" Represents the `{}` token.", &token.name);
 
         quote! {
+            #[derive(Debug, Clone, PartialEq, Eq, Hash)]
             #[doc = #doc]
             pub struct #item_name {
                 syntax: SyntaxToken,

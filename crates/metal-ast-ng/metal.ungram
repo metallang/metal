@@ -128,7 +128,7 @@ BinaryOp =
   // range
 | '..'
   // special
-  '.'
+| '.'
 
 CallExpr =
   Expr '(' (Expr ','?)* ')'
