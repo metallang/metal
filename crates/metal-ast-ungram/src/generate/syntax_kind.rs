@@ -4,8 +4,8 @@ use quote::quote;
 use crate::engram::{Engram, NodeExt, TokenExt};
 
 pub fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
-    let node_variants = grammar.nodes().map(|node| node.as_syntax_kind_ident());
-    let token_variants = grammar.tokens().map(|token| token.as_syntax_kind_ident());
+    let node_variants = grammar.nodes().map(|node| node.as_syntax_kind_name());
+    let token_variants = grammar.tokens().map(|token| token.as_syntax_kind_name());
 
     let variants = node_variants.chain(token_variants);
 

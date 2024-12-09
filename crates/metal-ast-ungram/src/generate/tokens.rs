@@ -5,8 +5,8 @@ use crate::engram::{Engram, TokenExt};
 
 pub fn generate_token_items(grammar: &Engram) -> TokenStream {
     let items = grammar.tokens().map(|token| {
-        let item_name = token.as_item_ident();
-        let syntax_kind_name = token.as_syntax_kind_ident();
+        let item_name = token.as_item_name();
+        let syntax_kind_name = token.as_syntax_kind_name();
 
         let doc = format!(" Represents the `{}` token.", &token.name);
 

@@ -62,23 +62,25 @@ pub impl Rule {
 pub impl TokenData {
     /// Returns an identifier to be used as the name for the item (struct/enum)
     /// corresponding to this token.
-    fn as_item_ident(&self) -> Ident {
+    fn as_item_name(&self) -> Ident {
         let name = token_name(&self.name);
         let ident = name.to_upper_camel_case();
 
         call_site_ident(ident)
     }
+
     /// Returns an identifier to be used as the name of the accessor method
     /// corresponding to this token.
-    fn as_fn_ident(&self, label: Option<&str>) -> Ident {
+    fn as_fn_name(&self, label: Option<&str>) -> Ident {
         let name = token_name(label.unwrap_or(&self.name));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
     }
+
     /// Returns an identifier to be used as the name of the `SyntaxKind` variant
     /// corresponding to this token.
-    fn as_syntax_kind_ident(&self) -> Ident {
+    fn as_syntax_kind_name(&self) -> Ident {
         let name = token_name(&self.name);
         let ident = name.to_shouty_snake_case();
 
@@ -91,25 +93,36 @@ pub impl TokenData {
 pub impl NodeData {
     /// Returns an identifier to be used as the name for the item (struct/enum)
     /// corresponding to this node.
-    fn as_item_ident(&self) -> Ident {
+    fn as_item_name(&self) -> Ident {
         let name = node_name(&self.name);
         let ident = name.to_upper_camel_case();
 
         call_site_ident(ident)
     }
+
     /// Returns an identifier to be used as the name of the accessor method
     /// corresponding to this node.
-    fn as_fn_ident(&self, label: Option<&str>) -> Ident {
+    fn as_fn_name(&self, label: Option<&str>) -> Ident {
         let name = node_name(label.unwrap_or(&self.name));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
     }
+
     /// Returns an identifier to be used as the name of the `SyntaxKind` variant
     /// corresponding to this node.
-    fn as_syntax_kind_ident(&self) -> Ident {
+    fn as_syntax_kind_name(&self) -> Ident {
         let name = node_name(&self.name);
         let ident = name.to_shouty_snake_case();
+
+        call_site_ident(ident)
+    }
+
+    /// Returns an identifier to be used as the name for enum variants that house
+    /// this node as data.
+    fn as_variant_name(&self) -> Ident {
+        // skip appending "node"
+        let ident = self.name.to_upper_camel_case();
 
         call_site_ident(ident)
     }
