@@ -2,37 +2,33 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use ungrammar::{NodeData, Rule};
 
-use crate::{
-    engram::{Engram, NodeExt},
-    generate::nodes::struct_::generate_struct_item,
-};
+use crate::engram::{Engram, NodeExt, TokenExt};
 
 #[allow(clippy::wildcard_enum_match_arm)]
-pub fn generate_enum_item(grammar: &Engram, node: &NodeData) -> TokenStream {
-    let item_name = node.as_item_ident();
+pub fn generate_enum_item(grammar: &Engram) -> impl Iterator<Item = TokenStream> + use<'_> {
+    grammar.nodes().filter_map(|token_node| {
+        let Rule::Alt(rules) = &token_node.rule else {
+            return None;
+        };
 
-    let doc = format!(" Represents the `{}` node.", &node.name);
+        if !rules.iter().all(|rule| matches!(rule, Rule::Token(_))) {
+            return None;
+        }
 
-    let Rule::Alt(alt_rules) = &node.rule else {
-        unreachable!()
-    };
-
-    if alt_rules.iter().all(|rule| matches!(rule, Rule::Node(_))) {
-        generate_node_enum_item(grammar, alt_rules.as_slice(), &item_name, &doc)
-    } else if alt_rules.iter().all(|rule| matches!(rule, Rule::Token(_))) {
-        generate_struct_item(grammar, node)
-    } else {
-        panic!("enum node {item_name} must be either all-nodes or all-tokens")
-    }
+        Some(generate_node_enum_item(
+            grammar,
+            token_node,
+            rules.as_slice(),
+        ))
+    })
 }
 
 #[allow(clippy::wildcard_enum_match_arm)]
-fn generate_node_enum_item(
-    grammar: &Engram,
-    rules: &[Rule],
-    item_name: &syn::Ident,
-    doc: &str,
-) -> TokenStream {
+fn generate_node_enum_item(grammar: &Engram, token_node: &NodeData, rules: &[Rule]) -> TokenStream {
+    let item_name = token_node.as_token_enum_name();
+
+    let doc = format!(" Represents the `{}` token.", &token_node.name);
+
     let mut enum_variants = TokenStream::new();
     let mut can_cast_arms = TokenStream::new();
     let mut cast_arms = TokenStream::new();
@@ -40,22 +36,23 @@ fn generate_node_enum_item(
 
     for rule in rules {
         match rule {
-            Rule::Node(node) => {
-                let node = &grammar[node];
-                let variant_name = node.as_item_ident(); // TODO: better naming
-                let syntax_kind_name = node.as_syntax_kind_ident();
+            Rule::Token(token) => {
+                let token = &grammar[token];
+                let variant_name = token.as_variant_name();
+                let data_name = token.as_item_name();
+                let syntax_kind_name = token.as_syntax_kind_name();
 
-                let enum_variant_doc = format!(" See [{}].", &variant_name);
+                let enum_variant_doc = format!(" See [{}].", &data_name);
 
                 let enum_variant = quote! {
                     #[doc = #enum_variant_doc]
-                    #variant_name(#variant_name),
+                    #variant_name(#data_name),
                 };
                 let can_cast_arm = quote! {
                     SyntaxKind::#syntax_kind_name => true,
                 };
                 let cast_arm = quote! {
-                    SyntaxKind::#syntax_kind_name => Some(#item_name::#variant_name(#variant_name::cast(syntax)?)),
+                    SyntaxKind::#syntax_kind_name => Some(#item_name::#variant_name(#data_name::cast(syntax)?)),
                 };
                 let syntax_arm = quote! {
                     #item_name::#variant_name(it) => it.syntax(),
@@ -71,13 +68,13 @@ fn generate_node_enum_item(
     }
 
     quote! {
-        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         #[doc = #doc]
+        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub enum #item_name {
             #enum_variants
         }
 
-        impl AstNode for #item_name {
+        impl AstToken for #item_name {
             #[allow(clippy::match_like_matches_macro)]
             #[allow(clippy::wildcard_enum_match_arm)]
             fn can_cast(kind: SyntaxKind) -> bool {
@@ -88,14 +85,14 @@ fn generate_node_enum_item(
             }
 
             #[allow(clippy::wildcard_enum_match_arm)]
-            fn cast(syntax: SyntaxNode) -> Option<Self> {
+            fn cast(syntax: SyntaxToken) -> Option<Self> {
                 match syntax.kind() {
                     #cast_arms
                     _ => None,
                 }
             }
 
-            fn syntax(&self) -> &SyntaxNode {
+            fn syntax(&self) -> &SyntaxToken {
                 match self {
                     #syntax_arms
                 }

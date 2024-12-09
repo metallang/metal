@@ -60,7 +60,7 @@ pub impl Rule {
 /// Additional methods for [TokenData].
 #[extend::ext(name = TokenExt)]
 pub impl TokenData {
-    /// Returns an identifier to be used as the name for the item (struct/enum)
+    /// Returns an identifier to be used as the name of the item (struct/enum)
     /// corresponding to this token.
     fn as_item_name(&self) -> Ident {
         let name = token_name(&self.name);
@@ -86,12 +86,21 @@ pub impl TokenData {
 
         call_site_ident(ident)
     }
+
+    /// Returns an identifier to be used as the name for enum variants that house
+    /// this node as data.
+    fn as_variant_name(&self) -> Ident {
+        let name = grammar_item_name(&self.name);
+        let ident = name.to_upper_camel_case();
+
+        call_site_ident(ident)
+    }
 }
 
 /// Additional methods for [NodeData].
 #[extend::ext(name = NodeExt)]
 pub impl NodeData {
-    /// Returns an identifier to be used as the name for the item (struct/enum)
+    /// Returns an identifier to be used as the name of the item (struct/enum)
     /// corresponding to this node.
     fn as_item_name(&self) -> Ident {
         let name = node_name(&self.name);
@@ -121,8 +130,17 @@ pub impl NodeData {
     /// Returns an identifier to be used as the name for enum variants that house
     /// this node as data.
     fn as_variant_name(&self) -> Ident {
-        // skip appending "node"
-        let ident = self.name.to_upper_camel_case();
+        let name = grammar_item_name(&self.name);
+        let ident = name.to_upper_camel_case();
+
+        call_site_ident(ident)
+    }
+
+    /// Returns an identifier to be used as the name of the token enum item
+    /// corresponding to this node.
+    fn as_token_enum_name(&self) -> Ident {
+        let name = token_name(&self.name);
+        let ident = name.to_upper_camel_case();
 
         call_site_ident(ident)
     }

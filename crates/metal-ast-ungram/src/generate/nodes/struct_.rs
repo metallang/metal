@@ -13,11 +13,11 @@ pub fn generate_struct_item(grammar: &Engram, node: &NodeData) -> TokenStream {
 
     let doc = format!(" Represents the `{}` node.", &node.name);
 
-    let item_impl = generate_struct_item_impl(grammar, &item_name, &node.rule);
+    let item_impl = generate_struct_item_impl(grammar, node, &node.rule);
 
     quote! {
-        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         #[doc = #doc]
+        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub struct #item_name {
             syntax: SyntaxNode,
         }
@@ -40,9 +40,24 @@ pub fn generate_struct_item(grammar: &Engram, node: &NodeData) -> TokenStream {
     }
 }
 
-fn generate_struct_item_impl(grammar: &Engram, item_name: &syn::Ident, rule: &Rule) -> TokenStream {
+fn generate_struct_item_impl(grammar: &Engram, node: &NodeData, rule: &Rule) -> TokenStream {
+    let item_name = node.as_item_name();
+
     if matches!(rule, Rule::Alt(_)) {
-        return TokenStream::new(); // TODO
+        let token_enum_name = node.as_token_enum_name();
+
+        return quote! {
+            impl #item_name {
+                pub fn token(&self) -> Option<#token_enum_name> {
+                    self.syntax
+                        .children_with_tokens()
+                        .find_map(|node_or_token| match node_or_token {
+                            NodeOrToken::Node(_) => None,
+                            NodeOrToken::Token(token) => #token_enum_name::cast(token),
+                        })
+                }
+            }
+        };
     }
 
     let impl_ = generate_rule(grammar, rule, None);

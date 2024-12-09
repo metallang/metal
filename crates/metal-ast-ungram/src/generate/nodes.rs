@@ -21,12 +21,16 @@ pub fn generate_node_items(grammar: &Engram) -> TokenStream {
     });
 
     quote! {
+        use rowan::NodeOrToken;
+
         use crate::{
             AstNode,
+            AstToken,
             SyntaxKind,
             SyntaxNode,
             SyntaxNodeExt,
             SyntaxToken,
+            tokens::*,
         };
 
         #(#token_items)*

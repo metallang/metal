@@ -72,8 +72,8 @@ fn generate_node_enum_item(
     }
 
     quote! {
-        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         #[doc = #doc]
+        #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub enum #item_name {
             #enum_variants
         }
