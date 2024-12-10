@@ -2,7 +2,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use ungrammar::{NodeData, Rule};
 
-use crate::engram::{Engram, NodeExt, TokenExt};
+use crate::engram::{Engram, GrammarItem, NodeDataExt};
 
 /// Finds and generates enums of tokens for nodes that are an alteration of tokens, such as `BinaryOp`.
 pub fn generate_token_alt_nodes(grammar: &Engram) -> impl Iterator<Item = TokenStream> + use<'_> {
@@ -40,9 +40,9 @@ fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rul
         match rule {
             Rule::Token(token) => {
                 let token = &grammar[token];
-                let variant_name = token.as_variant_name();
-                let data_name = token.as_item_name();
-                let syntax_kind_name = token.as_syntax_kind_name();
+                let variant_name = token.variant_name();
+                let data_name = token.item_name();
+                let syntax_kind_name = token.syntax_kind_name();
 
                 let enum_variant_doc = format!(" See [{}].", &data_name);
 

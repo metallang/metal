@@ -3,12 +3,12 @@ use quote::quote;
 use ungrammar::{NodeData, Rule};
 
 use crate::{
-    engram::{Engram, NodeExt},
-    generate::nodes::struct_::generate_struct_item,
+    engram::{Engram, GrammarItem},
+    generate::nodes::node_struct::generate_node_struct,
 };
 
 pub fn generate_enum_item(grammar: &Engram, node: &NodeData) -> TokenStream {
-    let item_name = node.as_item_name();
+    let item_name = node.item_name();
 
     let doc = format!(" Represents the `{}` node.", &node.name);
 
@@ -19,7 +19,7 @@ pub fn generate_enum_item(grammar: &Engram, node: &NodeData) -> TokenStream {
     if alt_rules.iter().all(|rule| matches!(rule, Rule::Node(_))) {
         generate_node_enum_item(grammar, alt_rules.as_slice(), &item_name, &doc)
     } else if alt_rules.iter().all(|rule| matches!(rule, Rule::Token(_))) {
-        generate_struct_item(grammar, node)
+        generate_node_struct(grammar, node)
     } else {
         panic!("enum node {item_name} must be either all-nodes or all-tokens")
     }
@@ -40,9 +40,9 @@ fn generate_node_enum_item(
         match rule {
             Rule::Node(node) => {
                 let node = &grammar[node];
-                let variant_name = node.as_variant_name();
-                let data_name = node.as_item_name();
-                let syntax_kind_name = node.as_syntax_kind_name();
+                let variant_name = node.variant_name();
+                let data_name = node.item_name();
+                let syntax_kind_name = node.syntax_kind_name();
 
                 let enum_variant_doc = format!(" See [{}].", &data_name);
 

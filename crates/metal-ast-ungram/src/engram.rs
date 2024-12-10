@@ -1,8 +1,10 @@
+//! Various abstractions over [ungrammar]'s API.
+
 use std::ops::Index;
 
 use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
-use ungrammar::{Grammar, Node, NodeData, Rule, Token, TokenData};
+use ungrammar::{Grammar, Node, NodeData, Token, TokenData};
 
 /// A convenience wrapper around [Grammar].
 pub struct Engram(Grammar);
@@ -41,55 +43,106 @@ impl Index<&Node> for Engram {
     }
 }
 
-/// Additional methods for [Rule].
-#[extend::ext]
-pub impl Rule {
-    /// "Unwraps" potential "layers" around the inner [simple rule](is_simple)
-    /// and returns it. If this rule is not a simple rule, returns `None`.
-    #[allow(clippy::wildcard_enum_match_arm)]
-    fn unwrap_simple(&self) -> Option<&Rule> {
-        match self {
-            rule @ (Rule::Node(_) | Rule::Token(_)) => Some(rule),
-            Rule::Opt(rule) => rule.as_ref().unwrap_simple(),
-            Rule::Labeled { rule, .. } => rule.as_ref().unwrap_simple(),
-            _ => None,
-        }
-    }
+/// Shared utility methods between [TokenData] and [NodeData].
+pub trait GrammarItem {
+    /// Returns the docstring for the struct corresponding to this grammar item.
+    fn struct_doc(&self) -> String;
+    /// Returns the name of the "AST trait" that this grammar item implements/should
+    /// implement.
+    fn ast_trait_name(&self) -> Ident;
+    /// Returns the name of the "syntax" type that this grammar item wraps/should wrap.
+    fn syntax_type_name(&self) -> Ident;
+    /// Returns an identifier to be used as the name of the struct/enum
+    /// corresponding to this grammar item.
+    fn item_name(&self) -> Ident;
+    /// Returns an identifier to be used as the name of the accessor method
+    /// corresponding to this grammar item.
+    fn fn_name(&self, label: Option<&str>) -> Ident;
+    /// Returns an identifier to be used as the name of the `SyntaxKind` variant
+    /// corresponding to this grammar item.
+    fn syntax_kind_name(&self) -> Ident;
+    /// Returns an identifier to be used as the name for enum variants that house
+    /// this grammar item as data.
+    fn variant_name(&self) -> Ident;
 }
 
-/// Additional methods for [TokenData].
-#[extend::ext(name = TokenExt)]
-pub impl TokenData {
-    /// Returns an identifier to be used as the name of the item (struct/enum)
-    /// corresponding to this token.
-    fn as_item_name(&self) -> Ident {
+impl GrammarItem for TokenData {
+    fn struct_doc(&self) -> String {
+        format!(" Represents the `{}` token.", self.name.as_str())
+    }
+
+    fn ast_trait_name(&self) -> Ident {
+        call_site_ident("AstToken".to_string())
+    }
+
+    fn syntax_type_name(&self) -> Ident {
+        call_site_ident("SyntaxToken".to_string())
+    }
+
+    fn item_name(&self) -> Ident {
         let name = token_name(&self.name);
         let ident = name.to_upper_camel_case();
 
         call_site_ident(ident)
     }
 
-    /// Returns an identifier to be used as the name of the accessor method
-    /// corresponding to this token.
-    fn as_fn_name(&self, label: Option<&str>) -> Ident {
+    fn fn_name(&self, label: Option<&str>) -> Ident {
         let name = token_name(label.unwrap_or(&self.name));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
     }
 
-    /// Returns an identifier to be used as the name of the `SyntaxKind` variant
-    /// corresponding to this token.
-    fn as_syntax_kind_name(&self) -> Ident {
+    fn syntax_kind_name(&self) -> Ident {
         let name = token_name(&self.name);
         let ident = name.to_shouty_snake_case();
 
         call_site_ident(ident)
     }
 
-    /// Returns an identifier to be used as the name for enum variants that house
-    /// this node as data.
-    fn as_variant_name(&self) -> Ident {
+    fn variant_name(&self) -> Ident {
+        let name = grammar_item_name(&self.name);
+        let ident = name.to_upper_camel_case();
+
+        call_site_ident(ident)
+    }
+}
+
+impl GrammarItem for NodeData {
+    fn struct_doc(&self) -> String {
+        format!(" Represents the `{}` node.", self.name.as_str())
+    }
+
+    fn ast_trait_name(&self) -> Ident {
+        call_site_ident("AstNode".to_string())
+    }
+
+    fn syntax_type_name(&self) -> Ident {
+        call_site_ident("SyntaxNode".to_string())
+    }
+
+    fn item_name(&self) -> Ident {
+        let name = node_name(&self.name);
+        let ident = name.to_upper_camel_case();
+
+        call_site_ident(ident)
+    }
+
+    fn fn_name(&self, label: Option<&str>) -> Ident {
+        let name = node_name(label.unwrap_or(&self.name));
+        let ident = name.to_snake_case();
+
+        call_site_ident(ident)
+    }
+
+    fn syntax_kind_name(&self) -> Ident {
+        let name = node_name(&self.name);
+        let ident = name.to_shouty_snake_case();
+
+        call_site_ident(ident)
+    }
+
+    fn variant_name(&self) -> Ident {
         let name = grammar_item_name(&self.name);
         let ident = name.to_upper_camel_case();
 
@@ -98,45 +151,9 @@ pub impl TokenData {
 }
 
 /// Additional methods for [NodeData].
-#[extend::ext(name = NodeExt)]
+#[extend::ext]
 pub impl NodeData {
-    /// Returns an identifier to be used as the name of the item (struct/enum)
-    /// corresponding to this node.
-    fn as_item_name(&self) -> Ident {
-        let name = node_name(&self.name);
-        let ident = name.to_upper_camel_case();
-
-        call_site_ident(ident)
-    }
-
-    /// Returns an identifier to be used as the name of the accessor method
-    /// corresponding to this node.
-    fn as_fn_name(&self, label: Option<&str>) -> Ident {
-        let name = node_name(label.unwrap_or(&self.name));
-        let ident = name.to_snake_case();
-
-        call_site_ident(ident)
-    }
-
-    /// Returns an identifier to be used as the name of the `SyntaxKind` variant
-    /// corresponding to this node.
-    fn as_syntax_kind_name(&self) -> Ident {
-        let name = node_name(&self.name);
-        let ident = name.to_shouty_snake_case();
-
-        call_site_ident(ident)
-    }
-
-    /// Returns an identifier to be used as the name for enum variants that house
-    /// this node as data.
-    fn as_variant_name(&self) -> Ident {
-        let name = grammar_item_name(&self.name);
-        let ident = name.to_upper_camel_case();
-
-        call_site_ident(ident)
-    }
-
-    /// Returns an identifier to be used as the name of the token enum item
+    /// Returns an identifier to be used as the name of the token enum
     /// corresponding to this node.
     fn as_token_enum_name(&self) -> Ident {
         let name = token_name(&self.name);

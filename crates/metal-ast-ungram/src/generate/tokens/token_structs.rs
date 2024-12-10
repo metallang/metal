@@ -1,13 +1,13 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::engram::{Engram, TokenExt};
+use crate::engram::{Engram, GrammarItem};
 
 /// Generates token structs.
 pub fn generate_token_structs(grammar: &Engram) -> impl Iterator<Item = TokenStream> + use<'_> {
     grammar.tokens().map(|token| {
-        let item_name = token.as_item_name();
-        let syntax_kind_name = token.as_syntax_kind_name();
+        let item_name = token.item_name();
+        let syntax_kind_name = token.syntax_kind_name();
 
         let doc = format!(" Represents the `{}` token.", &token.name);
 

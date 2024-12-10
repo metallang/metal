@@ -178,7 +178,7 @@ pub enum SyntaxKind {
     /// Don't try to remember this! Use [`T![@string]`](T) instead.
     LIT_STR_TOKEN,
     /// A special syntax kind used for transmute safety checks. You shouldn't worry
-    /// (and even less rely) on this.
+    /// about (and even less rely on) this.
     __LAST,
 }
 /// Returns the [SyntaxKind] variants corresponding to the provided token

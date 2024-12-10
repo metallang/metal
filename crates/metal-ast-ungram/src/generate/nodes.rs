@@ -4,19 +4,19 @@ use ungrammar::Rule;
 
 use crate::{
     engram::Engram,
-    generate::nodes::{enum_::generate_enum_item, struct_::generate_struct_item},
+    generate::nodes::{enum_::generate_enum_item, node_struct::generate_node_struct},
 };
 
 mod enum_;
-mod rule;
-mod struct_;
+mod node_struct;
 
+/// Generates the `nodes.rs` file.
 pub fn generate_nodes_file(grammar: &Engram) -> TokenStream {
     let token_items = grammar.nodes().map(|node| {
         if matches!(node.rule, Rule::Alt(_)) {
             generate_enum_item(grammar, node)
         } else {
-            generate_struct_item(grammar, node)
+            generate_node_struct(grammar, node)
         }
     });
 
