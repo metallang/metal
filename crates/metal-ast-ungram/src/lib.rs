@@ -1,3 +1,5 @@
+#![allow(clippy::wildcard_enum_match_arm)]
+
 use std::str::FromStr;
 
 use ungrammar::Grammar;

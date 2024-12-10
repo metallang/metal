@@ -3,11 +3,13 @@ use quote::quote;
 
 use crate::engram::Engram;
 
-mod enum_;
-mod struct_;
+mod token_alt_nodes;
+mod token_structs;
 
+/// Generates the `tokens.rs` file.
 pub fn generate_tokens_file(grammar: &Engram) -> TokenStream {
-    let items = struct_::generate_struct_item(grammar).chain(enum_::generate_enum_item(grammar));
+    let token_structs = token_structs::generate_token_structs(grammar);
+    let token_alt_nodes = token_alt_nodes::generate_token_alt_nodes(grammar);
 
     quote! {
         use crate::{
@@ -16,6 +18,7 @@ pub fn generate_tokens_file(grammar: &Engram) -> TokenStream {
             SyntaxToken,
         };
 
-        #(#items)*
+        #(#token_structs)*
+        #(#token_alt_nodes)*
     }
 }

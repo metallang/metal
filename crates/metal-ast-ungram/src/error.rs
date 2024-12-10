@@ -8,6 +8,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error("Ungrammar error: {0}")]
     Ungram(#[from] ungrammar::Error),
-    #[error("`metal-ast-ungram` is expected to only be run from build.rs of metal-ast-ng.")]
+    #[error("`metal-ast-ungram` is expected to be run from build.rs of metal-ast-ng only.")]
     InvalidInvocation,
 }

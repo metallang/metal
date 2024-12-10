@@ -7,7 +7,6 @@ use crate::{
     generate::nodes::struct_::generate_struct_item,
 };
 
-#[allow(clippy::wildcard_enum_match_arm)]
 pub fn generate_enum_item(grammar: &Engram, node: &NodeData) -> TokenStream {
     let item_name = node.as_item_name();
 
@@ -26,7 +25,6 @@ pub fn generate_enum_item(grammar: &Engram, node: &NodeData) -> TokenStream {
     }
 }
 
-#[allow(clippy::wildcard_enum_match_arm)]
 fn generate_node_enum_item(
     grammar: &Engram,
     rules: &[Rule],
