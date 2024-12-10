@@ -3,92 +3,226 @@
 #[repr(u8)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum SyntaxKind {
+    /// Corresponds to [NameNode].
     NAME_NODE,
+    /// Corresponds to [VisNode].
     VIS_NODE,
+    /// Corresponds to [MutnessNode].
     MUTNESS_NODE,
+    /// Corresponds to [ExprSpecNode].
     EXPR_SPEC_NODE,
+    /// Corresponds to [ExprNode].
     EXPR_NODE,
+    /// Corresponds to [TypeQualNode].
     TYPE_QUAL_NODE,
+    /// Corresponds to [TypeNode].
     TYPE_NODE,
+    /// Corresponds to [BlockNode].
     BLOCK_NODE,
+    /// Corresponds to [ItemNode].
     ITEM_NODE,
+    /// Corresponds to [ConstItemNode].
     CONST_ITEM_NODE,
+    /// Corresponds to [EnumItemNode].
     ENUM_ITEM_NODE,
+    /// Corresponds to [FnItemNode].
     FN_ITEM_NODE,
+    /// Corresponds to [ImportItemNode].
     IMPORT_ITEM_NODE,
+    /// Corresponds to [StructItemNode].
     STRUCT_ITEM_NODE,
+    /// Corresponds to [EnumBodyNode].
     ENUM_BODY_NODE,
+    /// Corresponds to [EnumBodyItemNode].
     ENUM_BODY_ITEM_NODE,
+    /// Corresponds to [EnumVariantNode].
     ENUM_VARIANT_NODE,
+    /// Corresponds to [EnumVariantTypeNode].
     ENUM_VARIANT_TYPE_NODE,
+    /// Corresponds to [FnSignatureNode].
     FN_SIGNATURE_NODE,
+    /// Corresponds to [FnInputNode].
     FN_INPUT_NODE,
+    /// Corresponds to [ImportTreeNode].
     IMPORT_TREE_NODE,
+    /// Corresponds to [ImportLeafNode].
     IMPORT_LEAF_NODE,
+    /// Corresponds to [ImportSegmentNode].
     IMPORT_SEGMENT_NODE,
+    /// Corresponds to [ImportBranchNode].
     IMPORT_BRANCH_NODE,
+    /// Corresponds to [StructBodyNode].
     STRUCT_BODY_NODE,
+    /// Corresponds to [StructBodyItemNode].
     STRUCT_BODY_ITEM_NODE,
+    /// Corresponds to [StructFieldNode].
     STRUCT_FIELD_NODE,
+    /// Corresponds to [PrefixExprNode].
     PREFIX_EXPR_NODE,
+    /// Corresponds to [BinaryExprNode].
     BINARY_EXPR_NODE,
+    /// Corresponds to [CallExprNode].
     CALL_EXPR_NODE,
+    /// Corresponds to [LitExprNode].
     LIT_EXPR_NODE,
+    /// Corresponds to [PrefixOpNode].
     PREFIX_OP_NODE,
+    /// Corresponds to [BinaryOpNode].
     BINARY_OP_NODE,
+    /// Corresponds to [NumLitNode].
     NUM_LIT_NODE,
+    /// Corresponds to [StrLitNode].
     STR_LIT_NODE,
+    /// Don't try to remember this! Use [`T![@ident]`](T) instead.
     LIT_IDENT_TOKEN,
+    /// Don't try to remember this! Use [`T![pub]`](T) instead.
     PUB_TOKEN,
+    /// Don't try to remember this! Use [`T![mut]`](T) instead.
     MUT_TOKEN,
+    /// Don't try to remember this! Use [`T![=]`](T) instead.
     EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![:]`](T) instead.
     COLON_TOKEN,
+    /// Don't try to remember this! Use [`T![{]`](T) instead.
     L_BRACE_TOKEN,
+    /// Don't try to remember this! Use [`T![}]`](T) instead.
     R_BRACE_TOKEN,
+    /// Don't try to remember this! Use [`T![const]`](T) instead.
     CONST_TOKEN,
+    /// Don't try to remember this! Use [`T![enum]`](T) instead.
     ENUM_TOKEN,
+    /// Don't try to remember this! Use [`T![,]`](T) instead.
     COMMA_TOKEN,
+    /// Don't try to remember this! Use [`T![(]`](T) instead.
     L_PAREN_TOKEN,
+    /// Don't try to remember this! Use [`T![)]`](T) instead.
     R_PAREN_TOKEN,
+    /// Don't try to remember this! Use [`T![def]`](T) instead.
     DEF_TOKEN,
+    /// Don't try to remember this! Use [`T![import]`](T) instead.
     IMPORT_TOKEN,
+    /// Don't try to remember this! Use [`T![;]`](T) instead.
     SEMICOLON_TOKEN,
+    /// Don't try to remember this! Use [`T![.]`](T) instead.
     DOT_TOKEN,
+    /// Don't try to remember this! Use [`T![struct]`](T) instead.
     STRUCT_TOKEN,
+    /// Don't try to remember this! Use [`T![+]`](T) instead.
     PLUS_TOKEN,
+    /// Don't try to remember this! Use [`T![-]`](T) instead.
     MINUS_TOKEN,
+    /// Don't try to remember this! Use [`T![!]`](T) instead.
     BANG_TOKEN,
+    /// Don't try to remember this! Use [`T![~]`](T) instead.
     TILDE_TOKEN,
+    /// Don't try to remember this! Use [`T![+=]`](T) instead.
     PLUS_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![-=]`](T) instead.
     MINUS_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![/=]`](T) instead.
     SLASH_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![*=]`](T) instead.
     STAR_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![**=]`](T) instead.
     STAR2_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![%=]`](T) instead.
     PERCENT_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![^=]`](T) instead.
     CARET_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![&=]`](T) instead.
     AMP_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![|=]`](T) instead.
     PIPE_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![<<=]`](T) instead.
     SHIFTL_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![>>=]`](T) instead.
     SHIFTR_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![/]`](T) instead.
     SLASH_TOKEN,
+    /// Don't try to remember this! Use [`T![*]`](T) instead.
     STAR_TOKEN,
+    /// Don't try to remember this! Use [`T![**]`](T) instead.
     STAR2_TOKEN,
+    /// Don't try to remember this! Use [`T![%]`](T) instead.
     PERCENT_TOKEN,
+    /// Don't try to remember this! Use [`T![&&]`](T) instead.
     AMP2_TOKEN,
+    /// Don't try to remember this! Use [`T![||]`](T) instead.
     PIPE2_TOKEN,
+    /// Don't try to remember this! Use [`T![==]`](T) instead.
     EQ2_TOKEN,
+    /// Don't try to remember this! Use [`T![!=]`](T) instead.
     BANG_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![>]`](T) instead.
     GT_TOKEN,
+    /// Don't try to remember this! Use [`T![>=]`](T) instead.
     GT_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![<]`](T) instead.
     LT_TOKEN,
+    /// Don't try to remember this! Use [`T![<=]`](T) instead.
     LT_EQ_TOKEN,
+    /// Don't try to remember this! Use [`T![^]`](T) instead.
     CARET_TOKEN,
+    /// Don't try to remember this! Use [`T![&]`](T) instead.
     AMP_TOKEN,
+    /// Don't try to remember this! Use [`T![|]`](T) instead.
     PIPE_TOKEN,
+    /// Don't try to remember this! Use [`T![<<]`](T) instead.
     LT2_TOKEN,
+    /// Don't try to remember this! Use [`T![>>]`](T) instead.
     GT2_TOKEN,
+    /// Don't try to remember this! Use [`T![..]`](T) instead.
     DOT2_TOKEN,
+    /// Don't try to remember this! Use [`T![@number]`](T) instead.
     LIT_NUM_TOKEN,
+    /// Don't try to remember this! Use [`T![@string]`](T) instead.
     LIT_STR_TOKEN,
+    /// A special syntax kind used for transmute safety checks. You shouldn't worry
+    /// (and even less rely) on this.
     __LAST,
+}
+/// Returns the [SyntaxKind] variants corresponding to the provided token
+/// as written in the grammar.
+///
+/// # Example
+///
+/// ```
+/// if binary_op_node.token() == T![+] {
+///     // The binary operator is plus!
+/// }
+/// ```
+pub macro T {
+    ["@ident"] => { $crate ::SyntaxKind::LIT_IDENT_TOKEN }, ["pub"] => { $crate
+    ::SyntaxKind::PUB_TOKEN }, ["mut"] => { $crate ::SyntaxKind::MUT_TOKEN }, ["="] => {
+    $crate ::SyntaxKind::EQ_TOKEN }, [":"] => { $crate ::SyntaxKind::COLON_TOKEN }, ["{"]
+    => { $crate ::SyntaxKind::L_BRACE_TOKEN }, ["}"] => { $crate
+    ::SyntaxKind::R_BRACE_TOKEN }, ["const"] => { $crate ::SyntaxKind::CONST_TOKEN },
+    ["enum"] => { $crate ::SyntaxKind::ENUM_TOKEN }, [","] => { $crate
+    ::SyntaxKind::COMMA_TOKEN }, ["("] => { $crate ::SyntaxKind::L_PAREN_TOKEN }, [")"]
+    => { $crate ::SyntaxKind::R_PAREN_TOKEN }, ["def"] => { $crate
+    ::SyntaxKind::DEF_TOKEN }, ["import"] => { $crate ::SyntaxKind::IMPORT_TOKEN }, [";"]
+    => { $crate ::SyntaxKind::SEMICOLON_TOKEN }, ["."] => { $crate
+    ::SyntaxKind::DOT_TOKEN }, ["struct"] => { $crate ::SyntaxKind::STRUCT_TOKEN }, ["+"]
+    => { $crate ::SyntaxKind::PLUS_TOKEN }, ["-"] => { $crate ::SyntaxKind::MINUS_TOKEN
+    }, ["!"] => { $crate ::SyntaxKind::BANG_TOKEN }, ["~"] => { $crate
+    ::SyntaxKind::TILDE_TOKEN }, ["+="] => { $crate ::SyntaxKind::PLUS_EQ_TOKEN }, ["-="]
+    => { $crate ::SyntaxKind::MINUS_EQ_TOKEN }, ["/="] => { $crate
+    ::SyntaxKind::SLASH_EQ_TOKEN }, ["*="] => { $crate ::SyntaxKind::STAR_EQ_TOKEN },
+    ["**="] => { $crate ::SyntaxKind::STAR2_EQ_TOKEN }, ["%="] => { $crate
+    ::SyntaxKind::PERCENT_EQ_TOKEN }, ["^="] => { $crate ::SyntaxKind::CARET_EQ_TOKEN },
+    ["&="] => { $crate ::SyntaxKind::AMP_EQ_TOKEN }, ["|="] => { $crate
+    ::SyntaxKind::PIPE_EQ_TOKEN }, ["<<="] => { $crate ::SyntaxKind::SHIFTL_EQ_TOKEN },
+    [">>="] => { $crate ::SyntaxKind::SHIFTR_EQ_TOKEN }, ["/"] => { $crate
+    ::SyntaxKind::SLASH_TOKEN }, ["*"] => { $crate ::SyntaxKind::STAR_TOKEN }, ["**"] =>
+    { $crate ::SyntaxKind::STAR2_TOKEN }, ["%"] => { $crate ::SyntaxKind::PERCENT_TOKEN
+    }, ["&&"] => { $crate ::SyntaxKind::AMP2_TOKEN }, ["||"] => { $crate
+    ::SyntaxKind::PIPE2_TOKEN }, ["=="] => { $crate ::SyntaxKind::EQ2_TOKEN }, ["!="] =>
+    { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [">"] => { $crate ::SyntaxKind::GT_TOKEN },
+    [">="] => { $crate ::SyntaxKind::GT_EQ_TOKEN }, ["<"] => { $crate
+    ::SyntaxKind::LT_TOKEN }, ["<="] => { $crate ::SyntaxKind::LT_EQ_TOKEN }, ["^"] => {
+    $crate ::SyntaxKind::CARET_TOKEN }, ["&"] => { $crate ::SyntaxKind::AMP_TOKEN },
+    ["|"] => { $crate ::SyntaxKind::PIPE_TOKEN }, ["<<"] => { $crate
+    ::SyntaxKind::LT2_TOKEN }, [">>"] => { $crate ::SyntaxKind::GT2_TOKEN }, [".."] => {
+    $crate ::SyntaxKind::DOT2_TOKEN }, ["@number"] => { $crate
+    ::SyntaxKind::LIT_NUM_TOKEN }, ["@string"] => { $crate ::SyntaxKind::LIT_STR_TOKEN },
 }

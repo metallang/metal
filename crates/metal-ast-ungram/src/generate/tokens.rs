@@ -6,7 +6,7 @@ use crate::engram::Engram;
 mod enum_;
 mod struct_;
 
-pub fn generate_token_items(grammar: &Engram) -> TokenStream {
+pub fn generate_tokens_file(grammar: &Engram) -> TokenStream {
     let items = struct_::generate_struct_item(grammar).chain(enum_::generate_enum_item(grammar));
 
     quote! {

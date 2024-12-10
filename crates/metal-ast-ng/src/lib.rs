@@ -1,3 +1,5 @@
+#![feature(decl_macro)]
+
 mod nodes;
 mod rowan;
 mod syntax_kind;

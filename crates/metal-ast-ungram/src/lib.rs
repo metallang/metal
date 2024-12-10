@@ -4,7 +4,8 @@ use ungrammar::Grammar;
 
 use crate::{
     generate::{
-        nodes::generate_node_items, syntax_kind::generate_syntax_kind, tokens::generate_token_items,
+        nodes::generate_nodes_file, syntax_kind::generate_syntax_kind_file,
+        tokens::generate_tokens_file,
     },
     utils::save_generated,
 };
@@ -29,9 +30,9 @@ pub fn run() -> Result<(), Error> {
 
     let grammar = Grammar::from_str(GRAMMAR)?.into();
 
-    save_generated(generate_syntax_kind(&grammar), SYNTAX_KIND)?;
-    save_generated(generate_token_items(&grammar), TOKENS)?;
-    save_generated(generate_node_items(&grammar), NODES)?;
+    save_generated(generate_syntax_kind_file(&grammar), SYNTAX_KIND)?;
+    save_generated(generate_tokens_file(&grammar), TOKENS)?;
+    save_generated(generate_nodes_file(&grammar), NODES)?;
 
     Ok(())
 }

@@ -11,7 +11,7 @@ mod enum_;
 mod rule;
 mod struct_;
 
-pub fn generate_node_items(grammar: &Engram) -> TokenStream {
+pub fn generate_nodes_file(grammar: &Engram) -> TokenStream {
     let token_items = grammar.nodes().map(|node| {
         if matches!(node.rule, Rule::Alt(_)) {
             generate_enum_item(grammar, node)

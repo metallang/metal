@@ -16,7 +16,7 @@ wasm-encoder = "0.220.0"
 ungrammar = "1.16.1"
 rowan = "0.15.16"
 heck = "0.5.0"
-prettyplease = "0.2.25"
+prettyplease = { version = "0.2.25", features = ["verbatim"] }
 extend = "1.2.0"
 
 metal = { path = "crates/metal" }
