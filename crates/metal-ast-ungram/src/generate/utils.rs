@@ -3,8 +3,9 @@ use quote::quote;
 
 use crate::engram::GrammarItem;
 
-pub fn generate_item_struct(item: impl GrammarItem) -> TokenStream {
-    let doc = item.struct_doc();
+/// Generates a struct representation of a grammar item.
+pub fn generate_grammar_item_struct(item: &impl GrammarItem) -> TokenStream {
+    let doc = item.item_doc();
     let item_name = item.item_name();
     let syntax_kind_name = item.syntax_kind_name();
     let ast_trait_name = item.ast_trait_name();
@@ -14,7 +15,7 @@ pub fn generate_item_struct(item: impl GrammarItem) -> TokenStream {
         #[doc = #doc]
         #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub struct #item_name {
-            syntax: SyntaxToken,
+            syntax: #syntax_type_name,
         }
 
         impl #ast_trait_name for #item_name {

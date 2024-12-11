@@ -45,32 +45,26 @@ impl Index<&Node> for Engram {
 
 /// Shared utility methods between [TokenData] and [NodeData].
 pub trait GrammarItem {
-    /// Returns the docstring for the struct corresponding to this grammar item.
-    fn struct_doc(&self) -> String;
     /// Returns the name of the "AST trait" that this grammar item implements/should
     /// implement.
     fn ast_trait_name(&self) -> Ident;
     /// Returns the name of the "syntax" type that this grammar item wraps/should wrap.
     fn syntax_type_name(&self) -> Ident;
-    /// Returns an identifier to be used as the name of the struct/enum
-    /// corresponding to this grammar item.
+    /// Returns the name of the struct/enum corresponding to this grammar item.
     fn item_name(&self) -> Ident;
-    /// Returns an identifier to be used as the name of the accessor method
-    /// corresponding to this grammar item.
+    /// Returns the docstring for the struct/enum corresponding to this grammar item.
+    fn item_doc(&self) -> String;
+    /// Returns the name of the accessor method corresponding to this grammar item.
     fn fn_name(&self, label: Option<&str>) -> Ident;
-    /// Returns an identifier to be used as the name of the `SyntaxKind` variant
-    /// corresponding to this grammar item.
+    /// Returns the name of the `SyntaxKind` variant corresponding to this grammar item.
     fn syntax_kind_name(&self) -> Ident;
-    /// Returns an identifier to be used as the name for enum variants that house
-    /// this grammar item as data.
+    /// Returns the name for enum variants that house this grammar item as data.
     fn variant_name(&self) -> Ident;
+    /// Returns the docstring for enum variants that house this grammar item as data.
+    fn variant_doc(&self) -> String;
 }
 
 impl GrammarItem for TokenData {
-    fn struct_doc(&self) -> String {
-        format!(" Represents the `{}` token.", self.name.as_str())
-    }
-
     fn ast_trait_name(&self) -> Ident {
         call_site_ident("AstToken".to_string())
     }
@@ -86,8 +80,12 @@ impl GrammarItem for TokenData {
         call_site_ident(ident)
     }
 
+    fn item_doc(&self) -> String {
+        format!(" Represents the `{}` token.", self.name.as_str())
+    }
+
     fn fn_name(&self, label: Option<&str>) -> Ident {
-        let name = token_name(label.unwrap_or(&self.name));
+        let name = token_name(label.unwrap_or(self.name.as_str()));
         let ident = name.to_snake_case();
 
         call_site_ident(ident)
@@ -106,13 +104,13 @@ impl GrammarItem for TokenData {
 
         call_site_ident(ident)
     }
+
+    fn variant_doc(&self) -> String {
+        format!(" See [{}].", self.item_name())
+    }
 }
 
 impl GrammarItem for NodeData {
-    fn struct_doc(&self) -> String {
-        format!(" Represents the `{}` node.", self.name.as_str())
-    }
-
     fn ast_trait_name(&self) -> Ident {
         call_site_ident("AstNode".to_string())
     }
@@ -126,6 +124,10 @@ impl GrammarItem for NodeData {
         let ident = name.to_upper_camel_case();
 
         call_site_ident(ident)
+    }
+
+    fn item_doc(&self) -> String {
+        format!(" Represents the `{}` node.", self.name.as_str())
     }
 
     fn fn_name(&self, label: Option<&str>) -> Ident {
@@ -148,6 +150,10 @@ impl GrammarItem for NodeData {
 
         call_site_ident(ident)
     }
+
+    fn variant_doc(&self) -> String {
+        format!(" See [{}].", self.item_name())
+    }
 }
 
 /// Additional methods for [NodeData].
@@ -155,11 +161,18 @@ impl GrammarItem for NodeData {
 pub impl NodeData {
     /// Returns an identifier to be used as the name of the token enum
     /// corresponding to this node.
-    fn as_token_enum_name(&self) -> Ident {
-        let name = token_name(&self.name);
-        let ident = name.to_upper_camel_case();
+    fn token_enum_name(&self) -> Ident {
+        TokenData {
+            name: self.name.clone(),
+        }
+        .item_name()
+    }
 
-        call_site_ident(ident)
+    fn token_enum_doc(&self) -> String {
+        TokenData {
+            name: self.name.clone(),
+        }
+        .item_doc()
     }
 }
 

@@ -4,7 +4,7 @@ use ungrammar::{NodeData, Rule};
 
 use crate::engram::{Engram, GrammarItem, NodeDataExt};
 
-/// Finds and generates enums of tokens for nodes that are an alteration of tokens, such as `BinaryOp`.
+/// Finds and generates enums of tokens for nodes that are alterations of tokens, such as `BinaryOp`.
 pub fn generate_token_alt_nodes(grammar: &Engram) -> impl Iterator<Item = TokenStream> + use<'_> {
     grammar.nodes().filter_map(|token_node| {
         // Check that the node is an alteration
@@ -27,9 +27,9 @@ pub fn generate_token_alt_nodes(grammar: &Engram) -> impl Iterator<Item = TokenS
 
 /// Generate a single token alteration node, such as `BinaryOp`.
 fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rule]) -> TokenStream {
-    let item_name = token_node.as_token_enum_name();
+    let item_name = token_node.token_enum_name();
 
-    let doc = format!(" Represents the `{}` token.", &token_node.name);
+    let doc = token_node.token_enum_doc();
 
     let mut enum_variants = TokenStream::new();
     let mut can_cast_arms = TokenStream::new();
@@ -41,13 +41,12 @@ fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rul
             Rule::Token(token) => {
                 let token = &grammar[token];
                 let variant_name = token.variant_name();
+                let variant_doc = token.variant_doc();
                 let data_name = token.item_name();
                 let syntax_kind_name = token.syntax_kind_name();
 
-                let enum_variant_doc = format!(" See [{}].", &data_name);
-
                 let enum_variant = quote! {
-                    #[doc = #enum_variant_doc]
+                    #[doc = #variant_doc]
                     #variant_name(#data_name),
                 };
                 let can_cast_arm = quote! {
