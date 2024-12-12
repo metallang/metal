@@ -503,15 +503,15 @@ impl AstNode for EnumBodyNode {
 }
 impl EnumBodyNode {
     /// Returns an iterator over the children nodes of this node.
-    pub fn children(&self) -> impl Iterator<Item = EnumBodyItemNode> {
-        self.children_with_delimiters()
+    pub fn items(&self) -> impl Iterator<Item = EnumBodyItemNode> {
+        self.items_with_delimiters()
             .filter_map(|either| match either {
                 Either::Left(node) => Some(node),
                 Either::Right(_) => None,
             })
     }
     /// Returns an iterator over the children nodes and token of this node.
-    pub fn children_with_delimiters(
+    pub fn items_with_delimiters(
         &self,
     ) -> impl Iterator<Item = Either<EnumBodyItemNode, CommaToken>> {
         self.syntax
@@ -636,24 +636,9 @@ impl FnSignatureNode {
     pub fn l_paren_token(&self) -> Option<SyntaxToken> {
         self.syntax.find_child_token(SyntaxKind::L_PAREN_TOKEN)
     }
-    /// Returns an iterator over the children nodes of this node.
-    pub fn inputs(&self) -> impl Iterator<Item = FnInputNode> {
-        self.inputs_with_delimiters()
-            .filter_map(|either| match either {
-                Either::Left(node) => Some(node),
-                Either::Right(_) => None,
-            })
-    }
-    /// Returns an iterator over the children nodes and token of this node.
-    pub fn inputs_with_delimiters(
-        &self,
-    ) -> impl Iterator<Item = Either<FnInputNode, CommaToken>> {
-        self.syntax
-            .children_with_tokens()
-            .filter_map(|node_or_token| match node_or_token {
-                NodeOrToken::Node(node) => FnInputNode::cast(node).map(Either::Left),
-                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
-            })
+    /// Find a child node of type [FnInputsNode].
+    pub fn inputs_node(&self) -> Option<FnInputsNode> {
+        self.syntax.child()
     }
     /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
     pub fn r_paren_token(&self) -> Option<SyntaxToken> {
@@ -662,6 +647,43 @@ impl FnSignatureNode {
     /// Find a child node of type [TypeQualNode].
     pub fn return_ty_node(&self) -> Option<TypeQualNode> {
         self.syntax.child()
+    }
+}
+/// Represents the `FnInputs` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FnInputsNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for FnInputsNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FN_INPUTS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl FnInputsNode {
+    /// Returns an iterator over the children nodes of this node.
+    pub fn children(&self) -> impl Iterator<Item = FnInputNode> {
+        self.children_with_delimiters()
+            .filter_map(|either| match either {
+                Either::Left(node) => Some(node),
+                Either::Right(_) => None,
+            })
+    }
+    /// Returns an iterator over the children nodes and token of this node.
+    pub fn children_with_delimiters(
+        &self,
+    ) -> impl Iterator<Item = Either<FnInputNode, CommaToken>> {
+        self.syntax
+            .children_with_tokens()
+            .filter_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(node) => FnInputNode::cast(node).map(Either::Left),
+                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
+            })
     }
 }
 /// Represents the `FnInput` node.
@@ -815,16 +837,42 @@ impl ImportBranchNode {
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
         self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
     }
+    /// Find a child node of type [ImportBranchSubtreesNode].
+    pub fn subtrees_node(&self) -> Option<ImportBranchSubtreesNode> {
+        self.syntax.child()
+    }
+    /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
+    pub fn r_brace_token(&self) -> Option<SyntaxToken> {
+        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+    }
+}
+/// Represents the `ImportBranchSubtrees` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ImportBranchSubtreesNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for ImportBranchSubtreesNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportBranchSubtreesNode {
     /// Returns an iterator over the children nodes of this node.
-    pub fn subtrees(&self) -> impl Iterator<Item = ImportTreeNode> {
-        self.subtrees_with_delimiters()
+    pub fn children(&self) -> impl Iterator<Item = ImportTreeNode> {
+        self.children_with_delimiters()
             .filter_map(|either| match either {
                 Either::Left(node) => Some(node),
                 Either::Right(_) => None,
             })
     }
     /// Returns an iterator over the children nodes and token of this node.
-    pub fn subtrees_with_delimiters(
+    pub fn children_with_delimiters(
         &self,
     ) -> impl Iterator<Item = Either<ImportTreeNode, CommaToken>> {
         self.syntax
@@ -833,10 +881,6 @@ impl ImportBranchNode {
                 NodeOrToken::Node(node) => ImportTreeNode::cast(node).map(Either::Left),
                 NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
             })
-    }
-    /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
-    pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
     }
 }
 /// Represents the `StructBody` node.
@@ -857,15 +901,15 @@ impl AstNode for StructBodyNode {
 }
 impl StructBodyNode {
     /// Returns an iterator over the children nodes of this node.
-    pub fn children(&self) -> impl Iterator<Item = StructBodyItemNode> {
-        self.children_with_delimiters()
+    pub fn items(&self) -> impl Iterator<Item = StructBodyItemNode> {
+        self.items_with_delimiters()
             .filter_map(|either| match either {
                 Either::Left(node) => Some(node),
                 Either::Right(_) => None,
             })
     }
     /// Returns an iterator over the children nodes and token of this node.
-    pub fn children_with_delimiters(
+    pub fn items_with_delimiters(
         &self,
     ) -> impl Iterator<Item = Either<StructBodyItemNode, CommaToken>> {
         self.syntax

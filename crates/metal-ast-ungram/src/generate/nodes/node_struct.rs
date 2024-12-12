@@ -4,7 +4,7 @@ use ungrammar::{NodeData, Rule};
 
 use crate::{
     engram::Engram,
-    generate::{rules::generate_rule, utils::generate_grammar_item_struct},
+    generate::{rules::generate_top_rule, utils::generate_grammar_item_struct},
     grammar_item::{GrammarItem, NodeDataExt},
 };
 
@@ -47,7 +47,7 @@ fn generate_node_struct_impl(grammar: &Engram, node: &NodeData) -> TokenStream {
         };
     }
 
-    let impl_ = generate_rule(grammar, &node.rule, None);
+    let impl_ = generate_top_rule(grammar, &node.rule);
 
     quote! {
         impl #item_name {

@@ -41,6 +41,8 @@ pub enum SyntaxKind {
     ENUM_VARIANT_TYPE_NODE,
     /// Corresponds to [FnSignatureNode].
     FN_SIGNATURE_NODE,
+    /// Corresponds to [FnInputsNode].
+    FN_INPUTS_NODE,
     /// Corresponds to [FnInputNode].
     FN_INPUT_NODE,
     /// Corresponds to [ImportTreeNode].
@@ -51,6 +53,8 @@ pub enum SyntaxKind {
     IMPORT_SEGMENT_NODE,
     /// Corresponds to [ImportBranchNode].
     IMPORT_BRANCH_NODE,
+    /// Corresponds to [ImportBranchSubtreesNode].
+    IMPORT_BRANCH_SUBTREES_NODE,
     /// Corresponds to [StructBodyNode].
     STRUCT_BODY_NODE,
     /// Corresponds to [StructBodyItemNode].

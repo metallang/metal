@@ -26,7 +26,7 @@ EnumItem =
   vis:Visibility 'enum' Name '{' body:EnumBody? '}'
 
 EnumBody =
-  (EnumBodyItem (',' EnumBodyItem)* ','?)
+  items:(EnumBodyItem (',' EnumBodyItem)* ','?)
 
 EnumBodyItem =
   EnumVariant | FnItem
@@ -41,7 +41,10 @@ FnItem =
   vis:Visibility 'def' Name sig:FnSignature body:Block
 
 FnSignature =
-  '(' inputs:(FnInput (',' FnInput)* ','?)? ')' return_ty:TypeQualifier?
+  '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
+
+FnInputs =
+  FnInput (',' FnInput)* ','?
 
 FnInput =
   mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
@@ -59,13 +62,16 @@ ImportSegment =
   segment:Name '.' rest:ImportTree
 
 ImportBranch =
-  '{' subtrees:(ImportTree (',' ImportTree)* ','?)? '}'
+  '{' subtrees:ImportBranchSubtrees? '}'
+
+ImportBranchSubtrees =
+  ImportTree (',' ImportTree)* ','?
 
 StructItem =
   vis:Visibility 'struct' Name '{' body:StructBody '}'
 
 StructBody =
-  StructBodyItem (',' StructBodyItem)* ','?
+  items:(StructBodyItem (',' StructBodyItem)* ','?)
 
 StructBodyItem =
   StructField | FnItem

@@ -27,6 +27,7 @@ mod utils;
 
 pub use crate::error::Error;
 
+/// Runs the generator.
 pub fn run() -> Result<(), Error> {
     if !std::fs::exists("./src/")? {
         return Err(Error::InvalidInvocation);
