@@ -11,8 +11,7 @@ mod traits;
 mod utils;
 
 pub use crate::nodes::*;
-pub use crate::rowan::{SyntaxElement, SyntaxNode, SyntaxNodeChildren, SyntaxToken};
-pub use crate::syntax_kind::SyntaxKind;
+pub use crate::rowan::{MetalLanguage, SyntaxElement, SyntaxNode, SyntaxNodeChildren, SyntaxToken};
+pub use crate::syntax_kind::{SyntaxKind, T};
 pub use crate::tokens::*;
 pub use crate::traits::{AstNode, AstToken};
-pub use crate::utils::SyntaxNodeExt;

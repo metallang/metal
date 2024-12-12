@@ -6,9 +6,7 @@ edition = "2021"
 [dependencies]
 rowan = { workspace = true }
 extend = { workspace = true }
-ungrammar = { workspace = true }
 either = { workspace = true }
-metal-proc-macros = { workspace = true }
 
 [build-dependencies]
 metal-ast-ungram = { workspace = true }

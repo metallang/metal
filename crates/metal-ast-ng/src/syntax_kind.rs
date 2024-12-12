@@ -192,10 +192,13 @@ pub enum SyntaxKind {
 ///
 /// # Example
 ///
-/// ```
+/// ```no_run,
+/// # use metal_ast_ng::{T, BinaryOpNode};
+/// # fn example(binary_op_node: BinaryOpNode) {
 /// if binary_op_node.token() == T![+] {
 ///     // The binary operator is plus!
 /// }
+/// # }
 /// ```
 pub macro T {
     ["@ident"] => { $crate ::SyntaxKind::LIT_IDENT_TOKEN }, ["pub"] => { $crate

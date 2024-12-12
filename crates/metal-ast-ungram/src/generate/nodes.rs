@@ -29,9 +29,9 @@ pub fn generate_nodes_file(grammar: &Engram) -> TokenStream {
             AstToken,
             SyntaxKind,
             SyntaxNode,
-            SyntaxNodeExt,
             SyntaxToken,
             tokens::*,
+            utils::SyntaxNodeExt,
         };
 
         #(#token_items)*

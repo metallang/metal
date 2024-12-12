@@ -2,7 +2,8 @@
 use either::Either;
 use rowan::NodeOrToken;
 use crate::{
-    AstNode, AstToken, SyntaxKind, SyntaxNode, SyntaxNodeExt, SyntaxToken, tokens::*,
+    AstNode, AstToken, SyntaxKind, SyntaxNode, SyntaxToken, tokens::*,
+    utils::SyntaxNodeExt,
 };
 /// Represents the `Name` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
