@@ -2,8 +2,10 @@ use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
 use ungrammar::{NodeData, TokenData};
 
+use crate::utils::call_site_ident;
+
 /// An alias for [String] to improve type readability.
-// Has to be a newtype: https://github.com/rust-lang/rust/issues/4508#issuecomment-48088373
+// note: we want this to be a newtype as RA "sees through" normal type aliases
 pub struct DocString(String);
 
 impl quote::ToTokens for DocString {
@@ -12,7 +14,7 @@ impl quote::ToTokens for DocString {
     }
 }
 
-/// A "named tuple" of `GrammarItemInfo`.
+/// A "named tuple" of `(syn::Ident, DocString)`.
 pub struct GrammarItemInfo {
     /// The identifier. What the identifier represents will depend on
     /// where you got this [GrammarItemInfo] from.
@@ -48,11 +50,11 @@ pub trait GrammarItem {
 
 impl GrammarItem for TokenData {
     fn ast_trait_name(&self) -> Ident {
-        call_site_ident("AstToken".to_string())
+        call_site_ident("AstToken")
     }
 
     fn syntax_type_name(&self) -> Ident {
-        call_site_ident("SyntaxToken".to_string())
+        call_site_ident("SyntaxToken")
     }
 
     fn item_info(&self) -> GrammarItemInfo {
@@ -97,11 +99,11 @@ impl GrammarItem for TokenData {
 
 impl GrammarItem for NodeData {
     fn ast_trait_name(&self) -> Ident {
-        call_site_ident("AstNode".to_string())
+        call_site_ident("AstNode")
     }
 
     fn syntax_type_name(&self) -> Ident {
-        call_site_ident("SyntaxNode".to_string())
+        call_site_ident("SyntaxNode")
     }
 
     fn item_info(&self) -> GrammarItemInfo {
@@ -222,10 +224,6 @@ fn grammar_item_name(item: &str) -> &str {
         // does not require special handling
         other => other,
     }
-}
-
-fn call_site_ident(ident: String) -> Ident {
-    Ident::new(&ident, proc_macro2::Span::call_site())
 }
 
 macro format_docstring($template:literal $($rest:tt)*) {

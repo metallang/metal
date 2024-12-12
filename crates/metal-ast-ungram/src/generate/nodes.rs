@@ -21,6 +21,7 @@ pub fn generate_nodes_file(grammar: &Engram) -> TokenStream {
     });
 
     quote! {
+        use either::Either;
         use rowan::NodeOrToken;
 
         use crate::{

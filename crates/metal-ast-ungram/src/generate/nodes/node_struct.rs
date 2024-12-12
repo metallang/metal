@@ -34,6 +34,7 @@ fn generate_node_struct_impl(grammar: &Engram, node: &NodeData) -> TokenStream {
 
         return quote! {
             impl #item_name {
+                /// Returns the inner token associated with this node.
                 pub fn token(&self) -> Option<#token_enum_name> {
                     self.syntax
                         .children_with_tokens()

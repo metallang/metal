@@ -69,6 +69,8 @@ pub enum SyntaxKind {
     PREFIX_OP_NODE,
     /// Corresponds to [BinaryOpNode].
     BINARY_OP_NODE,
+    /// Corresponds to [CallExprArgsNode].
+    CALL_EXPR_ARGS_NODE,
     /// Corresponds to [NumLitNode].
     NUM_LIT_NODE,
     /// Corresponds to [StrLitNode].

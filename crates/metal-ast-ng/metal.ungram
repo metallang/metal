@@ -131,7 +131,10 @@ BinaryOp =
 | '.'
 
 CallExpr =
-  Expr '(' (Expr ','?)* ')'
+  callee:Expr '(' args:CallExprArgs? ')'
+
+CallExprArgs =
+  Expr (',' Expr)* ','?
 
 // no BoolLit, `true` and `false` are regular values
 LitExpr =

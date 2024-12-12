@@ -1,8 +1,11 @@
 #![feature(decl_macro)]
 
+#[rustfmt::skip]
 mod nodes;
 mod rowan;
+#[rustfmt::skip]
 mod syntax_kind;
+#[rustfmt::skip]
 mod tokens;
 mod traits;
 mod utils;
