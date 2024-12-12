@@ -228,6 +228,6 @@ fn call_site_ident(ident: String) -> Ident {
     Ident::new(&ident, proc_macro2::Span::call_site())
 }
 
-pub macro format_docstring($template:literal $($rest:tt)*) {
+macro format_docstring($template:literal $($rest:tt)*) {
     DocString(format!(concat!(" ", $template) $($rest)*))
 }

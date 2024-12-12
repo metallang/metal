@@ -11,7 +11,7 @@ use crate::{
 /// Generates a node struct.
 pub fn generate_node_struct(grammar: &Engram, node: &NodeData) -> TokenStream {
     let item = generate_grammar_item_struct(node);
-    let item_impl = generate_node_struct_impl(grammar, node, &node.rule);
+    let item_impl = generate_node_struct_impl(grammar, node);
 
     quote! {
         #item
@@ -21,11 +21,15 @@ pub fn generate_node_struct(grammar: &Engram, node: &NodeData) -> TokenStream {
 }
 
 /// Generates an `impl` block consisting of accessor methods for a node struct.
-fn generate_node_struct_impl(grammar: &Engram, node: &NodeData, rule: &Rule) -> TokenStream {
+fn generate_node_struct_impl(grammar: &Engram, node: &NodeData) -> TokenStream {
     let item_name = node.item_info().ident;
 
-    // TODO: move this to generate_rule
-    if matches!(rule, Rule::Alt(_)) {
+    // a special case for token alt nodes
+    // note: cannot be nicely moved to generate_rule because this needs a NodeData,
+    // and since we're calling generate_rule *from inside generate_rule* (i.e., recursion),
+    // that means we'll have to pass the NodeData through all the functions. besides,
+    // Rule::Alts are only supported at the top-level anyway
+    if matches!(node.rule, Rule::Alt(_)) {
         let token_enum_name = node.token_enum_info().ident;
 
         return quote! {
@@ -42,7 +46,7 @@ fn generate_node_struct_impl(grammar: &Engram, node: &NodeData, rule: &Rule) -> 
         };
     }
 
-    let impl_ = generate_rule(grammar, rule, None);
+    let impl_ = generate_rule(grammar, &node.rule, None);
 
     quote! {
         impl #item_name {
