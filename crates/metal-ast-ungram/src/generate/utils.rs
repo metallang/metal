@@ -1,18 +1,20 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::engram::GrammarItem;
+use crate::grammar_item::{GrammarItem, GrammarItemInfo};
 
 /// Generates a struct representation of a grammar item.
 pub fn generate_grammar_item_struct(item: &impl GrammarItem) -> TokenStream {
-    let doc = item.item_doc();
-    let item_name = item.item_name();
-    let syntax_kind_name = item.syntax_kind_name();
+    let GrammarItemInfo {
+        ident: item_name,
+        doc: item_doc,
+    } = item.item_info();
+    let syntax_kind_name = item.syntax_kind_info().ident;
     let ast_trait_name = item.ast_trait_name();
     let syntax_type_name = item.syntax_type_name();
 
     quote! {
-        #[doc = #doc]
+        #[doc = #item_doc]
         #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub struct #item_name {
             syntax: #syntax_type_name,

@@ -3,8 +3,9 @@ use quote::quote;
 use ungrammar::{NodeData, Rule};
 
 use crate::{
-    engram::{Engram, GrammarItem, NodeDataExt},
+    engram::Engram,
     generate::{rules::generate_rule, utils::generate_grammar_item_struct},
+    grammar_item::{GrammarItem, NodeDataExt},
 };
 
 /// Generates a node struct.
@@ -21,10 +22,11 @@ pub fn generate_node_struct(grammar: &Engram, node: &NodeData) -> TokenStream {
 
 /// Generates an `impl` block consisting of accessor methods for a node struct.
 fn generate_node_struct_impl(grammar: &Engram, node: &NodeData, rule: &Rule) -> TokenStream {
-    let item_name = node.item_name();
+    let item_name = node.item_info().ident;
 
+    // TODO: move this to generate_rule
     if matches!(rule, Rule::Alt(_)) {
-        let token_enum_name = node.token_enum_name();
+        let token_enum_name = node.token_enum_info().ident;
 
         return quote! {
             impl #item_name {

@@ -2,7 +2,10 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use ungrammar::{NodeData, Rule};
 
-use crate::engram::{Engram, GrammarItem, NodeDataExt};
+use crate::{
+    engram::Engram,
+    grammar_item::{GrammarItem, GrammarItemInfo, NodeDataExt},
+};
 
 /// Finds and generates enums of tokens for nodes that are alterations of tokens, such as `BinaryOp`.
 pub fn generate_token_alt_nodes(grammar: &Engram) -> impl Iterator<Item = TokenStream> + use<'_> {
@@ -27,9 +30,10 @@ pub fn generate_token_alt_nodes(grammar: &Engram) -> impl Iterator<Item = TokenS
 
 /// Generate a single token alteration node, such as `BinaryOp`.
 fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rule]) -> TokenStream {
-    let item_name = token_node.token_enum_name();
-
-    let doc = token_node.token_enum_doc();
+    let GrammarItemInfo {
+        ident: item_name,
+        doc: item_doc,
+    } = token_node.token_enum_info();
 
     let mut enum_variants = TokenStream::new();
     let mut can_cast_arms = TokenStream::new();
@@ -40,10 +44,12 @@ fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rul
         match rule {
             Rule::Token(token) => {
                 let token = &grammar[token];
-                let variant_name = token.variant_name();
-                let variant_doc = token.variant_doc();
-                let data_name = token.item_name();
-                let syntax_kind_name = token.syntax_kind_name();
+                let GrammarItemInfo {
+                    ident: variant_name,
+                    doc: variant_doc,
+                } = token.variant_info();
+                let data_name = token.item_info().ident;
+                let syntax_kind_name = token.syntax_kind_info().ident;
 
                 let enum_variant = quote! {
                     #[doc = #variant_doc]
@@ -69,7 +75,7 @@ fn generate_token_alt_node(grammar: &Engram, token_node: &NodeData, rules: &[Rul
     }
 
     quote! {
-        #[doc = #doc]
+        #[doc = #item_doc]
         #[derive(Debug, Clone, PartialEq, Eq, Hash)]
         pub enum #item_name {
             #enum_variants

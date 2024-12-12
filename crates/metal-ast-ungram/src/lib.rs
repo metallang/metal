@@ -1,4 +1,5 @@
 #![allow(clippy::wildcard_enum_match_arm)]
+#![feature(decl_macro)]
 
 use std::str::FromStr;
 
@@ -21,6 +22,7 @@ mod debug;
 mod engram;
 mod error;
 mod generate;
+mod grammar_item;
 mod utils;
 
 pub use crate::error::Error;

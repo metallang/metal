@@ -1,7 +1,8 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::engram::{Engram, GrammarItem};
+use crate::engram::Engram;
+use crate::grammar_item::{GrammarItem, GrammarItemInfo};
 
 /// Generates the `syntax_kind.rs` file.
 pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
@@ -17,28 +18,25 @@ pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
 /// Generates the `SyntaxKind` enum.
 fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
     let node_variants = grammar.nodes().map(|node| {
-        let item_name = node.item_name();
-        let syntax_kind_name = node.syntax_kind_name();
-
-        let doc = format!(" Corresponds to [{}].", &item_name);
+        let GrammarItemInfo {
+            ident: syntax_kind_name,
+            doc: syntax_kind_doc,
+        } = node.syntax_kind_info();
 
         quote! {
-            #[doc = #doc]
+            #[doc = #syntax_kind_doc]
             #syntax_kind_name,
         }
     });
 
     let token_variants = grammar.tokens().map(|token| {
-        let token_name = token.name.as_str();
-        let syntax_kind_name = token.syntax_kind_name();
-
-        let doc = format!(
-            " Don't try to remember this! Use [`T![{}]`](T) instead.",
-            token_name
-        );
+        let GrammarItemInfo {
+            ident: syntax_kind_name,
+            doc: syntax_kind_doc,
+        } = token.syntax_kind_info();
 
         quote! {
-            #[doc = #doc]
+            #[doc = #syntax_kind_doc]
             #syntax_kind_name,
         }
     });
@@ -62,7 +60,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
 fn generate_t_macro(grammar: &Engram) -> TokenStream {
     let arms = grammar.tokens().map(|token| {
         let token_name = token.name.as_str();
-        let syntax_kind_name = token.syntax_kind_name();
+        let syntax_kind_name = token.syntax_kind_info().ident;
 
         quote! {
             [#token_name] => { $crate::SyntaxKind::#syntax_kind_name },

@@ -2,7 +2,10 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use ungrammar::{NodeData, Rule, TokenData};
 
-use crate::engram::{Engram, GrammarItem};
+use crate::{
+    engram::Engram,
+    grammar_item::{GrammarItem, GrammarItemInfo},
+};
 
 pub fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStream {
     match rule {
@@ -19,13 +22,15 @@ pub fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> Toke
 }
 
 fn generate_node_rule(node: &NodeData, label: Option<&str>) -> TokenStream {
-    let fn_name = node.fn_name(label);
-    let item_name = node.item_name();
+    let GrammarItemInfo {
+        ident: fn_name,
+        doc: fn_doc,
+    } = node.fn_info(label);
 
-    let doc = format!(" Find a child node of type [{}].", item_name);
+    let item_name = node.item_info().ident;
 
     quote! {
-        #[doc = #doc]
+        #[doc = #fn_doc]
         pub fn #fn_name(&self) -> Option<#item_name> {
             self.syntax.child()
         }
@@ -33,16 +38,15 @@ fn generate_node_rule(node: &NodeData, label: Option<&str>) -> TokenStream {
 }
 
 fn generate_token_rule(token: &TokenData, label: Option<&str>) -> TokenStream {
-    let fn_name = token.fn_name(label);
-    let syntax_kind_name = token.syntax_kind_name();
+    let GrammarItemInfo {
+        ident: fn_name,
+        doc: fn_doc,
+    } = token.fn_info(label);
 
-    let doc = format!(
-        " Find a child token of variant [SyntaxKind::{}].",
-        syntax_kind_name
-    );
+    let syntax_kind_name = token.syntax_kind_info().ident;
 
     quote! {
-        #[doc = #doc]
+        #[doc = #fn_doc]
         pub fn #fn_name(&self) -> Option<SyntaxToken> {
             self.syntax.find_child_token(SyntaxKind::#syntax_kind_name)
         }
