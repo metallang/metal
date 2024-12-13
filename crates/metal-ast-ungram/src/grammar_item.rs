@@ -151,6 +151,22 @@ pub impl NodeData {
 
         self_as_token.item_info()
     }
+
+    /// Same as [GrammarItem::fn_info], but pluralized.
+    fn plural_fn_info(&self, label: Option<&str>) -> GrammarItemInfo {
+        let name = format!(
+            "{}s",
+            node_name(label.unwrap_or(&format!("{}s", &self.name)))
+        );
+        let ident = call_site_ident(name.to_snake_case());
+
+        let doc = format_docstring!(
+            "Find all children nodes of type [{}].",
+            self.item_info().ident
+        );
+
+        (ident, doc).into()
+    }
 }
 
 /// Appends `"_token"` to the end of the result of [grammar_item_name].
@@ -178,9 +194,11 @@ fn grammar_item_name(item: &str) -> &str {
         ":" => "colon",
         "{" => "l_brace",
         "}" => "r_brace",
-        "," => "comma",
         "(" => "l_paren",
         ")" => "r_paren",
+        "[" => "l_bracket",
+        "]" => "r_bracket",
+        "," => "comma",
         ";" => "semicolon",
         "." => "dot",
         "+" => "plus",

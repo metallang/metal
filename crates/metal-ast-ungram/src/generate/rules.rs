@@ -5,7 +5,7 @@ use ungrammar::{NodeData, Rule, TokenData};
 use crate::{
     debug::debug_rule,
     engram::Engram,
-    grammar_item::{GrammarItem, GrammarItemInfo},
+    grammar_item::{GrammarItem, GrammarItemInfo, NodeDataExt},
     utils::call_site_ident,
 };
 
@@ -14,9 +14,11 @@ pub fn generate_top_rule(grammar: &Engram, rule: &Rule) -> TokenStream {
     match rule {
         Rule::Labeled { label, rule } => match rule.as_ref() {
             Rule::Seq(rules) => generate_seq_rule(grammar, rules.as_slice(), Some(label.as_str())),
+            Rule::Rep(rule) => generate_rep_rule(grammar, rule.as_ref(), Some(label.as_str())),
             other => generate_rule(grammar, other, Some(label.as_str())),
         },
         Rule::Seq(rules) => generate_seq_rule(grammar, rules.as_slice(), None),
+        Rule::Rep(rule) => generate_rep_rule(grammar, rule.as_ref(), None),
         other => generate_rule(grammar, other, None),
     }
 }
@@ -47,7 +49,7 @@ fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStr
         }
         other => {
             let suggestion = if matches!(other, Rule::Rep(_)) {
-                "if you wanted to represent a delimited sequence of nodes, extract it into a separate node"
+                "if you wanted to represent a sequence of nodes, extract it into a separate node"
             } else if matches!(other, Rule::Seq(_)) {
                 "nested rule sequences are not supported"
             } else {
@@ -176,6 +178,30 @@ fn generate_rep_seq_rule(node: &NodeData, token: &TokenData, label: Option<&str>
                     NodeOrToken::Node(node) => #node_name::cast(node).map(Either::Left),
                     NodeOrToken::Token(token) => #token_name::cast(token).map(Either::Right),
                 })
+        }
+    }
+}
+
+/// Generates a repetition rule.
+fn generate_rep_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStream {
+    let Rule::Node(node) = rule else {
+        panic!("token repetition detected when evaluating rule {:?}. token repetition is not supported yet", debug_rule(grammar, rule));
+    };
+
+    let node = &grammar[node];
+
+    let GrammarItemInfo {
+        ident: fn_name,
+        doc: fn_doc,
+    } = node.plural_fn_info(label);
+    let item_name = node.item_info().ident;
+
+    quote! {
+        #[doc = #fn_doc]
+        pub fn #fn_name(&self) -> impl Iterator<Item = #item_name> {
+            self.syntax
+                .children()
+                .filter_map(#item_name::cast)
         }
     }
 }
