@@ -224,6 +224,10 @@ pub enum SyntaxKind {
 /// Returns the [SyntaxKind] variants corresponding to the provided token
 /// as written in the grammar.
 ///
+/// Note that certain tokens such as parentheses, braces, and brackets need
+/// to be wrapped in single quotes (like you would spell a character), e.g.
+/// `T!['{']`. This is a limitation imposed by Rust.
+///
 /// # Example
 ///
 /// ```no_run,
