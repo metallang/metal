@@ -59,7 +59,18 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
 /// Generates the `T!` macro.
 fn generate_t_macro(grammar: &Engram) -> TokenStream {
     let arms = grammar.tokens().map(|token| {
-        let token_name = token.name.as_str();
+        let token_name = token.name.as_str().parse().unwrap_or_else(|_| {
+            // rust requires braces to be always paired regardless of where they appear,
+            // so we can't make e.g. `T![}]` work. instead, we'll wrap such tokens in quotes
+            let token_name = token.name.as_str();
+
+            assert_eq!(token_name.len(), 1);
+
+            let token_name = token_name.chars().next().unwrap();
+
+            quote! { #token_name }
+        });
+
         let syntax_kind_name = token.syntax_kind_info().ident;
 
         quote! {
@@ -76,7 +87,7 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// ```no_run,
         /// # use metal_ast_ng::{T, BinaryOpNode};
         /// # fn example(binary_op_node: BinaryOpNode) {
-        /// if binary_op_node.token() == T![+] {
+        /// if binary_op_node.token() == T!["+"] {
         ///     // The binary operator is plus!
         /// }
         /// # }
