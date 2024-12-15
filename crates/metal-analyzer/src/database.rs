@@ -1,9 +1,14 @@
+// SPDX-License-Identifier: MIT
+
 use std::{fs, path::PathBuf};
 
 use rkyv::rancor;
 use salsa::Storage;
 
-use crate::module::{ArchivedModule, Module};
+use crate::{
+    error::AnalyzerError,
+    module::{ASTModule, ArchivedASTModule},
+};
 
 #[salsa::db]
 pub trait Db: salsa::Database {}
@@ -12,7 +17,7 @@ pub trait Db: salsa::Database {}
 #[derive(Clone)]
 pub struct AnalyzerDatabase {
     pub storage: Storage<Self>,
-    pub modules: Vec<Module>,
+    pub modules: Vec<ASTModule>,
 }
 
 #[salsa::db]
@@ -24,23 +29,22 @@ impl salsa::Database for AnalyzerDatabase {
 impl Db for AnalyzerDatabase {}
 
 impl AnalyzerDatabase {
-    pub fn load_from_directory(path: PathBuf) -> Self {
+    pub fn load_from_directory(path: PathBuf) -> Result<Self, AnalyzerError> {
         let mut modules = Vec::new();
-        for dir in fs::read_dir(path).unwrap().flatten() {
+        for dir in fs::read_dir(path)?.flatten() {
             // NOTE: the analyzer cache dir should only be one directory large
-            if dir.metadata().unwrap().is_dir() | dir.metadata().unwrap().is_symlink() {
+            if dir.metadata()?.is_dir() | dir.metadata()?.is_symlink() {
                 continue;
             }
 
-            let contents = fs::read_to_string(dir.path()).unwrap();
-            let archived =
-                rkyv::access::<ArchivedModule, rancor::Error>(contents.as_bytes()).unwrap();
-            let module = rkyv::deserialize::<Module, rancor::Error>(archived).unwrap();
+            let contents = fs::read_to_string(dir.path())?;
+            let archived = rkyv::access::<ArchivedASTModule, rancor::Error>(contents.as_bytes())?;
+            let module = rkyv::deserialize::<ASTModule, rancor::Error>(archived)?;
             modules.push(module);
         }
-        Self {
+        Ok(Self {
             storage: Storage::default(),
             modules,
-        }
+        })
     }
 }

@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: MIT
+
 //! Modules constructed using AST nodes
 
 use rkyv::{Archive, Deserialize, Serialize};
 
-// TODO(ast): add ast nodes or other such here.
+/// A general AST detail of a Metal module
 #[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone, Copy)]
 #[rkyv(compare(PartialEq), derive(Debug, Clone, Copy))]
-pub struct Module;
+pub struct ASTModule {}

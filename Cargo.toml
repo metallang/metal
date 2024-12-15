@@ -27,6 +27,7 @@ rkyv = "0.8"
 metal = { path = "crates/metal" }
 metal-analyzer = { path = "crates/metal-analyzer" }
 metal-ast = { path = "crates/metal-ast" }
+metal-ast-ng = { path = "crates/metal-ast-ng" }
 metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
@@ -44,6 +45,7 @@ peekable = { path = "crates/peekable" }
 ignored = [
     "metal-analyzer",
     "metal-ast",
+    "metal-ast-ng",
     "metal-parser",
     "metal-codegen-llvm",
     "metal-codegen-wasm",

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use salsa::Accumulator;
 
 use crate::database::Db;

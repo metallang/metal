@@ -6,8 +6,9 @@ description = "The Metal AST Analyzer."
 
 [dependencies]
 salsa = { workspace = true }
-metal-mir = { workspace = true }
 rkyv = { workspace = true }
+metal-ast-ng = { workspace = true }
+thiserror = { workspace = true }
 
 [lints]
 workspace = true
