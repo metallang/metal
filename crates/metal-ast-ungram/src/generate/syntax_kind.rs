@@ -91,9 +91,9 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// # Example
         ///
         /// ```no_run,
-        /// # use metal_ast_ng::{T, BinaryOpNode};
-        /// # fn example(binary_op_node: BinaryOpNode) {
-        /// if binary_op_node.token() == T![+] {
+        /// # use metal_ast_ng::{T, AstToken, BinaryExprOpNode};
+        /// # fn example(binary_op_node: BinaryExprOpNode) {
+        /// if binary_op_node.token().is_some_and(|token| token.syntax().kind() == T![+]) {
         ///     // The binary operator is plus!
         /// }
         /// # }
