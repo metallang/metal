@@ -9,7 +9,7 @@ use metal_mir::types::primitives::Primitive;
 use crate::CodeGenType;
 
 impl CodeGenType for Primitive {
-    fn codegen_type(
+    fn llvm_type(
         &self,
         llvm: &crate::LLVMRefs,
         _module: &metal_mir::parcel::Module,

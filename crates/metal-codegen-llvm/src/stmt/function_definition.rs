@@ -4,22 +4,28 @@ use std::ffi::CString;
 
 use llvm_sys::{
     core::{
-        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMPositionBuilderAtEnd, LLVMSetLinkage,
+        LLVMAddFunction, LLVMAppendBasicBlockInContext, LLVMGetParam, LLVMPositionBuilderAtEnd,
+        LLVMSetLinkage, LLVMSetValueName2,
     },
     prelude::LLVMValueRef,
 };
 use metal_mir::stmt::functiondef::FunctionDefinition;
 
 use super::{CodeGenType, CodeGenValue};
-use crate::get_linkage_from_vis;
+use crate::{core::get_module_full_name, get_linkage_from_vis};
 
 impl CodeGenValue for FunctionDefinition {
-    fn codegen_value(
+    fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let fun_name = self.signature.name.as_str();
+        let fun_name = if self.signature.name != "main" {
+            let module_name = get_module_full_name(module.to_owned());
+            module_name + "." + self.signature.name.as_str()
+        } else {
+            self.signature.name.clone()
+        };
 
         let linkage = get_linkage_from_vis(&self.signature.vis);
 
@@ -29,7 +35,7 @@ impl CodeGenValue for FunctionDefinition {
             let function = LLVMAddFunction(
                 llvm.module,
                 c_fun_name.as_ptr(),
-                self.signature.codegen_type(llvm, module),
+                self.signature.llvm_type(llvm, module),
             );
             LLVMSetLinkage(function, linkage);
 
@@ -38,8 +44,15 @@ impl CodeGenValue for FunctionDefinition {
 
             llvm.locals.clear();
 
+            for (idx, (input_name, _)) in self.signature.inputs.iter().enumerate() {
+                let param = LLVMGetParam(function, idx as u32);
+                let c_name = CString::new(input_name.as_str()).unwrap();
+                LLVMSetValueName2(param, c_name.as_ptr(), c_name.count_bytes());
+                llvm.locals.insert(input_name.to_string(), param);
+            }
+
             for stmt in &self.body {
-                stmt.codegen_value(llvm, module);
+                stmt.llvm_value(llvm, module);
             }
 
             function

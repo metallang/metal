@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+use serde::{Deserialize, Serialize};
 
 use crate::{parcel::Module, struct_, types};
 
@@ -23,7 +24,7 @@ use crate::{parcel::Module, struct_, types};
 ///     ]
 /// }
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Import {
     /// The module imported.
     pub module: Box<Module>,

@@ -9,26 +9,24 @@ use llvm_sys::{
 use metal_mir::{expr::Expr, stmt::constant::Constant};
 
 use super::{CodeGenType, CodeGenValue};
-use crate::get_linkage_from_vis;
+use crate::{core::get_module_full_name, get_linkage_from_vis};
 
 impl CodeGenValue for Constant {
-    fn codegen_value(
+    fn llvm_value(
         &self,
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let cname = CString::new(self.name).unwrap();
+        let module_name = get_module_full_name(module.to_owned());
+        let cname = CString::new(module_name + "." + self.name.as_str()).unwrap();
 
         unsafe {
-            let global_var = LLVMAddGlobal(
-                llvm.module,
-                self.ty.codegen_type(llvm, module),
-                cname.as_ptr(),
-            );
+            let global_var =
+                LLVMAddGlobal(llvm.module, self.ty.llvm_type(llvm, module), cname.as_ptr());
 
             match self.expr {
                 Expr::Literal(_) => {
-                    let val = self.expr.codegen_value(llvm, module);
+                    let val = self.expr.llvm_value(llvm, module);
                     LLVMSetInitializer(global_var, val);
                 }
                 _ => panic!("Expression is unsupported for use as a global variable"),
