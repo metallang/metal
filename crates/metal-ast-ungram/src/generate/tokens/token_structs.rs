@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use proc_macro2::TokenStream;
 
 use crate::{engram::Engram, generate::utils::generate_grammar_item_struct};

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![feature(decl_macro)]
 
 #[rustfmt::skip]

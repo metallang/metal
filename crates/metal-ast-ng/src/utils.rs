@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use std::marker::PhantomData;
 
 use crate::{AstNode, SyntaxKind, SyntaxNode, SyntaxNodeChildren, SyntaxToken};

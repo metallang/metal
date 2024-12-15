@@ -1,5 +1,9 @@
+// SPDX-License-Identifier: MIT
+
 use proc_macro2::TokenStream;
 use quote::quote;
+
+const LICENSE_PREAMBLE: &str = "// SPDX-License-Identifier: MIT\n\n";
 
 /// Creates a [syn::Ident] from a [String].
 pub fn call_site_ident(ident: impl AsRef<str>) -> syn::Ident {
@@ -15,7 +19,7 @@ pub fn save_generated(tokens: TokenStream, to: &str) -> Result<(), crate::Error>
     .to_string();
 
     let parsed = syn::parse_file(&tokens)?;
-    let formatted = prettyplease::unparse(&parsed);
+    let formatted = format!("{}{}", LICENSE_PREAMBLE, prettyplease::unparse(&parsed));
 
     std::fs::write(to, formatted)?;
 

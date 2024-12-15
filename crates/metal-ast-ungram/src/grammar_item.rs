@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
 use ungrammar::{NodeData, TokenData};

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // Some docs:
 // - Optionals are effectively ignored (but that doesn't mean you shouldn't add them)
 // - Don't forget to tweak metal_ast_ungram::grammar_item::grammar_item_name when adding
@@ -6,6 +8,8 @@
 //   For example, you can't do `Abc = A B C*`, but you can do `Abc = A B C_repeated` plus
 //   `C_repeated = C*`. The generator should provide good (enough) error messages when you
 //   try doing something it doesn't support.
+//
+// Also, if you use the ungrammar language server, make sure to disable auto-formatting.
 
 // Blocks
 Block = '{' items:BlockItems '}'

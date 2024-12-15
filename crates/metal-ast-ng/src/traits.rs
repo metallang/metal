@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{SyntaxKind, SyntaxNode, SyntaxToken};
 
 /// A trait to be implemented by [SyntaxNode] wrappers to provide rich, typed AST experience.

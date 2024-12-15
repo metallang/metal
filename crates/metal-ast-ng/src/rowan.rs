@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::SyntaxKind;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]

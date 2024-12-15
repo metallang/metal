@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 //! Various abstractions over [ungrammar]'s API.
 
 use std::ops::Index;

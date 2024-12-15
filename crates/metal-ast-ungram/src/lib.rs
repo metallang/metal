@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![allow(clippy::wildcard_enum_match_arm)]
 #![feature(decl_macro)]
 
