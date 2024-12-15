@@ -1,0 +1,15 @@
+[package]
+name = "metal-ast-ng"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rowan = { workspace = true }
+extend = { workspace = true }
+either = { workspace = true }
+
+[build-dependencies]
+metal-ast-ungram = { workspace = true }
+
+[lints]
+workspace = true
