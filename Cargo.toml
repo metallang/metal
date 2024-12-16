@@ -6,19 +6,26 @@ resolver = "2"
 tapcli = { git = "https://github.com/elenakrittik/gdtk/", rev = "699bffcd52ae85bd7297dbf552eb010ae9bc1f6e" }
 logos = { git = "https://github.com/elenakrittik/logos", rev = "533228db3e8bbc9ac27e790628844b7d423e10cb" }
 thiserror = "2.0.3"
-syn = { version = "2.0.85", features = ["full"] }
+syn = { version = "2.0.85", features = ["full", "visit-mut"] }
 quote = "1.0.37"
 proc-macro2 = "1.0.89"
 proc-macro-error2 = "2.0.1"
 llvm-sys = { version = "191", features = ["force-static"] }
 enum-as-inner = "0.6.1"
 wasm-encoder = "0.221.0"
+ungrammar = "1.16.1"
+rowan = "0.16.1"
+heck = "0.5.0"
+prettyplease = { version = "0.2.25", features = ["verbatim"] }
+extend = "1.2.0"
+either = "1.13.0"
 ron = "0.8"
 serde = { version = "1", features = ["derive"] }
 semver = "1"
 
 cart = { path = "crates/cart" }
 metal-ast = { path = "crates/metal-ast" }
+metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
