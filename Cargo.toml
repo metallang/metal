@@ -14,7 +14,7 @@ llvm-sys = { version = "191", features = ["force-static"] }
 enum-as-inner = "0.6.1"
 wasm-encoder = "0.221.0"
 ungrammar = "1.16.1"
-rowan = "0.15.16"
+rowan = "0.16.1"
 heck = "0.5.0"
 prettyplease = { version = "0.2.25", features = ["verbatim"] }
 extend = "1.2.0"
