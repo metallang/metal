@@ -16,17 +16,12 @@ use crate::{
     CodeGenType, CodeGenValue, LLVMRefs,
 };
 
+#[derive(Default)]
 pub struct StructRepository {
     structs: HashMap<String, LLVMTypeRef>,
 }
 
 impl StructRepository {
-    pub fn new() -> Self {
-        Self {
-            structs: HashMap::new(),
-        }
-    }
-
     pub fn insert(&mut self, name: String, ty: LLVMTypeRef) {
         self.structs.insert(name, ty);
     }
@@ -49,12 +44,6 @@ impl StructRepository {
             self.insert(name, ty);
             ty
         }
-    }
-}
-
-impl Default for StructRepository {
-    fn default() -> Self {
-        Self::new()
     }
 }
 
