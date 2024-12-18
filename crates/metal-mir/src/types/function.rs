@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{visibility::Visibility, Type};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct FunctionSignature {
     /// The name of this function.
     pub name: String,

@@ -23,8 +23,9 @@ ron = "0.8"
 serde = { version = "1", features = ["derive"] }
 salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8eab92de89edf4073b03601" }
 rkyv = "0.8"
+semver = "1"
 
-metal = { path = "crates/metal" }
+cart = { path = "crates/cart" }
 metal-analyzer = { path = "crates/metal-analyzer" }
 metal-ast = { path = "crates/metal-ast" }
 metal-ast-ng = { path = "crates/metal-ast-ng" }
@@ -40,6 +41,7 @@ metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
 metallic = { path = "crates/metallic" }
 peekable = { path = "crates/peekable" }
+debug-to-display = { path = "crates/debug-to-display" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
@@ -51,7 +53,7 @@ ignored = [
     "metal-codegen-wasm",
     "metallic",
     "metal-formatter",
-    "metal",
+    "cart",
     "metal-linter",
     "metal-lsp",
 ]
