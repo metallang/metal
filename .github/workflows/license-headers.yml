@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: MIT
+
+name: License headers
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
+  cancel-in-progress: false # The day will come, and this will be true
+
+jobs:
+  clippy:
+    strategy:
+      matrix:
+        target:
+          - id: "linux-amd64"
+            os: "ubuntu-latest"
+          - id: "darwin-aarch64"
+            os: "macos-latest"
+          - id: "darwin-amd64"
+            os: "macos-13"
+    runs-on: ${{ matrix.target.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-shear
+
+      - run: |
+          shopt -s extglob
+          EXCLUDE_PATTERN='WONTMATCHTESTESTEST'
+          HEADER='SPDX-License-Identifier: MIT'
+          FAILURE=false
+
+          for filename in **/*; do
+            case filename in
+              $EXCLUDE_PATTERN) echo "Skipping $filename" ;;
+              *) : ;;
+            esac
+
+            FILE_HEAD=(head $filename)
+            grep $HEADER <<< $FILE_HEAD
+
+            # grep returns 1 (failure) if it doesn't find a match
+            if [ $? -eq 1 ]; then
+              echo "File $filename does not have an SPDX license header"
+              FAILURE=true
+            fi
+          
+          if [ "$FAILURE" = true ]; then
+            exit 1
+          fi
