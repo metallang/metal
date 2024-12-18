@@ -1,6 +1,6 @@
 # Metal
 
-Prototype compiled language built in Rust with LLVM.
+A beautiful, robust, flexible, efficient general-purpose programming language with zero garbage collection built with LLVM and Rust.
 
 ## Contributing
 
