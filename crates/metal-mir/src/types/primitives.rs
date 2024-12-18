@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Represents the basic types of the language.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Primitive {
     // Integers (signed)
     I8,

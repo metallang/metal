@@ -9,7 +9,7 @@ pub mod import;
 pub mod return_;
 
 /// Represents a statement in Metal code.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub enum Statement {
     FunctionDefine(Box<functiondef::FunctionDefinition>),
     Constant(Box<constant::Constant>),
