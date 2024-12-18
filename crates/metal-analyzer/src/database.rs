@@ -43,4 +43,14 @@ impl AnalyzerDatabase {
             modules,
         })
     }
+
+    pub fn serialize_to_directory(&self, path: PathBuf) -> Result<(), AnalyzerError> {
+        let p = path.to_str().unwrap().to_string();
+        for module in self.modules.values() {
+            let ser = bincode::serialize(module)?;
+            fs::write(format!("{}{}", &p, &module.name), ser)?;
+        }
+
+        Ok(())
+    }
 }
