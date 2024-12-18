@@ -33,7 +33,7 @@ jobs:
             esac
 
             FILE_HEAD=(head $filename)
-            echo "$FILE_HEAD" | grep $HEADER
+            echo "$FILE_HEAD" | grep "$HEADER"
 
             # grep returns 1 (failure) if it doesn't find a match
             if [ $? -eq 1 ]; then
