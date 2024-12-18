@@ -2,11 +2,12 @@
 
 //! Contains representation of Metal Parcels and modules.
 
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::stmt;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Parcel {
     /// Parcel name.
     /// i.e. `std`
@@ -16,7 +17,8 @@ pub struct Parcel {
     pub modules: Vec<Module>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Module {
     /// Module name.
     /// i.e. `std.io`

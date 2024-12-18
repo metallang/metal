@@ -2,11 +2,12 @@
 
 use std::collections::BTreeMap;
 
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use super::{visibility::Visibility, Type};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct FunctionSignature {
     /// The name of this function.
     pub name: String,

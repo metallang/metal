@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 /// Represents the basic types of the language.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub enum Primitive {
     // Integers (signed)
     I8,

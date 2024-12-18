@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::{expr::Assignment, types::function::FunctionSignature};
 
@@ -9,7 +9,8 @@ pub mod import;
 pub mod return_;
 
 /// Represents a statement in Metal code.
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub enum Statement {
     FunctionDefine(Box<functiondef::FunctionDefinition>),
     Constant(Box<constant::Constant>),

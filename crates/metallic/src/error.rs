@@ -2,8 +2,6 @@
 
 use std::io;
 
-use ron::de::SpannedError;
-
 use crate::target::TargetError;
 
 #[derive(Debug, thiserror::Error)]

@@ -6,5 +6,5 @@ use rkyv::{Archive, Deserialize, Serialize};
 
 /// A general AST detail of a Metal module
 #[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone, Copy)]
-#[rkyv(compare(PartialEq), derive(Debug, Clone, Copy))]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct ASTModule {}

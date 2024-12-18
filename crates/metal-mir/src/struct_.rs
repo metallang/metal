@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the fields of a struct, i.e. `a: B`.
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct StructField {
     /// The name of the struct field, i.e. `a`.
     pub name: String,
@@ -21,7 +22,8 @@ pub struct StructField {
 ///     pub c: i32
 /// }
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Struct {
     /// The name of this struct.
     pub name: String,

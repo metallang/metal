@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use super::Type;
 
@@ -9,7 +9,8 @@ use super::Type;
 /// Represents a tuple type.
 /// i.e. (1, 2, 3)
 /// Tuple { id: "...", size: 3, types: [Int, Int, Int] }
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Tuple {
     /// A unique identifier for this tuple.
     /// Used for naming inside of LLVM.

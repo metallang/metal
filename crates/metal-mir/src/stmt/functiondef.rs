@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use super::Statement;
 use crate::types;
 
 /// Represents a definition for a function.
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct FunctionDefinition {
     /// The function signature/identifier/type.
     pub signature: types::function::FunctionSignature,

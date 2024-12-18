@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use super::Type;
 
@@ -8,7 +8,8 @@ use super::Type;
 ///
 /// i.e.: [1, 2, 3]
 /// Array { item_type: Type(...) }
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Array {
     /// The type which is present in a list.
     pub item_type: Type,

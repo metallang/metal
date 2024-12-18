@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::{parcel::Module, struct_, types};
 
@@ -24,7 +24,8 @@ use crate::{parcel::Module, struct_, types};
 ///     ]
 /// }
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Import {
     /// The module imported.
     pub module: Box<Module>,

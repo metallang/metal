@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::types;
 
 /// Represents a literal.
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub enum Literal {
     /// Represents a literal number, i.e. `1`.
     Number(Number),
@@ -15,7 +16,8 @@ pub enum Literal {
     Boolean(Bool),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Number {
     /// The primitive type of this number.
     pub primitive: types::primitives::Primitive,
@@ -23,13 +25,15 @@ pub struct Number {
     pub value: i64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct StringLiteral {
     /// The string value.
     pub value: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Bool {
     /// The boolean value.
     pub value: bool,

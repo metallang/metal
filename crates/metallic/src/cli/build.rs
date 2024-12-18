@@ -10,7 +10,6 @@ use llvm_sys::target::{
 };
 use metal_codegen_llvm::core::compile_module;
 use metal_mir::parcel::Module;
-use ron::de::from_reader;
 
 use crate::{error::Error, target::Target};
 

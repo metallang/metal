@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-use serde::{Deserialize, Serialize};
+use rkyv::{Archive, Deserialize, Serialize};
 
 use crate::{
     expr::Expr,
@@ -7,7 +7,8 @@ use crate::{
 };
 
 /// An immutable global constant value.
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[rkyv(compare(PartialEq), derive(Debug, Clone))]
 pub struct Constant {
     /// The name of this constant.
     pub name: String,
