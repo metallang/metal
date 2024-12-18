@@ -40,6 +40,7 @@ jobs:
               echo "File $filename does not have an SPDX license header"
               FAILURE=true
             fi
+          done
           
           if [ "$FAILURE" = true ]; then
             exit 1
