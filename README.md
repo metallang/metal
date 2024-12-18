@@ -10,8 +10,14 @@ opening an issue, or [joining our Discord](https://discord.gg/fDCMSbgpsB) and sa
 
 ## Development
 
-Use nightly Rust.
+### Rust
 
-If you want to add a dependency, add it to the workspace Cargo.toml and then
-in the crate that you want to use this dependency in specify that dependency as `dep_name = { workspace = true }`.
-This makes updating deps much easier.
+The Metal Compiler, analyzer, and surrounding tools are all built with Rust.
+More specifically, you should use the most latest Rust nightly release as Metal only
+targets supporting it specifically.
+
+#### Adding Dependencies
+
+When adding dependencies to Metal please make sure to only add the main dependency information (i.e. `tokio = { version = "1", features = ["full"] }`)
+to the `Cargo.toml` in Metal's root directory. Then, when using the dependency in one of Metal's child crates, in lieu of adding it directly, only add it
+as a workspace dependency (i.e. `tokio = { workspace = true }`).
