@@ -41,14 +41,5 @@
         vis: Public
     )
   ],
-  imports: [],
-  constants: [
-    (
-        name: "test_constant",
-        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
-        ty: I8,
-        vis: Public
-    )
-  ],
-  structs: []
+  imports: []
 )

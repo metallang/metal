@@ -21,10 +21,10 @@ extend = "1.2.0"
 either = "1.13.0"
 ron = "0.8"
 serde = { version = "1", features = ["derive"] }
+semver = "1"
 
-metal = { path = "crates/metal" }
+cart = { path = "crates/cart" }
 metal-ast = { path = "crates/metal-ast" }
-metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
@@ -34,8 +34,10 @@ metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
+metal-ungram = { path = "crates/metal-ungram" }
 metallic = { path = "crates/metallic" }
 peekable = { path = "crates/peekable" }
+debug-to-display = { path = "crates/debug-to-display" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
@@ -45,7 +47,7 @@ ignored = [
     "metal-codegen-wasm",
     "metallic",
     "metal-formatter",
-    "metal",
+    "cart",
     "metal-linter",
     "metal-lsp",
 ]
