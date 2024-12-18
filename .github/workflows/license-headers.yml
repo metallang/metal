@@ -25,7 +25,7 @@ jobs:
 
           RED='\033[0;31m' # red color
           NC='\033[0m' # no color aka color reset
-          EXCLUDE_PATTERN='+(LICENSE|*.toml|mir-tests/*|README.md|.gitignore|.github/dependabot.yml)'
+          EXCLUDE_PATTERN='+(LICENSE|*.toml|mir-tests/*|README.md|.gitignore|.github/dependabot.yml|.gitattributes)'
           HEADER='SPDX-License-Identifier: MIT'
           FAILURE=false
           FILES=$(git ls-files)
