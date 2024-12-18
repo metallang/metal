@@ -6,20 +6,20 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::Error;
 
-pub trait VerifyConfig {
-    fn verify_config(&self) -> Result<(), Error>;
+pub trait Verify {
+    fn verify(&self) -> Result<(), Error>;
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Config {
+pub struct Manifest {
     pub pkg: Package,
     pub deps: HashMap<String, Dependency>,
 }
 
-impl VerifyConfig for Config {
-    fn verify_config(&self) -> Result<(), Error> {
-        self.pkg.verify_config()?;
-        self.deps.values().try_for_each(|d| d.verify_config())
+impl Verify for Manifest {
+    fn verify(&self) -> Result<(), Error> {
+        self.pkg.verify()?;
+        self.deps.values().try_for_each(|d| d.verify())
     }
 }
 
@@ -31,8 +31,8 @@ pub struct Package {
     pub description: Option<String>,
 }
 
-impl VerifyConfig for Package {
-    fn verify_config(&self) -> Result<(), Error> {
+impl Verify for Package {
+    fn verify(&self) -> Result<(), Error> {
         if semver::Version::parse(&self.version).is_err() {
             return Err(Error::InvalidPackageVersion(self.version.clone()));
         }
@@ -50,11 +50,9 @@ pub struct Dependency {
     features: Option<Vec<String>>,
 }
 
-impl VerifyConfig for Dependency {
-    fn verify_config(&self) -> Result<(), Error> {
-        if let None = self.git
-            && let Some(_) = self.tag
-        {
+impl Verify for Dependency {
+    fn verify(&self) -> Result<(), Error> {
+        if self.git.is_none() && self.tag.is_some() {
             return Err(Error::TagIncluded);
         }
 

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-#![feature(let_chains)]
-
 use debug_to_display::ForwardDebugToDisplay;
 use tapcli::Command;
 
