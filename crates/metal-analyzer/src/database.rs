@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-use std::{fs, path::PathBuf};
+use std::{collections::HashMap, fs, path::PathBuf};
 
-use rkyv::rancor;
+use metal_mir::parcel::Module;
 use salsa::Storage;
 
-use crate::{
-    error::AnalyzerError,
-    module::{ASTModule, ArchivedASTModule},
-};
+use crate::error::AnalyzerError;
 
 #[salsa::db]
 pub trait Db: salsa::Database {}
@@ -17,7 +14,7 @@ pub trait Db: salsa::Database {}
 #[derive(Clone)]
 pub struct AnalyzerDatabase {
     pub storage: Storage<Self>,
-    pub modules: Vec<ASTModule>,
+    pub modules: HashMap<String, Module>,
 }
 
 #[salsa::db]
@@ -30,7 +27,7 @@ impl Db for AnalyzerDatabase {}
 
 impl AnalyzerDatabase {
     pub fn load_from_directory(path: PathBuf) -> Result<Self, AnalyzerError> {
-        let mut modules = Vec::new();
+        let mut modules = HashMap::new();
         for dir in fs::read_dir(path)?.flatten() {
             // NOTE: the analyzer cache dir should only be one directory large
             if dir.metadata()?.is_dir() | dir.metadata()?.is_symlink() {
@@ -38,9 +35,8 @@ impl AnalyzerDatabase {
             }
 
             let contents = fs::read_to_string(dir.path())?;
-            let archived = rkyv::access::<ArchivedASTModule, rancor::Error>(contents.as_bytes())?;
-            let module = rkyv::deserialize::<ASTModule, rancor::Error>(archived)?;
-            modules.push(module);
+            let module: Module = bincode::deserialize(contents.as_bytes())?;
+            modules.insert(module.name.clone(), module);
         }
         Ok(Self {
             storage: Storage::default(),

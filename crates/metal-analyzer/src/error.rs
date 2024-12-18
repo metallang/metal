@@ -6,6 +6,6 @@ use std::io;
 pub enum AnalyzerError {
     #[error("Error with file IO system: {0}")]
     IOError(#[from] io::Error),
-    #[error("Rkyv rancor error: {0}")]
-    RkyvError(#[from] rkyv::rancor::Error),
+    #[error("Bincode error: {0}")]
+    RkyvError(#[from] bincode::Error),
 }
