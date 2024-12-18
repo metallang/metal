@@ -22,26 +22,29 @@ jobs:
       - shell: bash
         run: |
           shopt -s extglob
-          EXCLUDE_PATTERN='WONTMATCHTESTESTEST'
+
+          RED='\033[0;31m' # red color
+          NC='\033[0m' # no color aka color reset
+          EXCLUDE_PATTERN='+(LICENSE|*.toml|mir-tests/*)'
           HEADER='SPDX-License-Identifier: MIT'
           FAILURE=false
+          FILES=$(git ls-files)
 
-          for filename in **/*; do
-            case filename in
-              $EXCLUDE_PATTERN) echo "Skipping $filename" ;;
-              *) : ;;
-            esac
+          for filename in $FILES; do
+            if [[ "$filename" == $EXCLUDE_PATTERN ]]; then
+              echo "Skipping $filename because it was manually exempted from the check"
+              continue
+            fi
 
-            FILE_HEAD=(head $filename)
-            echo "$FILE_HEAD" | grep "$HEADER"
+            FILE_HEAD=$(head $filename)
 
             # grep returns 1 (failure) if it doesn't find a match
-            if [ $? -eq 1 ]; then
-              echo "File $filename does not have an SPDX license header"
+            if ! (echo "$FILE_HEAD" | grep -q "$HEADER"); then
+              echo -e "${RED}File $filename does not have an SPDX license header${NC}"
               FAILURE=true
             fi
           done
-          
+
           if [ "$FAILURE" = true ]; then
             exit 1
           fi
