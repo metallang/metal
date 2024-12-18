@@ -11,24 +11,16 @@ concurrency:
   cancel-in-progress: false # The day will come, and this will be true
 
 jobs:
-  clippy:
-    strategy:
-      matrix:
-        target:
-          - id: "linux-amd64"
-            os: "ubuntu-latest"
-          - id: "darwin-aarch64"
-            os: "macos-latest"
-          - id: "darwin-amd64"
-            os: "macos-13"
-    runs-on: ${{ matrix.target.os }}
+  license-headers:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-shear
 
-      - run: |
+      - shell: bash
+        run: |
           shopt -s extglob
           EXCLUDE_PATTERN='WONTMATCHTESTESTEST'
           HEADER='SPDX-License-Identifier: MIT'
