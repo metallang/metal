@@ -1,6 +1,7 @@
 # Metal
 
-A beautiful, robust, flexible, efficient general-purpose programming language with zero garbage collection built with LLVM and Rust.
+A prototype compiled programming language, striving to be an easy-to-use borrow checked, non-garbage-collected,
+memory safe, robust programming language.
 
 ## Contributing
 
