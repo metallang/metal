@@ -28,7 +28,6 @@ bincode = "1"
 cart = { path = "crates/cart" }
 metal-analyzer = { path = "crates/metal-analyzer" }
 metal-ast = { path = "crates/metal-ast" }
-metal-ast-ng = { path = "crates/metal-ast-ng" }
 metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
