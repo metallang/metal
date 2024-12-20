@@ -47,7 +47,6 @@ debug-to-display = { path = "crates/debug-to-display" }
 ignored = [
     "metal-analyzer",
     "metal-ast",
-    "metal-ast-ng",
     "metal-parser",
     "metal-codegen-llvm",
     "metal-codegen-wasm",
