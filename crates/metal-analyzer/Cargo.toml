@@ -7,7 +7,6 @@ description = "The Metal AST Analyzer."
 [dependencies]
 salsa = { workspace = true }
 bincode = { workspace = true }
-metal-ast-ng = { workspace = true }
 metal-mir = { workspace = true }
 thiserror = { workspace = true }
 
