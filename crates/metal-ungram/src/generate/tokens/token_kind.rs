@@ -16,8 +16,13 @@ pub fn generate_token_kind(grammar: &Engram) -> TokenStream {
 
     quote! {
         /// The kind of a token.
+        #[derive(Debug)]
         pub enum TokenKind {
             #(#variants)*
+            /// Represents a multi- or single-line comment.
+            Comment,
+            /// Represents a whitespace token, such as a space or a tab, among others.
+            Whitespace,
             /// A special token representing an unknown token.
             Unknown,
             /// A special token representing the end of an input.

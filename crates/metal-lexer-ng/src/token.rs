@@ -1,8 +1,9 @@
 use crate::{Span, TokenKind};
 
+#[derive(Debug)]
 pub struct Token {
-    kind: TokenKind,
-    span: Span,
+    pub kind: TokenKind,
+    pub span: Span,
 }
 
 impl Token {

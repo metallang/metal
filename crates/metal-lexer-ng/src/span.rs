@@ -1,10 +1,11 @@
+#[derive(Debug)]
 pub struct Span {
-    start: usize,
-    end: usize,
+    pub start: usize,
+    pub end: usize,
 }
 
 impl Span {
-    pub(crate) fn new(start: usize, end: usize) -> Self {
+    pub fn new(start: usize, end: usize) -> Self {
         Self { start, end }
     }
 }

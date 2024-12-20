@@ -580,12 +580,12 @@ impl AstToken for PipeEqToken {
 }
 /// Represents the `<<=` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ShiftlEqToken {
+pub struct Lt2EqToken {
     syntax: SyntaxToken,
 }
-impl AstToken for ShiftlEqToken {
+impl AstToken for Lt2EqToken {
     fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::SHIFTL_EQ_TOKEN
+        kind == SyntaxKind::LT2_EQ_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -596,12 +596,12 @@ impl AstToken for ShiftlEqToken {
 }
 /// Represents the `>>=` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ShiftrEqToken {
+pub struct Gt2EqToken {
     syntax: SyntaxToken,
 }
-impl AstToken for ShiftrEqToken {
+impl AstToken for Gt2EqToken {
     fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::SHIFTR_EQ_TOKEN
+        kind == SyntaxKind::GT2_EQ_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -988,10 +988,10 @@ pub enum BinaryExprOpToken {
     AmpEq(AmpEqToken),
     /// See [PipeEqToken].
     PipeEq(PipeEqToken),
-    /// See [ShiftlEqToken].
-    ShiftlEq(ShiftlEqToken),
-    /// See [ShiftrEqToken].
-    ShiftrEq(ShiftrEqToken),
+    /// See [Lt2EqToken].
+    Lt2Eq(Lt2EqToken),
+    /// See [Gt2EqToken].
+    Gt2Eq(Gt2EqToken),
     /// See [PlusToken].
     Plus(PlusToken),
     /// See [MinusToken].
@@ -1050,8 +1050,8 @@ impl AstToken for BinaryExprOpToken {
             SyntaxKind::CARET_EQ_TOKEN => true,
             SyntaxKind::AMP_EQ_TOKEN => true,
             SyntaxKind::PIPE_EQ_TOKEN => true,
-            SyntaxKind::SHIFTL_EQ_TOKEN => true,
-            SyntaxKind::SHIFTR_EQ_TOKEN => true,
+            SyntaxKind::LT2_EQ_TOKEN => true,
+            SyntaxKind::GT2_EQ_TOKEN => true,
             SyntaxKind::PLUS_TOKEN => true,
             SyntaxKind::MINUS_TOKEN => true,
             SyntaxKind::SLASH_TOKEN => true,
@@ -1107,11 +1107,11 @@ impl AstToken for BinaryExprOpToken {
             SyntaxKind::PIPE_EQ_TOKEN => {
                 Some(BinaryExprOpToken::PipeEq(PipeEqToken::cast(syntax)?))
             }
-            SyntaxKind::SHIFTL_EQ_TOKEN => {
-                Some(BinaryExprOpToken::ShiftlEq(ShiftlEqToken::cast(syntax)?))
+            SyntaxKind::LT2_EQ_TOKEN => {
+                Some(BinaryExprOpToken::Lt2Eq(Lt2EqToken::cast(syntax)?))
             }
-            SyntaxKind::SHIFTR_EQ_TOKEN => {
-                Some(BinaryExprOpToken::ShiftrEq(ShiftrEqToken::cast(syntax)?))
+            SyntaxKind::GT2_EQ_TOKEN => {
+                Some(BinaryExprOpToken::Gt2Eq(Gt2EqToken::cast(syntax)?))
             }
             SyntaxKind::PLUS_TOKEN => {
                 Some(BinaryExprOpToken::Plus(PlusToken::cast(syntax)?))
@@ -1187,8 +1187,8 @@ impl AstToken for BinaryExprOpToken {
             BinaryExprOpToken::CaretEq(it) => it.syntax(),
             BinaryExprOpToken::AmpEq(it) => it.syntax(),
             BinaryExprOpToken::PipeEq(it) => it.syntax(),
-            BinaryExprOpToken::ShiftlEq(it) => it.syntax(),
-            BinaryExprOpToken::ShiftrEq(it) => it.syntax(),
+            BinaryExprOpToken::Lt2Eq(it) => it.syntax(),
+            BinaryExprOpToken::Gt2Eq(it) => it.syntax(),
             BinaryExprOpToken::Plus(it) => it.syntax(),
             BinaryExprOpToken::Minus(it) => it.syntax(),
             BinaryExprOpToken::Slash(it) => it.syntax(),
