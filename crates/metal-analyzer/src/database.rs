@@ -46,7 +46,7 @@ impl AnalyzerDatabase {
     pub fn load_from_directory(path: PathBuf) -> Result<Self, Error> {
         let mut modules = HashMap::new();
         for dir in fs::read_dir(path)?.flatten() {
-            // NOTE: the analyzer cache dir is flat meaning doesn't support child directories.
+            // NOTE: the analyzer cache dir is flat meaning it doesn't support child directories.
             if dir.metadata()?.is_dir() | dir.metadata()?.is_symlink() {
                 continue;
             }
