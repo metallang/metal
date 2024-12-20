@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT -->
+
 # Metal Architecture
 
 This is a high-level overview and a generalization of Metal's core architecture. It is not representative of how different components of Metal interact with each other,
