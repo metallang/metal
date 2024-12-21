@@ -21,26 +21,31 @@ extend = "1.2.0"
 either = "1.13.0"
 ron = "0.8"
 serde = { version = "1", features = ["derive"] }
+salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8eab92de89edf4073b03601" }
 semver = "1"
+bincode = "1"
 
 cart = { path = "crates/cart" }
+metal-analyzer = { path = "crates/metal-analyzer" }
 metal-ast = { path = "crates/metal-ast" }
-metal-ast-ungram = { path = "crates/metal-ast-ungram" }
 metal-codegen-wasm = { path = "crates/metal-codegen-wasm" }
 metal-codegen-llvm = { path = "crates/metal-codegen-llvm" }
 metal-formatter = { path = "crates/metal-formatter" }
 metal-lexer = { path = "crates/metal-lexer" }
+metal-lexer-ng = { path = "crates/metal-lexer-ng" }
 metal-linter = { path = "crates/metal-linter" }
 metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
 metal-proc-macros = { path = "crates/metal-proc-macros" }
+metal-ungram = { path = "crates/metal-ungram" }
 metallic = { path = "crates/metallic" }
 peekable = { path = "crates/peekable" }
 debug-to-display = { path = "crates/debug-to-display" }
 
 [workspace.metadata.cargo-shear]
 ignored = [
+    "metal-analyzer",
     "metal-ast",
     "metal-parser",
     "metal-codegen-llvm",
