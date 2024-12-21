@@ -14,7 +14,6 @@ opening an issue, or [joining our Discord](https://discord.gg/fDCMSbgpsB) and sa
 ### Rust
 
 The Metal toolchain uses the nightly Rust channel, so to work on it you should use a reasonably recent nightly Rust installation.
-targets supporting it specifically.
 
 #### Adding Dependencies
 
