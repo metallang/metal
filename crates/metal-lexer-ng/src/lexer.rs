@@ -2,7 +2,7 @@
 
 use core::str;
 
-use crate::{Span, TokenKind, token::Token};
+use crate::{token::Token, Span, TokenKind};
 
 pub struct Lexer<'src> {
     bytes: &'src [u8],
