@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 //! Compilation step for modules from MIR to LLVM IR
 
-use std::{borrow::Cow, collections::HashMap, ffi::CString};
+use std::{borrow::Cow, collections::HashMap, env, ffi::CString, process::Command};
 
 use llvm_sys::{
     analysis::LLVMVerifyModule,
     bit_writer,
-    core::{LLVMPrintModuleToString, LLVMSetSourceFileName},
-    prelude::LLVMTypeRef,
+    core::{LLVMPrintModuleToString, LLVMSetSourceFileName, LLVMSetTarget},
+    prelude::LLVMTypeRef, target_machine::LLVMGetDefaultTargetTriple,
 };
 use metal_mir::{parcel::Module, struct_::Struct};
 
@@ -75,7 +75,7 @@ impl<'a> PathBuilder<'a> {
 
 /// Compiles an LLVM module and returns either human-readable
 /// LLVM IR or LLVM bytecode depending on `human_readable`.
-pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
+pub fn compile_module(module: &Module, human_readable: bool, triple: &Option<String>) -> Vec<u8> {
     let mut llvm = LLVMRefs::new(module);
 
     let c_filename = CString::new(module.filename.as_str()).unwrap();
@@ -84,6 +84,15 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
     for stmt in &module.statements {
         stmt.llvm_value(&mut llvm, module);
+    }
+
+    unsafe {
+        if let Some(triple) = triple {
+            let string = CString::new(triple.as_str()).unwrap();
+            LLVMSetTarget(llvm.module, string.as_ptr());
+        } else {
+            LLVMSetTarget(llvm.module, LLVMGetDefaultTargetTriple());
+        }
     }
 
     let error = LLVMErrorMessage::new();
@@ -106,6 +115,65 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
         let buf = unsafe { bit_writer::LLVMWriteBitcodeToMemoryBuffer(llvm.module) };
         MemoryBuffer::new(buf).to_vec()
     }
+}
+
+
+#[derive(Debug)]
+pub enum LLCFormat {
+    /// Compile to textual assembly (`.s`)
+    TextualAssembly,
+    /// Compile to a native object (`.o`)
+    NativeObject
+}
+
+#[derive(Debug)]
+#[repr(u8)]
+pub enum Optimization {
+    O0 = 0,
+    O1 = 1,
+    O2 = 2,
+    O3 = 3
+}
+
+pub fn get_llc_dir() -> String {
+    let mut output = if let Ok(p) = env::var("LLVM_SYS_191_PREFIX") {
+        p + "\\bin"
+    } else {
+        let output = Command::new("llvm-config")
+            .arg("--bindir")
+            .output()
+            .unwrap();
+
+        String::from_utf8_lossy_owned(output.stdout).replace("\n", "")
+    };
+
+    if cfg!(target_os = "windows") {
+        output += "\\llc.exe";
+    } else {
+        output += "/llc";
+    }
+
+    output
+}
+
+/// Compiles LLVM IR to using LLC to a `.o` or `.asm`
+pub fn ir_llc(llc_path: &str, input_file: &str, output_file_name: &str, optimize: Optimization, llcfmt: LLCFormat) {
+    let filetype = match llcfmt {
+        LLCFormat::TextualAssembly => "asm",
+        LLCFormat::NativeObject => "obj"
+    };
+    let mut command = Command::new(llc_path);
+
+    command.arg(format!("-o={}", output_file_name))
+        .arg(format!("-O={}", optimize as u8))
+        .arg(format!("-filetype={}", filetype))
+        .arg(input_file);
+
+    #[cfg(debug_assertions)]
+    eprintln!("Running LLC command: `{:?}`", &command);
+
+    #[cfg(debug_assertions)]
+    eprintln!("LLC error result: {:?}", String::from_utf8_lossy_owned(command.output().unwrap().stderr));
 }
 
 #[cfg(test)]
@@ -135,7 +203,7 @@ mod tests {
     #[test]
     fn test_empty_module() {
         let module = get_empty_module("empty".to_string());
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
@@ -178,7 +246,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
@@ -208,7 +276,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        compile_module(&module, true);
+        compile_module(&module, true, &None);
     }
 
     #[test]
@@ -252,7 +320,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 }
