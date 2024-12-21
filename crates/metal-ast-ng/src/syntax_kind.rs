@@ -178,9 +178,9 @@ pub enum SyntaxKind {
     /// Don't try to remember this! Use [`T![|=]`](T) instead.
     PIPE_EQ_TOKEN,
     /// Don't try to remember this! Use [`T![<<=]`](T) instead.
-    SHIFTL_EQ_TOKEN,
+    LT2_EQ_TOKEN,
     /// Don't try to remember this! Use [`T![>>=]`](T) instead.
-    SHIFTR_EQ_TOKEN,
+    GT2_EQ_TOKEN,
     /// Don't try to remember this! Use [`T![/]`](T) instead.
     SLASH_TOKEN,
     /// Don't try to remember this! Use [`T![*]`](T) instead.
@@ -264,17 +264,16 @@ pub macro T {
     ::SyntaxKind::STAR2_EQ_TOKEN }, [%=] => { $crate ::SyntaxKind::PERCENT_EQ_TOKEN },
     [^=] => { $crate ::SyntaxKind::CARET_EQ_TOKEN }, [&=] => { $crate
     ::SyntaxKind::AMP_EQ_TOKEN }, [|=] => { $crate ::SyntaxKind::PIPE_EQ_TOKEN }, [<<=]
-    => { $crate ::SyntaxKind::SHIFTL_EQ_TOKEN }, [>>=] => { $crate
-    ::SyntaxKind::SHIFTR_EQ_TOKEN }, [/] => { $crate ::SyntaxKind::SLASH_TOKEN }, [*] =>
-    { $crate ::SyntaxKind::STAR_TOKEN }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN },
-    [%] => { $crate ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate
-    ::SyntaxKind::AMP2_TOKEN }, [||] => { $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => {
-    $crate ::SyntaxKind::EQ2_TOKEN }, [!=] => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>]
-    => { $crate ::SyntaxKind::GT_TOKEN }, [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN },
-    [<] => { $crate ::SyntaxKind::LT_TOKEN }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN
-    }, [^] => { $crate ::SyntaxKind::CARET_TOKEN }, [|] => { $crate
-    ::SyntaxKind::PIPE_TOKEN }, [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => {
-    $crate ::SyntaxKind::GT2_TOKEN }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@
-    number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
-    ::SyntaxKind::LIT_STR_TOKEN },
+    => { $crate ::SyntaxKind::LT2_EQ_TOKEN }, [>>=] => { $crate
+    ::SyntaxKind::GT2_EQ_TOKEN }, [/] => { $crate ::SyntaxKind::SLASH_TOKEN }, [*] => {
+    $crate ::SyntaxKind::STAR_TOKEN }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN }, [%]
+    => { $crate ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate ::SyntaxKind::AMP2_TOKEN
+    }, [||] => { $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => { $crate
+    ::SyntaxKind::EQ2_TOKEN }, [!=] => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>] => {
+    $crate ::SyntaxKind::GT_TOKEN }, [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN }, [<] =>
+    { $crate ::SyntaxKind::LT_TOKEN }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN }, [^]
+    => { $crate ::SyntaxKind::CARET_TOKEN }, [|] => { $crate ::SyntaxKind::PIPE_TOKEN },
+    [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => { $crate ::SyntaxKind::GT2_TOKEN
+    }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@ number] => { $crate
+    ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate ::SyntaxKind::LIT_STR_TOKEN },
 }

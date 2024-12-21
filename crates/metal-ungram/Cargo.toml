@@ -1,5 +1,5 @@
 [package]
-name = "metal-ast-ungram"
+name = "metal-ungram"
 version = "0.1.0"
 edition = "2021"
 
@@ -15,5 +15,3 @@ thiserror = { workspace = true }
 
 [lints]
 workspace = true
-
-[lib]
