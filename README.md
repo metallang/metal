@@ -1,6 +1,6 @@
 # Metal
 
-A prototype compiled programming language, striving to be an easy-to-use borrow checked, non-garbage-collected,
+A prototype compiled programming language, striving to be an easy-to-use, borrow checked, non-garbage-collected,
 memory safe, robust programming language.
 
 ## Contributing
@@ -13,8 +13,7 @@ opening an issue, or [joining our Discord](https://discord.gg/fDCMSbgpsB) and sa
 
 ### Rust
 
-The Metal Compiler, analyzer, and surrounding tools are all built with Rust.
-More specifically, you should use the most latest Rust nightly release as Metal only
+The Metal toolchain uses the nightly Rust channel, so to work on it you should use a reasonably recent nightly Rust installation.
 targets supporting it specifically.
 
 #### Adding Dependencies
