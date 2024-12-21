@@ -1,0 +1,30 @@
+(
+  name: "executable",
+  filename: "executable.mt",
+  parent: None,
+  children: [],
+  statements: [
+    FunctionDefine(
+        (
+            signature: (
+                name: "WinMain",
+                return_type: Primitive(Void),
+                inputs: {},
+                vis: Public
+            ),
+            body: [
+                Return(None)
+            ]
+        )
+    )
+  ],
+  function_signatures: [
+    (
+        name: "WinMain",
+        return_type: Primitive(Void),
+        inputs: {},
+        vis: Public
+    )
+  ],
+  imports: []
+)
