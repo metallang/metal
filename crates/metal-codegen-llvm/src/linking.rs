@@ -34,5 +34,8 @@ pub fn link(lld_dir: String, objs: Vec<String>, output_dir: &str) {
     command.arg(format!("/OUT:{}", output_dir));
 
     #[cfg(debug_assertions)]
-    eprintln!("link error result: {:?}", String::from_utf8_lossy_owned(command.output().unwrap().stderr));
+    eprintln!(
+        "link error result: {:?}",
+        String::from_utf8_lossy_owned(command.output().unwrap().stderr)
+    );
 }

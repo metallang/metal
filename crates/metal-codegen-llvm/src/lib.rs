@@ -14,11 +14,11 @@ use metal_mir::{
 
 pub mod core;
 pub mod expr;
+pub mod linking;
 pub mod primitives;
 pub mod safeties;
 pub mod stmt;
 pub mod ty;
-pub mod linking;
 
 use llvm_sys::{
     core::{

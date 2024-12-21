@@ -7,7 +7,8 @@ use llvm_sys::{
     analysis::LLVMVerifyModule,
     bit_writer,
     core::{LLVMPrintModuleToString, LLVMSetSourceFileName, LLVMSetTarget},
-    prelude::LLVMTypeRef, target_machine::LLVMGetDefaultTargetTriple,
+    prelude::LLVMTypeRef,
+    target_machine::LLVMGetDefaultTargetTriple,
 };
 use metal_mir::{parcel::Module, struct_::Struct};
 
@@ -117,13 +118,12 @@ pub fn compile_module(module: &Module, human_readable: bool, triple: &Option<Str
     }
 }
 
-
 #[derive(Debug)]
 pub enum LLCFormat {
     /// Compile to textual assembly (`.s`)
     TextualAssembly,
     /// Compile to a native object (`.o`)
-    NativeObject
+    NativeObject,
 }
 
 #[derive(Debug)]
@@ -132,7 +132,7 @@ pub enum Optimization {
     O0 = 0,
     O1 = 1,
     O2 = 2,
-    O3 = 3
+    O3 = 3,
 }
 
 pub fn get_llc_dir() -> String {
@@ -157,14 +157,21 @@ pub fn get_llc_dir() -> String {
 }
 
 /// Compiles LLVM IR to using LLC to a `.o` or `.asm`
-pub fn ir_llc(llc_path: &str, input_file: &str, output_file_name: &str, optimize: Optimization, llcfmt: LLCFormat) {
+pub fn ir_llc(
+    llc_path: &str,
+    input_file: &str,
+    output_file_name: &str,
+    optimize: Optimization,
+    llcfmt: LLCFormat,
+) {
     let filetype = match llcfmt {
         LLCFormat::TextualAssembly => "asm",
-        LLCFormat::NativeObject => "obj"
+        LLCFormat::NativeObject => "obj",
     };
     let mut command = Command::new(llc_path);
 
-    command.arg(format!("-o={}", output_file_name))
+    command
+        .arg(format!("-o={}", output_file_name))
         .arg(format!("-O={}", optimize as u8))
         .arg(format!("-filetype={}", filetype))
         .arg(input_file);
@@ -173,7 +180,10 @@ pub fn ir_llc(llc_path: &str, input_file: &str, output_file_name: &str, optimize
     eprintln!("Running LLC command: `{:?}`", &command);
 
     #[cfg(debug_assertions)]
-    eprintln!("LLC error result: {:?}", String::from_utf8_lossy_owned(command.output().unwrap().stderr));
+    eprintln!(
+        "LLC error result: {:?}",
+        String::from_utf8_lossy_owned(command.output().unwrap().stderr)
+    );
 }
 
 #[cfg(test)]
