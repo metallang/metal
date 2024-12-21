@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![feature(new_range_api)]
 
 mod lexer;

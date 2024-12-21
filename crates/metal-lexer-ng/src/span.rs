@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #[derive(Debug)]
 pub struct Span {
     pub start: usize,

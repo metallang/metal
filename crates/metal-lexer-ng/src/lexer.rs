@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use core::str;
 
 use crate::{Span, TokenKind, token::Token};

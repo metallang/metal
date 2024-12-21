@@ -10,6 +10,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error("Ungrammar error: {0}")]
     Ungram(#[from] ungrammar::Error),
-    #[error("`metal-ast-ungram` is expected to be run from build scripts only.")]
+    #[error("`metal-ungram` is expected to be run from build scripts only.")]
     InvalidInvocation,
 }
