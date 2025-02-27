@@ -24,9 +24,10 @@ pub struct Module {
     /// Module file name.
     /// i.e. `io.mt`
     pub filename: String,
-    /// An exhaustive list of the statements
-    /// the module includes
+    /// An exhaustive list of the statements the module includes.
     pub statements: Vec<Box<stmt::Statement>>,
     /// All imports declared within this module.
     pub imports: Vec<Box<stmt::import::Import>>,
+    /// Whether this module is an executable or library.
+    pub library: bool,
 }

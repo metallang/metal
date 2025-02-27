@@ -42,7 +42,13 @@ pub fn get_lld_dir() -> String {
     output
 }
 
-pub fn link(lld_dir: String, objs: Vec<String>, output_dir: &str, custom_link_args: &Vec<String>) {
+pub fn link(
+    lld_dir: String,
+    objs: Vec<String>,
+    output_dir: &str,
+    custom_link_args: &Vec<String>,
+    lib: bool,
+) {
     let mut command = Command::new(&lld_dir);
 
     // NOTE: only supports windows. Need someone with a Linux computer to be able to
@@ -54,12 +60,15 @@ pub fn link(lld_dir: String, objs: Vec<String>, output_dir: &str, custom_link_ar
 
     // TODO: main should be ran second so that we can have pre-main functions
     // (i.e. for environments) like how Rust or C++ does.
-    command.arg("/ENTRY:main");
-    command.arg(format!(
-        "/PDB:{}.{}",
-        output_dir.strip_suffix(".exe").unwrap_or(output_dir),
-        "pdb"
-    ));
+    let pdb_dir = if lib {
+        command.arg("/NOENTRY");
+        command.arg("/DLL");
+        output_dir.strip_suffix(".dll").unwrap_or(output_dir)
+    } else {
+        command.arg("/ENTRY:main");
+        output_dir.strip_suffix(".exe").unwrap_or(output_dir)
+    };
+    command.arg(format!("/PDB:{}.{}", pdb_dir, "pdb"));
     command.arg(format!("/OUT:{}", output_dir));
 
     for arg in custom_link_args {

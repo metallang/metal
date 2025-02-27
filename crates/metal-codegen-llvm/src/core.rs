@@ -139,6 +139,7 @@ mod tests {
             filename: name,
             statements: Vec::new(),
             imports: Vec::new(),
+            library: false,
         }
     }
 

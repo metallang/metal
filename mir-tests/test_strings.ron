@@ -3,6 +3,7 @@
   filename: "test_strings.mt",
   parent: None,
   children: [],
+  library: true,
   statements: [
     FunctionDefine(
         (

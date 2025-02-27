@@ -109,6 +109,8 @@ impl tapcli::Command for BuildCommand {
 
                 let mut object_files = Vec::new();
                 Target::reset_llvm()?;
+
+                let mut dll = true;
                 for module in modules.iter() {
                     // TODO: move this into LLVM codegen once rykv comes around.
                     unsafe {
@@ -132,17 +134,25 @@ impl tapcli::Command for BuildCommand {
                         metal_codegen_llvm::llc::LLCFormat::NativeObject,
                     );
                     object_files.push(obj_fn);
+
+                    if !module.library {
+                        dll = false;
+                    }
                 }
 
                 let lld = get_lld_dir();
 
                 let output = if cfg!(target_os = "windows") {
-                    "./target/build/output.exe"
+                    if dll {
+                        "./target/build/output.dll"
+                    } else {
+                        "./target/build/output.exe"
+                    }
                 } else {
                     "./target/build/output"
                 };
 
-                link(lld, object_files, output, &vec!["/DEBUG".to_string()]);
+                link(lld, object_files, output, &vec!["/DEBUG".to_string()], dll);
 
                 println!("Compilation results have been written to target");
             }

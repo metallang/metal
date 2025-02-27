@@ -3,6 +3,7 @@
   filename: "executable.mt",
   parent: None,
   children: [],
+  library: false,
   statements: [
     FunctionDefine(
         (
