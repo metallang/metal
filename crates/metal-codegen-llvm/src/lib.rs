@@ -16,6 +16,7 @@ use metal_mir::{
 pub mod core;
 pub mod expr;
 pub mod linking;
+pub mod llc;
 pub mod primitives;
 pub mod safeties;
 pub mod stmt;

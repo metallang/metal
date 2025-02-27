@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 //! Compilation step for modules from MIR to LLVM IR
 
-use std::{borrow::Cow, collections::HashMap, env, ffi::CString, process::Command};
+use std::{borrow::Cow, collections::HashMap, ffi::CString};
 
 use llvm_sys::{
     analysis::LLVMVerifyModule,
@@ -116,74 +116,6 @@ pub fn compile_module(module: &Module, human_readable: bool, triple: &Option<Str
         let buf = unsafe { bit_writer::LLVMWriteBitcodeToMemoryBuffer(llvm.module) };
         MemoryBuffer::new(buf).to_vec()
     }
-}
-
-#[derive(Debug)]
-pub enum LLCFormat {
-    /// Compile to textual assembly (`.s`)
-    TextualAssembly,
-    /// Compile to a native object (`.o`)
-    NativeObject,
-}
-
-#[derive(Debug)]
-#[repr(u8)]
-pub enum Optimization {
-    O0 = 0,
-    O1 = 1,
-    O2 = 2,
-    O3 = 3,
-}
-
-pub fn get_llc_dir() -> String {
-    let mut output = if let Ok(p) = env::var("LLVM_SYS_191_PREFIX") {
-        p + "\\bin"
-    } else {
-        let output = Command::new("llvm-config")
-            .arg("--bindir")
-            .output()
-            .unwrap();
-
-        String::from_utf8_lossy_owned(output.stdout).replace("\n", "")
-    };
-
-    if cfg!(target_os = "windows") {
-        output += "\\llc.exe";
-    } else {
-        output += "/llc";
-    }
-
-    output
-}
-
-/// Compiles LLVM IR to using LLC to a `.o` or `.asm`
-pub fn ir_llc(
-    llc_path: &str,
-    input_file: &str,
-    output_file_name: &str,
-    optimize: Optimization,
-    llcfmt: LLCFormat,
-) {
-    let filetype = match llcfmt {
-        LLCFormat::TextualAssembly => "asm",
-        LLCFormat::NativeObject => "obj",
-    };
-    let mut command = Command::new(llc_path);
-
-    command
-        .arg(format!("-o={}", output_file_name))
-        .arg(format!("-O={}", optimize as u8))
-        .arg(format!("-filetype={}", filetype))
-        .arg(input_file);
-
-    #[cfg(debug_assertions)]
-    eprintln!("Running LLC command: `{:?}`", &command);
-
-    #[cfg(debug_assertions)]
-    eprintln!(
-        "LLC error result: {:?}",
-        String::from_utf8_lossy_owned(command.output().unwrap().stderr)
-    );
 }
 
 #[cfg(test)]

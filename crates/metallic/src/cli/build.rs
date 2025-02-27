@@ -9,8 +9,9 @@ use llvm_sys::target::{
     LLVM_InitializeNativeAsmParser, LLVM_InitializeNativeAsmPrinter, LLVM_InitializeNativeTarget,
 };
 use metal_codegen_llvm::{
-    core::{compile_module, get_llc_dir, ir_llc},
+    core::compile_module,
     linking::{get_lld_dir, link},
+    llc::{get_llc_dir, ir_llc},
 };
 use metal_mir::parcel::Module;
 use ron::de::from_reader;
@@ -127,8 +128,8 @@ impl tapcli::Command for BuildCommand {
                         &llc,
                         &input_dir,
                         &obj_fn,
-                        metal_codegen_llvm::core::Optimization::O0,
-                        metal_codegen_llvm::core::LLCFormat::NativeObject,
+                        metal_codegen_llvm::llc::Optimization::O0,
+                        metal_codegen_llvm::llc::LLCFormat::NativeObject,
                     );
                     object_files.push(obj_fn);
                 }

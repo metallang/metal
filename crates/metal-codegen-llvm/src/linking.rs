@@ -16,9 +16,7 @@ pub fn get_lld_dir() -> String {
     } else if let Ok(p) = env::var("METAL_LLD_DIR") {
         p
     } else {
-        let output = Command::new("llvm-config")
-            .arg("--bindir")
-            .output();
+        let output = Command::new("llvm-config").arg("--bindir").output();
 
         if let Ok(output) = output {
             String::from_utf8_lossy_owned(output.stdout).replace("\n", "")
@@ -35,7 +33,7 @@ pub fn get_lld_dir() -> String {
 
     if let Ok(false) = fs::exists(&output) {
         if cfg!(target_os = "windows") {
-           return "llvm-link".to_string();
+            return "llvm-link".to_string();
         } else {
             return "ld.lld".to_string();
         }
