@@ -55,7 +55,11 @@ pub fn link(lld_dir: String, objs: Vec<String>, output_dir: &str, custom_link_ar
     // TODO: main should be ran second so that we can have pre-main functions
     // (i.e. for environments) like how Rust or C++ does.
     command.arg("/ENTRY:main");
-    command.arg(format!("/PDB:{}.{}", output_dir.strip_suffix(".exe").unwrap_or(output_dir), "pdb"));
+    command.arg(format!(
+        "/PDB:{}.{}",
+        output_dir.strip_suffix(".exe").unwrap_or(output_dir),
+        "pdb"
+    ));
     command.arg(format!("/OUT:{}", output_dir));
 
     for arg in custom_link_args {
