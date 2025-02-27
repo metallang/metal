@@ -30,7 +30,7 @@ pub fn get_llc_dir() -> String {
             .output()
             .unwrap();
 
-        String::from_utf8_lossy_owned(output.stdout).replace("\n", "")
+        String::from_utf8_lossy_owned(output.stdout)
     };
 
     if cfg!(target_os = "windows") {
