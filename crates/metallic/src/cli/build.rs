@@ -39,6 +39,7 @@ impl TryFrom<tapcli::Arg> for InputType {
 }
 
 pub struct BuildCommand {
+    pub name: Option<String>,
     pub input_type: InputType,
     pub relative_paths: Vec<PathBuf>,
     pub triple: Option<String>,
@@ -49,6 +50,7 @@ impl tapcli::Command for BuildCommand {
 
     fn parse(parser: &mut tapcli::Parser) -> Result<Self, Self::Error> {
         let mut cmd: BuildCommand = Self {
+            name: None,
             input_type: InputType::Metal,
             relative_paths: Vec::new(),
             triple: None,
@@ -65,6 +67,11 @@ impl tapcli::Command for BuildCommand {
                     let value = parser.next().ok_or(Error::InsufficientArguments)?;
 
                     cmd.triple = Some(value.to_string());
+                }
+                tapcli::ArgRef::Long("name") | tapcli::ArgRef::Short('n') => {
+                    let value = parser.next().ok_or(Error::InsufficientArguments)?;
+
+                    cmd.name = Some(value.to_string());
                 }
                 tapcli::ArgRef::Value(val) => {
                     cmd.relative_paths.push(PathBuf::from(val));
@@ -144,15 +151,26 @@ impl tapcli::Command for BuildCommand {
 
                 let output = if cfg!(target_os = "windows") {
                     if dll {
-                        "./target/build/output.dll"
+                        format!(
+                            "./target/build/{}.dll",
+                            self.name.unwrap_or("output".to_string())
+                        )
                     } else {
-                        "./target/build/output.exe"
+                        format!(
+                            "./target/build/{}.exe",
+                            self.name.unwrap_or("output".to_string())
+                        )
                     }
                 } else {
-                    "./target/build/output"
+                    format!(
+                        "./target/build/{}",
+                        self.name.unwrap_or("output".to_string())
+                    )
                 };
 
-                link(lld, object_files, output, &vec!["/DEBUG".to_string()], dll);
+                Target::reset_build()?;
+
+                link(lld, object_files, &output, &vec!["/DEBUG".to_string()], dll);
 
                 println!("Compilation results have been written to target");
             }
