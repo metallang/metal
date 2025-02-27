@@ -44,8 +44,6 @@ pub fn get_lld_dir() -> String {
 
 pub fn link(lld_dir: String, objs: Vec<String>, output_dir: &str, custom_link_args: &Vec<String>) {
     let mut command = Command::new(&lld_dir);
-    println!("{:#?}", objs);
-    println!("{}", &lld_dir);
 
     // NOTE: only supports windows. Need someone with a Linux computer to be able to
     // get the correct args for linux
