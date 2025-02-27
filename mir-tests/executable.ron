@@ -7,7 +7,7 @@
     FunctionDefine(
         (
             signature: (
-                name: "WinMain",
+                name: "main",
                 return_type: Primitive(Void),
                 inputs: {},
                 vis: Public
@@ -20,7 +20,7 @@
   ],
   function_signatures: [
     (
-        name: "WinMain",
+        name: "main",
         return_type: Primitive(Void),
         inputs: {},
         vis: Public

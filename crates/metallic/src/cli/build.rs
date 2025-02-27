@@ -141,7 +141,7 @@ impl tapcli::Command for BuildCommand {
                     "./target/build/output"
                 };
 
-                link(lld, object_files, output);
+                link(lld, object_files, output, &vec!["/DEBUG".to_string()]);
 
                 println!("Compilation results have been written to target");
             }

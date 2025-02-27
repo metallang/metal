@@ -20,7 +20,7 @@ impl CodeGenValue for FunctionDefinition {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let fun_name = if self.signature.name != "main" && self.signature.name != "WinMain" {
+        let fun_name = if self.signature.name != "main" {
             module.name.clone() + "." + self.signature.name.as_str()
         } else {
             self.signature.name.clone()
