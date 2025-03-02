@@ -21,7 +21,7 @@ pub enum Type {
     /// This should not be provided to codegen,
     /// and is only intended as an intermediate type
     /// representation while attempting to build types
-    Unknown
+    Unknown,
 }
 
 /// Represents an array type or a group of types.
