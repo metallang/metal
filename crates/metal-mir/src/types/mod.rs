@@ -17,6 +17,11 @@ pub enum Type {
     Primitive(Box<primitives::Primitive>),
     Function(Box<function::FunctionSignature>),
     Struct(Box<struct_::Struct>),
+    /// Specifies the type can't be known or isn't known yet.
+    /// This should not be provided to codegen,
+    /// and is only intended as an intermediate type
+    /// representation while attempting to build types
+    Unknown
 }
 
 /// Represents an array type or a group of types.
