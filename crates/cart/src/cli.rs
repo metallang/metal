@@ -10,9 +10,9 @@ pub mod build;
 pub mod dev;
 
 pub enum Cli {
-    /// `metal build`
+    /// `cart build`
     Build(BuildCommand),
-    /// `metal dev`, a namespace for arbitrary command useful during development.
+    /// `cart dev`, a namespace for arbitrary commands useful during development.
     #[cfg(any(debug_assertions, feature = "dev"))]
     Dev(DevCommand),
 }

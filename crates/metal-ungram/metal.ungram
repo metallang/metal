@@ -53,9 +53,9 @@ FnInputs = FnInput (',' FnInput)* ','?
 FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
 
 ImportItem = vis:Visibility 'import' tree:ImportTree ';'
-ImportTree = ImportLeaf | ImportSegment | ImportBranch
-ImportLeaf = Name
-ImportSegment = segment:Name '.' rest:ImportTree
+ImportTree = ImportLeaf | ImportBranch
+ImportLeaf = segment:Name rest:ImportSegment?
+ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
@@ -75,9 +75,9 @@ Type =
   | RefType
   | BinaryType
 
-NameType = Name generics:NameTypeMaybeGenerics?
-NameTypeMaybeGenerics = '[' generics:NameTypeGenerics ']'
-NameTypeGenerics = Type*
+NameType = Name generics:NameTypeGenerics?
+NameTypeGenerics = '[' generics:NameTypeGenericsInner ']'
+NameTypeGenericsInner = Type* // FIXME
 
 RefType = '&' mutness:Mutability Type
 
@@ -145,8 +145,5 @@ BinaryExprOp =
 CallExpr = callee:Expr '(' args:CallExprArgs? ')'
 CallExprArgs = Expr (',' Expr)* ','?
 
-// no BoolLit, `true` and `false` are regular Name (identifier/variable) values
-LitExpr = NumLit | StrLit
-
-NumLit = '@number'
-StrLit = '@string'
+// no @bool, `true` and `false` are regular Name (identifier/variable) values
+LitExpr = '@number' | '@string'

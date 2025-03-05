@@ -128,7 +128,7 @@ impl GrammarItem for NodeData {
     fn syntax_kind_info(&self) -> GrammarItemInfo {
         let name = node_name(&self.name);
         let ident = call_site_ident(name.to_shouty_snake_case());
-        let doc = format_docstring!("Corresponds to [{}].", self.item_info().ident);
+        let doc = format_docstring!("Corresponds to [crate::{}].", self.item_info().ident);
 
         (ident, doc).into()
     }
