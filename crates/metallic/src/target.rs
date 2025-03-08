@@ -22,7 +22,9 @@ const GITIGNORE_CONTENTS: &str = "*";
 impl Target {
     pub fn setup() -> TargetResult<()> {
         // ensure the directories all exist
-        fs::create_dir_all("./target/.llvm-cache")?;
+        fs::create_dir_all("./target/.llvm-ir-cache")?;
+        fs::create_dir_all("./target/.llvm-linking-cache")?;
+        fs::create_dir_all("./target/build")?;
 
         if !fs::exists("./target/CACHEDIR.TAG")? {
             fs::write("./target/CACHEDIR.TAG", CACHEDIR_CONTENTS)?;
@@ -34,16 +36,28 @@ impl Target {
     }
 
     pub fn reset_llvm() -> TargetResult<()> {
-        fs::remove_dir_all("./target/.llvm-cache")?;
-        fs::create_dir_all("./target/.llvm-cache")?;
+        fs::remove_dir_all("./target/.llvm-ir-cache")?;
+        fs::create_dir_all("./target/.llvm-ir-cache")?;
+        fs::remove_dir_all("./target/.llvm-linking-cache")?;
+        fs::create_dir_all("./target/.llvm-linking-cache")?;
         Ok(())
     }
 
-    pub fn write_llvm_ir(module: &str, contents: &[u8]) -> TargetResult<()> {
-        fs::write(
-            "./target/.llvm-cache/".to_string() + module + ".ll",
-            contents,
-        )?;
+    pub fn reset_build() -> TargetResult<()> {
+        fs::remove_dir_all("./target/build")?;
+        fs::create_dir_all("./target/build")?;
+        Ok(())
+    }
+
+    pub fn write_llvm_ir(module: &str, contents: &[u8]) -> TargetResult<String> {
+        let path = "./target/.llvm-ir-cache/".to_string() + module + ".ll";
+        fs::write(&path, contents)?;
+        Ok(path)
+    }
+
+    pub fn write_build_output(module: &str, contents: &[u8], filetype: &str) -> TargetResult<()> {
+        // TODO: separate between triples & environments
+        fs::write("./target/build/".to_string() + module + filetype, contents)?;
         Ok(())
     }
 }

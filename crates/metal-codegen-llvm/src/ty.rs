@@ -34,6 +34,7 @@ impl CodeGenType for Type {
             },
             Self::Function(f) => f.llvm_type(llvm, module),
             Self::Struct(s) => s.llvm_type(llvm, module),
+            Self::Unknown => unreachable!(),
         }
     }
 }

@@ -10,23 +10,23 @@ runs:
       shell: bash
  
     - if: ${{ runner.os == 'Linux' && runner.arch == 'X64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/metallang/llvm-builds/releases/download/19.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ runner.os == 'Linux' && runner.arch == 'ARM64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-linux-aarch64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/metallang/llvm-builds/releases/download/19.x/llvm-linux-aarch64.tar.xz" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ runner.os == 'macOS' && runner.arch == 'X64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-darwin-amd64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/metallang/llvm-builds/releases/download/19.x/llvm-darwin-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ runner.os == 'macOS' && runner.arch == 'ARM64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-darwin-aarch64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/metallang/llvm-builds/releases/download/19.x/llvm-darwin-aarch64.tar.xz" >> $GITHUB_ENV
       shell: bash
 
     - if: ${{ runner.os == 'Windows' && runner.arch == 'X64' }}
-      run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-windows-amd64.tar.xz" >> $GITHUB_ENV
+      run: echo "LLVM_URL=""https://github.com/metallang/llvm-builds/releases/download/19.x/llvm-windows-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
 
     - id: cache-llvm

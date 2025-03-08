@@ -3,6 +3,7 @@
   filename: "test_variables.mt",
   parent: None,
   children: [],
+  library: true,
   statements: [
     FunctionDefine(
         (

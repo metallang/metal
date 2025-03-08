@@ -20,10 +20,10 @@ impl CodeGenValue for FunctionDefinition {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let fun_name = if self.signature.name != "main" {
-            module.name.clone() + "." + self.signature.name.as_str()
-        } else {
+        let fun_name = if self.signature.name == "main" && !module.library {
             self.signature.name.clone()
+        } else {
+            module.name.clone() + "." + self.signature.name.as_str()
         };
 
         let linkage = get_linkage_from_vis(&self.signature.vis);
