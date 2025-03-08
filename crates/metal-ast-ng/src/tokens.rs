@@ -914,6 +914,43 @@ impl AstToken for LitStrToken {
         &self.syntax
     }
 }
+/// Represents the `LitExpr` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum LitExprToken {
+    /// See [LitNumToken].
+    LitNum(LitNumToken),
+    /// See [LitStrToken].
+    LitStr(LitStrToken),
+}
+impl AstToken for LitExprToken {
+    #[allow(clippy::match_like_matches_macro)]
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn can_cast(kind: SyntaxKind) -> bool {
+        match kind {
+            SyntaxKind::LIT_NUM_TOKEN => true,
+            SyntaxKind::LIT_STR_TOKEN => true,
+            _ => false,
+        }
+    }
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        match syntax.kind() {
+            SyntaxKind::LIT_NUM_TOKEN => {
+                Some(LitExprToken::LitNum(LitNumToken::cast(syntax)?))
+            }
+            SyntaxKind::LIT_STR_TOKEN => {
+                Some(LitExprToken::LitStr(LitStrToken::cast(syntax)?))
+            }
+            _ => None,
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        match self {
+            LitExprToken::LitNum(it) => it.syntax(),
+            LitExprToken::LitStr(it) => it.syntax(),
+        }
+    }
+}
 /// Represents the `PrefixExprOp` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum PrefixExprOpToken {

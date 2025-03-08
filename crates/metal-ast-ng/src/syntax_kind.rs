@@ -5,106 +5,102 @@
 #[repr(u8)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum SyntaxKind {
-    /// Corresponds to [BlockNode].
+    /// Corresponds to [crate::BlockNode].
     BLOCK_NODE,
-    /// Corresponds to [BlockItemsNode].
+    /// Corresponds to [crate::BlockItemsNode].
     BLOCK_ITEMS_NODE,
-    /// Corresponds to [ItemNode].
+    /// Corresponds to [crate::ItemNode].
     ITEM_NODE,
-    /// Corresponds to [NameNode].
+    /// Corresponds to [crate::NameNode].
     NAME_NODE,
-    /// Corresponds to [VisNode].
+    /// Corresponds to [crate::VisNode].
     VIS_NODE,
-    /// Corresponds to [MutnessNode].
+    /// Corresponds to [crate::MutnessNode].
     MUTNESS_NODE,
-    /// Corresponds to [ExprSpecNode].
+    /// Corresponds to [crate::ExprSpecNode].
     EXPR_SPEC_NODE,
-    /// Corresponds to [ExprNode].
+    /// Corresponds to [crate::ExprNode].
     EXPR_NODE,
-    /// Corresponds to [TypeQualNode].
+    /// Corresponds to [crate::TypeQualNode].
     TYPE_QUAL_NODE,
-    /// Corresponds to [TypeNode].
+    /// Corresponds to [crate::TypeNode].
     TYPE_NODE,
-    /// Corresponds to [AbstractItemNode].
+    /// Corresponds to [crate::AbstractItemNode].
     ABSTRACT_ITEM_NODE,
-    /// Corresponds to [ConstItemNode].
+    /// Corresponds to [crate::ConstItemNode].
     CONST_ITEM_NODE,
-    /// Corresponds to [EnumItemNode].
+    /// Corresponds to [crate::EnumItemNode].
     ENUM_ITEM_NODE,
-    /// Corresponds to [FnItemNode].
+    /// Corresponds to [crate::FnItemNode].
     FN_ITEM_NODE,
-    /// Corresponds to [ImportItemNode].
+    /// Corresponds to [crate::ImportItemNode].
     IMPORT_ITEM_NODE,
-    /// Corresponds to [ReturnItemNode].
+    /// Corresponds to [crate::ReturnItemNode].
     RETURN_ITEM_NODE,
-    /// Corresponds to [StructItemNode].
+    /// Corresponds to [crate::StructItemNode].
     STRUCT_ITEM_NODE,
-    /// Corresponds to [TypeAliasItemNode].
+    /// Corresponds to [crate::TypeAliasItemNode].
     TYPE_ALIAS_ITEM_NODE,
-    /// Corresponds to [AbstractBodyNode].
+    /// Corresponds to [crate::AbstractBodyNode].
     ABSTRACT_BODY_NODE,
-    /// Corresponds to [AbstractFnItemNode].
+    /// Corresponds to [crate::AbstractFnItemNode].
     ABSTRACT_FN_ITEM_NODE,
-    /// Corresponds to [FnSignatureNode].
+    /// Corresponds to [crate::FnSignatureNode].
     FN_SIGNATURE_NODE,
-    /// Corresponds to [EnumBodyNode].
+    /// Corresponds to [crate::EnumBodyNode].
     ENUM_BODY_NODE,
-    /// Corresponds to [EnumBodyItemNode].
+    /// Corresponds to [crate::EnumBodyItemNode].
     ENUM_BODY_ITEM_NODE,
-    /// Corresponds to [EnumVariantNode].
+    /// Corresponds to [crate::EnumVariantNode].
     ENUM_VARIANT_NODE,
-    /// Corresponds to [EnumVariantDataTypeNode].
+    /// Corresponds to [crate::EnumVariantDataTypeNode].
     ENUM_VARIANT_DATA_TYPE_NODE,
-    /// Corresponds to [FnInputsNode].
+    /// Corresponds to [crate::FnInputsNode].
     FN_INPUTS_NODE,
-    /// Corresponds to [FnInputNode].
+    /// Corresponds to [crate::FnInputNode].
     FN_INPUT_NODE,
-    /// Corresponds to [ImportTreeNode].
+    /// Corresponds to [crate::ImportTreeNode].
     IMPORT_TREE_NODE,
-    /// Corresponds to [ImportLeafNode].
+    /// Corresponds to [crate::ImportLeafNode].
     IMPORT_LEAF_NODE,
-    /// Corresponds to [ImportSegmentNode].
-    IMPORT_SEGMENT_NODE,
-    /// Corresponds to [ImportBranchNode].
+    /// Corresponds to [crate::ImportBranchNode].
     IMPORT_BRANCH_NODE,
-    /// Corresponds to [ImportBranchSubtreesNode].
+    /// Corresponds to [crate::ImportSegmentNode].
+    IMPORT_SEGMENT_NODE,
+    /// Corresponds to [crate::ImportBranchSubtreesNode].
     IMPORT_BRANCH_SUBTREES_NODE,
-    /// Corresponds to [StructBodyNode].
+    /// Corresponds to [crate::StructBodyNode].
     STRUCT_BODY_NODE,
-    /// Corresponds to [StructBodyItemNode].
+    /// Corresponds to [crate::StructBodyItemNode].
     STRUCT_BODY_ITEM_NODE,
-    /// Corresponds to [StructFieldNode].
+    /// Corresponds to [crate::StructFieldNode].
     STRUCT_FIELD_NODE,
-    /// Corresponds to [NameTypeNode].
+    /// Corresponds to [crate::NameTypeNode].
     NAME_TYPE_NODE,
-    /// Corresponds to [RefTypeNode].
+    /// Corresponds to [crate::RefTypeNode].
     REF_TYPE_NODE,
-    /// Corresponds to [BinaryTypeNode].
+    /// Corresponds to [crate::BinaryTypeNode].
     BINARY_TYPE_NODE,
-    /// Corresponds to [NameTypeMaybeGenericsNode].
-    NAME_TYPE_MAYBE_GENERICS_NODE,
-    /// Corresponds to [NameTypeGenericsNode].
+    /// Corresponds to [crate::NameTypeGenericsNode].
     NAME_TYPE_GENERICS_NODE,
-    /// Corresponds to [BinaryTypeOpNode].
+    /// Corresponds to [crate::NameTypeGenericsInnerNode].
+    NAME_TYPE_GENERICS_INNER_NODE,
+    /// Corresponds to [crate::BinaryTypeOpNode].
     BINARY_TYPE_OP_NODE,
-    /// Corresponds to [PrefixExprNode].
+    /// Corresponds to [crate::PrefixExprNode].
     PREFIX_EXPR_NODE,
-    /// Corresponds to [BinaryExprNode].
+    /// Corresponds to [crate::BinaryExprNode].
     BINARY_EXPR_NODE,
-    /// Corresponds to [CallExprNode].
+    /// Corresponds to [crate::CallExprNode].
     CALL_EXPR_NODE,
-    /// Corresponds to [LitExprNode].
+    /// Corresponds to [crate::LitExprNode].
     LIT_EXPR_NODE,
-    /// Corresponds to [PrefixExprOpNode].
+    /// Corresponds to [crate::PrefixExprOpNode].
     PREFIX_EXPR_OP_NODE,
-    /// Corresponds to [BinaryExprOpNode].
+    /// Corresponds to [crate::BinaryExprOpNode].
     BINARY_EXPR_OP_NODE,
-    /// Corresponds to [CallExprArgsNode].
+    /// Corresponds to [crate::CallExprArgsNode].
     CALL_EXPR_ARGS_NODE,
-    /// Corresponds to [NumLitNode].
-    NUM_LIT_NODE,
-    /// Corresponds to [StrLitNode].
-    STR_LIT_NODE,
     /// Don't try to remember this! Use [`T![{]`](T) instead.
     L_BRACE_TOKEN,
     /// Don't try to remember this! Use [`T![}]`](T) instead.
@@ -219,9 +215,27 @@ pub enum SyntaxKind {
     LIT_NUM_TOKEN,
     /// Don't try to remember this! Use [`T![@string]`](T) instead.
     LIT_STR_TOKEN,
+    /// Represents a multi- or single-line comment.
+    COMMENT_TOKEN,
+    /// Represents a whitespace token, such as a space or a tab, among others.
+    WHITESPACE_TOKEN,
+    /// A special token representing an unknown token.
+    UNKNOWN_TOKEN,
     /// A special syntax kind used for transmute safety checks. You shouldn't worry
     /// about (and even less rely on) this.
     __LAST,
+}
+impl From<rowan::SyntaxKind> for SyntaxKind {
+    fn from(value: rowan::SyntaxKind) -> Self {
+        let d = value.0 as u8;
+        assert!(d <= (SyntaxKind::__LAST as u8));
+        unsafe { std::mem::transmute::<u8, SyntaxKind>(d) }
+    }
+}
+impl From<SyntaxKind> for rowan::SyntaxKind {
+    fn from(val: SyntaxKind) -> Self {
+        rowan::SyntaxKind(val as u16)
+    }
 }
 /// Returns the [SyntaxKind] variants corresponding to the provided token
 /// as written in the grammar.

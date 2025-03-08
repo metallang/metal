@@ -51,9 +51,31 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
         pub enum SyntaxKind {
             #(#variants)*
+            /// Represents a multi- or single-line comment.
+            COMMENT_TOKEN,
+            /// Represents a whitespace token, such as a space or a tab, among others.
+            WHITESPACE_TOKEN,
+            /// A special token representing an unknown token.
+            UNKNOWN_TOKEN,
             /// A special syntax kind used for transmute safety checks. You shouldn't worry
             /// about (and even less rely on) this.
             __LAST,
+        }
+
+        impl From<rowan::SyntaxKind> for SyntaxKind {
+            fn from(value: rowan::SyntaxKind) -> Self {
+                let d = value.0 as u8;
+
+                assert!(d <= (SyntaxKind::__LAST as u8));
+
+                unsafe { std::mem::transmute::<u8, SyntaxKind>(d) }
+            }
+        }
+
+        impl From<SyntaxKind> for rowan::SyntaxKind {
+            fn from(val: SyntaxKind) -> Self {
+                rowan::SyntaxKind(val as u16)
+            }
         }
     }
 }
