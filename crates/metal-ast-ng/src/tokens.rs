@@ -434,6 +434,22 @@ impl AstToken for TildeToken {
         &self.syntax
     }
 }
+/// Represents the `*` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StarToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for StarToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STAR_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `+=` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PlusEqToken {
@@ -618,22 +634,6 @@ pub struct SlashToken {
 impl AstToken for SlashToken {
     fn can_cast(kind: SyntaxKind) -> bool {
         kind == SyntaxKind::SLASH_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
-/// Represents the `*` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StarToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for StarToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::STAR_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -962,6 +962,8 @@ pub enum PrefixExprOpToken {
     Bang(BangToken),
     /// See [TildeToken].
     Tilde(TildeToken),
+    /// See [StarToken].
+    Star(StarToken),
 }
 impl AstToken for PrefixExprOpToken {
     #[allow(clippy::match_like_matches_macro)]
@@ -972,6 +974,7 @@ impl AstToken for PrefixExprOpToken {
             SyntaxKind::MINUS_TOKEN => true,
             SyntaxKind::BANG_TOKEN => true,
             SyntaxKind::TILDE_TOKEN => true,
+            SyntaxKind::STAR_TOKEN => true,
             _ => false,
         }
     }
@@ -990,6 +993,9 @@ impl AstToken for PrefixExprOpToken {
             SyntaxKind::TILDE_TOKEN => {
                 Some(PrefixExprOpToken::Tilde(TildeToken::cast(syntax)?))
             }
+            SyntaxKind::STAR_TOKEN => {
+                Some(PrefixExprOpToken::Star(StarToken::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -999,6 +1005,7 @@ impl AstToken for PrefixExprOpToken {
             PrefixExprOpToken::Minus(it) => it.syntax(),
             PrefixExprOpToken::Bang(it) => it.syntax(),
             PrefixExprOpToken::Tilde(it) => it.syntax(),
+            PrefixExprOpToken::Star(it) => it.syntax(),
         }
     }
 }

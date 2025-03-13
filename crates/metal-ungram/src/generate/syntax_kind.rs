@@ -77,6 +77,62 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                 rowan::SyntaxKind(val as u16)
             }
         }
+
+        impl SyntaxKind {
+            pub fn is_whitespace(&self) -> bool {
+                matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
+            }
+
+            pub fn is_prefix_expr_op(&self) -> bool {
+                self == &T![+]
+                || self == &T![-]
+                || self == &T![!]
+                || self == &T![~]
+            }
+
+            pub fn is_binary_expr_op(&self) -> bool {
+                // assignment
+                self == &T![=]
+                || self == &T![+=]
+                || self == &T![-=]
+                || self == &T![/=]
+                || self == &T![*=]
+                || self == &T![**=]
+                || self == &T![%=]
+                || self == &T![^=]
+                || self == &T![&=]
+                || self == &T![|=]
+                || self == &T![<<=]
+                || self == &T![>>=]
+                // math
+                || self == &T![+]
+                || self == &T![-]
+                || self == &T![/]
+                || self == &T![*]
+                || self == &T![**]
+                || self == &T![%]
+                // logic
+                || self == &T![&&]
+                || self == &T![||]
+                || self == &T![==]
+                || self == &T![!=]
+                // comparison
+                || self == &T![>]
+                || self == &T![>=]
+                || self == &T![<]
+                || self == &T![<=]
+                // bitwise
+                || self == &T![^]
+                || self == &T![&]
+                || self == &T![|]
+                || self == &T![<<]
+                || self == &T![>>]
+                // range
+                || self == &T![..]
+                // special
+                || self == &T![.]
+            }
+        }
     }
 }
 

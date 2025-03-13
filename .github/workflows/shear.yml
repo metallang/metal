@@ -1,15 +1,7 @@
-# SPDX-License-Identifier: MIT
-
-name: Shear dependencies
-
-on:
-  push:
-  workflow_dispatch:
-
+---
 concurrency:
+  cancel-in-progress: false
   group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
-  cancel-in-progress: false # The day will come, and this will be true
-
 jobs:
   shear:
     runs-on: ubuntu-latest
@@ -19,9 +11,11 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: nightly-2024-12-15
-
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-shear
-
       - run: cargo shear
+name: Shear dependencies
+'on':
+  push: null
+  workflow_dispatch: null# SPDX-License-Identifier: MIT

@@ -101,9 +101,9 @@ pub enum SyntaxKind {
     BINARY_EXPR_OP_NODE,
     /// Corresponds to [crate::CallExprArgsNode].
     CALL_EXPR_ARGS_NODE,
-    /// Don't try to remember this! Use [`T![{]`](T) instead.
+    /// Don't try to remember this! Use [`T!['{']`](T) instead.
     L_BRACE_TOKEN,
-    /// Don't try to remember this! Use [`T![}]`](T) instead.
+    /// Don't try to remember this! Use [`T!['}']`](T) instead.
     R_BRACE_TOKEN,
     /// Don't try to remember this! Use [`T![@ident]`](T) instead.
     LIT_IDENT_TOKEN,
@@ -125,9 +125,9 @@ pub enum SyntaxKind {
     CONST_TOKEN,
     /// Don't try to remember this! Use [`T![enum]`](T) instead.
     ENUM_TOKEN,
-    /// Don't try to remember this! Use [`T![(]`](T) instead.
+    /// Don't try to remember this! Use [`T!['(']`](T) instead.
     L_PAREN_TOKEN,
-    /// Don't try to remember this! Use [`T![)]`](T) instead.
+    /// Don't try to remember this! Use [`T![')']`](T) instead.
     R_PAREN_TOKEN,
     /// Don't try to remember this! Use [`T![,]`](T) instead.
     COMMA_TOKEN,
@@ -141,9 +141,9 @@ pub enum SyntaxKind {
     STRUCT_TOKEN,
     /// Don't try to remember this! Use [`T![type]`](T) instead.
     TYPE_TOKEN,
-    /// Don't try to remember this! Use [`T![[]`](T) instead.
+    /// Don't try to remember this! Use [`T!['[']`](T) instead.
     L_BRACKET_TOKEN,
-    /// Don't try to remember this! Use [`T![]]`](T) instead.
+    /// Don't try to remember this! Use [`T![']']`](T) instead.
     R_BRACKET_TOKEN,
     /// Don't try to remember this! Use [`T![&]`](T) instead.
     AMP_TOKEN,
@@ -155,6 +155,8 @@ pub enum SyntaxKind {
     BANG_TOKEN,
     /// Don't try to remember this! Use [`T![~]`](T) instead.
     TILDE_TOKEN,
+    /// Don't try to remember this! Use [`T![*]`](T) instead.
+    STAR_TOKEN,
     /// Don't try to remember this! Use [`T![+=]`](T) instead.
     PLUS_EQ_TOKEN,
     /// Don't try to remember this! Use [`T![-=]`](T) instead.
@@ -179,8 +181,6 @@ pub enum SyntaxKind {
     GT2_EQ_TOKEN,
     /// Don't try to remember this! Use [`T![/]`](T) instead.
     SLASH_TOKEN,
-    /// Don't try to remember this! Use [`T![*]`](T) instead.
-    STAR_TOKEN,
     /// Don't try to remember this! Use [`T![**]`](T) instead.
     STAR2_TOKEN,
     /// Don't try to remember this! Use [`T![%]`](T) instead.
@@ -237,6 +237,25 @@ impl From<SyntaxKind> for rowan::SyntaxKind {
         rowan::SyntaxKind(val as u16)
     }
 }
+impl SyntaxKind {
+    pub fn is_whitespace(&self) -> bool {
+        matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
+    }
+    pub fn is_prefix_expr_op(&self) -> bool {
+        self == &T![+] || self == &T![-] || self == &T![!] || self == &T![~]
+    }
+    pub fn is_binary_expr_op(&self) -> bool {
+        self == &T![=] || self == &T![+=] || self == &T![-=] || self == &T![/=]
+            || self == &T![*=] || self == &T![* *=] || self == &T![%=] || self == &T![^=]
+            || self == &T![&=] || self == &T![|=] || self == &T![<<=] || self == &T![>>=]
+            || self == &T![+] || self == &T![-] || self == &T![/] || self == &T![*]
+            || self == &T![* *] || self == &T![%] || self == &T![&&] || self == &T![||]
+            || self == &T![==] || self == &T![!=] || self == &T![>] || self == &T![>=]
+            || self == &T![<] || self == &T![<=] || self == &T![^] || self == &T![&]
+            || self == &T![|] || self == &T![<<] || self == &T![>>] || self == &T![..]
+            || self == &T![.]
+    }
+}
 /// Returns the [SyntaxKind] variants corresponding to the provided token
 /// as written in the grammar.
 ///
@@ -272,22 +291,23 @@ pub macro T {
     ::SyntaxKind::R_BRACKET_TOKEN }, [&] => { $crate ::SyntaxKind::AMP_TOKEN }, [+] => {
     $crate ::SyntaxKind::PLUS_TOKEN }, [-] => { $crate ::SyntaxKind::MINUS_TOKEN }, [!]
     => { $crate ::SyntaxKind::BANG_TOKEN }, [~] => { $crate ::SyntaxKind::TILDE_TOKEN },
-    [+=] => { $crate ::SyntaxKind::PLUS_EQ_TOKEN }, [-=] => { $crate
-    ::SyntaxKind::MINUS_EQ_TOKEN }, [/=] => { $crate ::SyntaxKind::SLASH_EQ_TOKEN }, [*=]
-    => { $crate ::SyntaxKind::STAR_EQ_TOKEN }, [**=] => { $crate
-    ::SyntaxKind::STAR2_EQ_TOKEN }, [%=] => { $crate ::SyntaxKind::PERCENT_EQ_TOKEN },
-    [^=] => { $crate ::SyntaxKind::CARET_EQ_TOKEN }, [&=] => { $crate
-    ::SyntaxKind::AMP_EQ_TOKEN }, [|=] => { $crate ::SyntaxKind::PIPE_EQ_TOKEN }, [<<=]
-    => { $crate ::SyntaxKind::LT2_EQ_TOKEN }, [>>=] => { $crate
-    ::SyntaxKind::GT2_EQ_TOKEN }, [/] => { $crate ::SyntaxKind::SLASH_TOKEN }, [*] => {
-    $crate ::SyntaxKind::STAR_TOKEN }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN }, [%]
-    => { $crate ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate ::SyntaxKind::AMP2_TOKEN
-    }, [||] => { $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => { $crate
-    ::SyntaxKind::EQ2_TOKEN }, [!=] => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>] => {
-    $crate ::SyntaxKind::GT_TOKEN }, [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN }, [<] =>
-    { $crate ::SyntaxKind::LT_TOKEN }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN }, [^]
-    => { $crate ::SyntaxKind::CARET_TOKEN }, [|] => { $crate ::SyntaxKind::PIPE_TOKEN },
-    [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => { $crate ::SyntaxKind::GT2_TOKEN
-    }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@ number] => { $crate
-    ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate ::SyntaxKind::LIT_STR_TOKEN },
+    [*] => { $crate ::SyntaxKind::STAR_TOKEN }, [+=] => { $crate
+    ::SyntaxKind::PLUS_EQ_TOKEN }, [-=] => { $crate ::SyntaxKind::MINUS_EQ_TOKEN }, [/=]
+    => { $crate ::SyntaxKind::SLASH_EQ_TOKEN }, [*=] => { $crate
+    ::SyntaxKind::STAR_EQ_TOKEN }, [**=] => { $crate ::SyntaxKind::STAR2_EQ_TOKEN }, [%=]
+    => { $crate ::SyntaxKind::PERCENT_EQ_TOKEN }, [^=] => { $crate
+    ::SyntaxKind::CARET_EQ_TOKEN }, [&=] => { $crate ::SyntaxKind::AMP_EQ_TOKEN }, [|=]
+    => { $crate ::SyntaxKind::PIPE_EQ_TOKEN }, [<<=] => { $crate
+    ::SyntaxKind::LT2_EQ_TOKEN }, [>>=] => { $crate ::SyntaxKind::GT2_EQ_TOKEN }, [/] =>
+    { $crate ::SyntaxKind::SLASH_TOKEN }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN },
+    [%] => { $crate ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate
+    ::SyntaxKind::AMP2_TOKEN }, [||] => { $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => {
+    $crate ::SyntaxKind::EQ2_TOKEN }, [!=] => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>]
+    => { $crate ::SyntaxKind::GT_TOKEN }, [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN },
+    [<] => { $crate ::SyntaxKind::LT_TOKEN }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN
+    }, [^] => { $crate ::SyntaxKind::CARET_TOKEN }, [|] => { $crate
+    ::SyntaxKind::PIPE_TOKEN }, [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => {
+    $crate ::SyntaxKind::GT2_TOKEN }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@
+    number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
+    ::SyntaxKind::LIT_STR_TOKEN },
 }

@@ -1329,9 +1329,24 @@ impl AstNode for NameTypeGenericsInnerNode {
     }
 }
 impl NameTypeGenericsInnerNode {
-    /// Find all children nodes of type [TypeNode].
-    pub fn types_nodes(&self) -> impl Iterator<Item = TypeNode> {
-        self.syntax.children().filter_map(TypeNode::cast)
+    /// Returns an iterator over the children nodes of this node.
+    pub fn children(&self) -> impl Iterator<Item = TypeNode> {
+        self.children_with_delimiters()
+            .filter_map(|either| match either {
+                Either::Left(node) => Some(node),
+                Either::Right(_) => None,
+            })
+    }
+    /// Returns an iterator over the children nodes and token of this node.
+    pub fn children_with_delimiters(
+        &self,
+    ) -> impl Iterator<Item = Either<TypeNode, CommaToken>> {
+        self.syntax
+            .children_with_tokens()
+            .filter_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(node) => TypeNode::cast(node).map(Either::Left),
+                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
+            })
     }
 }
 /// Represents the `BinaryTypeOp` node.

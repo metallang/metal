@@ -6,6 +6,8 @@ use ungrammar::{NodeData, TokenData};
 
 use crate::utils::call_site_ident;
 
+pub const PAREN_TOKENS: &[&str] = &["{", "}", "(", ")", "[", "]"];
+
 /// An alias for [String] to improve type readability.
 // note: we want this to be a newtype as RA "sees through" normal type aliases
 pub struct DocString(String);
@@ -82,10 +84,12 @@ impl GrammarItem for TokenData {
     fn syntax_kind_info(&self) -> GrammarItemInfo {
         let name = token_name(&self.name);
         let ident = call_site_ident(name.to_shouty_snake_case());
-        let doc = format_docstring!(
-            "Don't try to remember this! Use [`T![{}]`](T) instead.",
-            self.name.as_str(),
-        );
+        let usage = if PAREN_TOKENS.contains(&self.name.as_str()) {
+            format!("T!['{}']", self.name.as_str())
+        } else {
+            format!("T![{}]", self.name.as_str())
+        };
+        let doc = format_docstring!("Don't try to remember this! Use [`{}`](T) instead.", usage);
 
         (ident, doc).into()
     }

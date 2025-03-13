@@ -1,3 +1,4 @@
+use crate::parser::ParserMode;
 use crate::type_::name::parse_name_type;
 use crate::type_::ref_::parse_ref_type;
 
@@ -10,6 +11,7 @@ pub fn parse_type(parser: &mut crate::parser::parser_type!()) {
     let at = parser.checkpoint();
 
     parser.start_node(SyntaxKind::TYPE_NODE);
+    let old_mode = parser.enter_mode(ParserMode::Type);
 
     match parser.peek().expect("expected a type").kind {
         SyntaxKind::LIT_IDENT_TOKEN => parse_name_type(parser),
@@ -27,8 +29,10 @@ pub fn parse_type(parser: &mut crate::parser::parser_type!()) {
 
         parser.end_node();
     }
+
+    parser.enter_mode(old_mode);
 }
 
 fn is_binary_type_op(kind: SyntaxKind) -> bool {
-    kind == SyntaxKind::PLUS_TOKEN
+    kind == SyntaxKind::AMP_TOKEN
 }

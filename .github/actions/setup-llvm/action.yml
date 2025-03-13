@@ -1,47 +1,37 @@
-# SPDX-License-Identifier: MIT
-
-name: "Setup LLVM"
+---
 description: blah
-
+name: Setup LLVM
 runs:
-  using: composite
   steps:
     - run: echo "LLVM_DIR=$(pwd)/.llvm" >> $GITHUB_ENV
       shell: bash
- 
     - if: ${{ runner.os == 'Linux' && runner.arch == 'X64' }}
       run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-linux-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
-
     - if: ${{ runner.os == 'Linux' && runner.arch == 'ARM64' }}
       run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-linux-aarch64.tar.xz" >> $GITHUB_ENV
       shell: bash
-
     - if: ${{ runner.os == 'macOS' && runner.arch == 'X64' }}
       run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-darwin-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
-
     - if: ${{ runner.os == 'macOS' && runner.arch == 'ARM64' }}
       run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-darwin-aarch64.tar.xz" >> $GITHUB_ENV
       shell: bash
-
     - if: ${{ runner.os == 'Windows' && runner.arch == 'X64' }}
       run: echo "LLVM_URL=""https://github.com/anavereum/llvm-custom-builds/releases/download/19.x/llvm-windows-amd64.tar.xz" >> $GITHUB_ENV
       shell: bash
-
     - id: cache-llvm
       uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
       with:
-        path: ${{ env.LLVM_DIR }}
         key: ${{ runner.os }}-${{ runner.arch }}
-
+        path: ${{ env.LLVM_DIR }}
     - if: ${{ steps.cache-llvm.outputs.cache-hit != 'true' }}
       run: |
         mkdir -p $LLVM_DIR
         curl --proto '=https' --tlsv1.2 -sSf "$LLVM_URL" -L -o - | tar xJv -C $LLVM_DIR
       shell: bash
-
     - run: |
         echo LLVM_SYS_191_PREFIX="$LLVM_DIR" >> $GITHUB_ENV
         echo LLVM_ENABLE=1 >> $GITHUB_ENV
       shell: bash
+  using: composite# SPDX-License-Identifier: MIT

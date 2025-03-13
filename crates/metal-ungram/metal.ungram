@@ -77,7 +77,7 @@ Type =
 
 NameType = Name generics:NameTypeGenerics?
 NameTypeGenerics = '[' generics:NameTypeGenericsInner ']'
-NameTypeGenericsInner = Type* // FIXME
+NameTypeGenericsInner = Type (',' Type)* ','?
 
 RefType = '&' mutness:Mutability Type
 
@@ -96,7 +96,7 @@ Expr =
 
 PrefixExpr = op:PrefixExprOp Expr
 
-PrefixExprOp = '+' | '-' | '!' | '~'
+PrefixExprOp = '+' | '-' | '!' | '~' | '*'
 
 BinaryExpr = lhs:Expr op:BinaryExprOp rhs:Expr
 
@@ -140,7 +140,7 @@ BinaryExprOp =
     // range
   | '..'
     // special
-  | '.'
+  | '.' // member access
 
 CallExpr = callee:Expr '(' args:CallExprArgs? ')'
 CallExprArgs = Expr (',' Expr)* ','?

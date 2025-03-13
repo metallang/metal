@@ -1,5 +1,6 @@
 use metal_ast_ng::SyntaxKind;
 
+use crate::expr::parse_expr;
 use crate::item::abstract_::parse_abstract_item;
 use crate::item::const_::parse_const_item;
 use crate::item::enum_::parse_enum_item;
@@ -32,7 +33,7 @@ pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
         SyntaxKind::RETURN_TOKEN => parse_return_item(parser),
         SyntaxKind::STRUCT_TOKEN => parse_struct_item(parser),
         SyntaxKind::TYPE_TOKEN => parse_type_alias_item(parser),
-        other => todo!("{other:#?}"),
+        _ => parse_expr(parser),
     }
 
     parser.end_node();

@@ -1,26 +1,9 @@
-# SPDX-License-Identifier: MIT
-
-name: Clippy
-
-on:
-  push:
-  workflow_dispatch:
-
+---
 concurrency:
+  cancel-in-progress: false
   group: ${{ github.workflow }}-${{ github.head_ref && github.head_ref || github.ref_name }}
-  cancel-in-progress: false # The day will come, and this will be true
-
 jobs:
   clippy:
-    strategy:
-      matrix:
-        target:
-          - id: "linux-amd64"
-            os: "ubuntu-latest"
-          - id: "darwin-aarch64"
-            os: "macos-latest"
-          - id: "darwin-amd64"
-            os: "macos-13"
     runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +11,19 @@ jobs:
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly-2024-12-15
           components: clippy
-
+          toolchain: nightly-2024-12-15
       - run: cargo clippy
+    strategy:
+      matrix:
+        target:
+          - id: linux-amd64
+            os: ubuntu-latest
+          - id: darwin-aarch64
+            os: macos-latest
+          - id: darwin-amd64
+            os: macos-13
+name: Clippy
+'on':
+  push: null
+  workflow_dispatch: null# SPDX-License-Identifier: MIT

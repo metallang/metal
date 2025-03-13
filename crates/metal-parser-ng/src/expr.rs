@@ -3,23 +3,34 @@ use metal_ast_ng::T;
 
 use crate::common::parse_name;
 
-mod binary;
-
 pub fn parse_expr(parser: &mut crate::parser::parser_type!()) {
-    let at = parser.checkpoint();
+    parse_expr_with_binding_power(parser, BindingPower::ZERO);
+}
 
+// warning: tricky stuff, be careful and read https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
+fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min_bp: BindingPower) {
+    let checkpoint = parser.checkpoint();
+
+    // main expression
     parser.start_node(SyntaxKind::EXPR_NODE);
 
-    match parser.peek().expect("expected an expr").kind {
+    match parser.peek().unwrap().kind {
         SyntaxKind::LIT_IDENT_TOKEN => parse_name(parser),
         SyntaxKind::LIT_NUM_TOKEN | SyntaxKind::LIT_STR_TOKEN => {
             parser.start_node(SyntaxKind::LIT_EXPR_NODE);
+            parser.eat_any();
+            parser.end_node();
+        }
+        // prefix ops
+        op if let Some(bp) = prefix_binding_power_for(op) => {
+            parser.start_node_at(SyntaxKind::PREFIX_EXPR_NODE, checkpoint);
 
-            if parser.peek_is(SyntaxKind::LIT_NUM_TOKEN)
-                || parser.peek_is(SyntaxKind::LIT_STR_TOKEN)
-            {
-                parser.eat_any();
-            }
+            // for prettiness we use _at again so that the prefix op node comes before the expr node
+            parser.start_node_at(SyntaxKind::PREFIX_EXPR_OP_NODE, checkpoint);
+            parser.eat_any();
+            parser.end_node();
+
+            parse_expr_with_binding_power(parser, bp); // rhs
 
             parser.end_node();
         }
@@ -28,77 +39,150 @@ pub fn parse_expr(parser: &mut crate::parser::parser_type!()) {
 
     parser.end_node();
 
-    if parser.peek_is(SyntaxKind::L_PAREN_TOKEN) {
-        parser.start_node_at(SyntaxKind::CALL_EXPR_NODE, at);
+    // binary ops
+    while let Some(Some(bp)) = parser
+        .peek()
+        .map(|token| infix_binding_power_for(token.kind))
+        && (bp.l_value() >= min_bp.l_value())
+    {
+        parser.start_node_at(SyntaxKind::EXPR_NODE, checkpoint);
+        parser.start_node_at(SyntaxKind::BINARY_EXPR_NODE, checkpoint);
 
+        // the lhs is now here
+
+        parser.start_node(SyntaxKind::BINARY_EXPR_OP_NODE);
         parser.eat_any();
+        parser.end_node();
 
-        if !parser.peek_is(SyntaxKind::R_PAREN_TOKEN) {
-            parser.start_node(SyntaxKind::CALL_EXPR_ARGS_NODE);
+        parse_expr_with_binding_power(parser, bp.as_r_value()); // rhs
 
-            while !(parser.peek_is(SyntaxKind::R_PAREN_TOKEN) || parser.is_eof()) {
-                parse_expr(parser);
-                parser.maybe_eat(SyntaxKind::COMMA_TOKEN);
-            }
-
-            parser.end_node();
-        }
-
-        parser.maybe_eat(SyntaxKind::R_PAREN_TOKEN);
-
+        parser.end_node();
         parser.end_node();
     }
 
-    if parser.peek().is_some_and(|t| is_binary_expr_op(t.kind)) {
-        parser.start_node_at(SyntaxKind::BINARY_EXPR_NODE, at);
+    // postfix ops
+    while let Some(Some(bp)) = parser
+        .peek()
+        .map(|token| postfix_binding_power_for(token.kind))
+        && (bp.l_value() >= min_bp.l_value())
+    {
+        match parser.peek().unwrap().kind {
+            T!['('] => {
+                parser.start_node_at(SyntaxKind::EXPR_NODE, checkpoint);
+                parser.start_node_at(SyntaxKind::CALL_EXPR_NODE, checkpoint);
 
-        parser.eat_any();
+                // the callee is now here
 
-        parse_expr(parser);
+                parser.eat_any(); // guaranteed to be an l_paren
 
-        parser.end_node();
+                parser.start_node(SyntaxKind::CALL_EXPR_ARGS_NODE);
+                while !(parser.peek_is(T![')']) || parser.is_eof()) {
+                    parse_expr(parser);
+                    parser.maybe_eat(T![,]);
+                }
+                parser.end_node();
+
+                parser.maybe_eat(T![')']);
+
+                parser.end_node();
+                parser.end_node();
+            }
+            T!['['] => todo!(), // FIXME: not in the grammar yet
+            _ => unreachable!(),
+        }
     }
 }
 
-fn is_binary_expr_op(kind: SyntaxKind) -> bool {
-    // assignment
-    kind == T![=]
-    || kind == T![+=]
-    || kind == T![-=]
-    || kind == T![/=]
-    || kind == T![*=]
-    || kind == T![**=]
-    || kind == T![%=]
-    || kind == T![^=]
-    || kind == T![&=]
-    || kind == T![|=]
-    || kind == T![<<=]
-    || kind == T![>>=]
-    // math
-    || kind == T![+]
-    || kind == T![-]
-    || kind == T![/]
-    || kind == T![*]
-    || kind == T![**]
-    || kind == T![%]
-    // logic
-    || kind == T![&&]
-    || kind == T![||]
-    || kind == T![==]
-    || kind == T![!=]
-    // comparison
-    || kind == T![>]
-    || kind == T![>=]
-    || kind == T![<]
-    || kind == T![<=]
-    // bitwise
-    || kind == T![^]
-    || kind == T![&]
-    || kind == T![|]
-    || kind == T![<<]
-    || kind == T![>>]
-    // range
-    || kind == T![..]
-    // special
-    || kind == T![.]
+struct BindingPower {
+    value: u8,
+    assoc: Assoc,
+}
+
+impl BindingPower {
+    const ZERO: Self = BindingPower {
+        value: 0,
+        assoc: Assoc::Inapplicable,
+    };
+
+    fn l_value(&self) -> u8 {
+        self.value
+    }
+
+    fn as_r_value(&self) -> BindingPower {
+        let assoc_val = match self.assoc {
+            Assoc::Left => 1,
+            Assoc::Right | Assoc::Inapplicable => 0,
+        };
+
+        Self {
+            value: self.value + assoc_val,
+            assoc: Assoc::Inapplicable,
+        }
+    }
+}
+
+impl From<(u8, Assoc)> for BindingPower {
+    fn from((value, assoc): (u8, Assoc)) -> Self {
+        Self { value, assoc }
+    }
+}
+
+#[derive(Debug)]
+enum Assoc {
+    Left,
+    Right,
+    Inapplicable,
+}
+
+#[rustfmt::skip]
+fn infix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
+    Some(match op {
+        T![.] => (29, Assoc::Left),
+        // {postfix ops}
+        // {prefix ops}
+        T![**] => (23, Assoc::Right),
+        T![*] | T![/] | T![%] => (21, Assoc::Left),
+        T![+] | T![-] => (19, Assoc::Left),
+        T![<<] | T![>>] => (17, Assoc::Left),
+        T![&] => (15, Assoc::Left),
+        T![^] => (13, Assoc::Left),
+        T![|] => (11, Assoc::Left),
+        // -
+        T![==] | T![!=]
+        | T![>] | T![>=]
+        | T![<] | T![<=] => (9, Assoc::Inapplicable),
+        // -
+        T![&&] => (7, Assoc::Left),
+        T![||] => (5, Assoc::Left),
+        T![..] => (3, Assoc::Inapplicable),
+        // -
+        T![=]
+        | T![+=] | T![-=] | T![/=] | T![*=]
+        | T![**=] | T![%=]
+        | T![^=] | T![&=] | T![|=]
+        | T![<<=] | T![>>=] => (1, Assoc::Right),
+        // -
+        _ => return None,
+    }
+    .into())
+}
+
+fn postfix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
+    Some(
+        match op {
+            T!['('] | T!['['] => (27, Assoc::Inapplicable),
+            _ => return None,
+        }
+        .into(),
+    )
+}
+
+fn prefix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
+    Some(
+        match op {
+            T![+] | T![-] | T![!] | T![~] | T![*] => (25, Assoc::Inapplicable),
+            _ => return None,
+        }
+        .into(),
+    )
 }

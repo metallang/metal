@@ -2,7 +2,7 @@ abstract Interactable {
     def interact(with: GameObject): void;
 }
 
-const OBJECT_POOL_SIZE: usize = 4096;
+const OBJECT_POOL_SIZE: usize = fibbonacci(pow(2, 4), CONSTANTS.FIB_COEFF);
 
 enum PlayerKind {
     Local
@@ -35,4 +35,6 @@ type PlayerType = PlayerKind;
 type GenericNameType = Array[usize]
 type RefType = &mut GenericNameType
 type ReallyRefType = &mut &&mut GenericNameType
-// type BinaryType = GenericNameType & RefType
+type BinaryType = GenericNameType & RefType & SomeOtherTye
+
+a.b.c()
