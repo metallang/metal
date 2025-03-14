@@ -10,10 +10,12 @@ use crate::grammar_item::{GrammarItem, GrammarItemInfo};
 pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
     let syntax_kind = generate_syntax_kind(grammar);
     let t = generate_t_macro(grammar);
+    let n = generate_n_macro(grammar);
 
     quote! {
         #syntax_kind
         #t
+        #n
     }
 }
 
@@ -82,56 +84,6 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
             pub fn is_whitespace(&self) -> bool {
                 matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
             }
-
-            pub fn is_prefix_expr_op(&self) -> bool {
-                self == &T![+]
-                || self == &T![-]
-                || self == &T![!]
-                || self == &T![~]
-            }
-
-            pub fn is_binary_expr_op(&self) -> bool {
-                // assignment
-                self == &T![=]
-                || self == &T![+=]
-                || self == &T![-=]
-                || self == &T![/=]
-                || self == &T![*=]
-                || self == &T![**=]
-                || self == &T![%=]
-                || self == &T![^=]
-                || self == &T![&=]
-                || self == &T![|=]
-                || self == &T![<<=]
-                || self == &T![>>=]
-                // math
-                || self == &T![+]
-                || self == &T![-]
-                || self == &T![/]
-                || self == &T![*]
-                || self == &T![**]
-                || self == &T![%]
-                // logic
-                || self == &T![&&]
-                || self == &T![||]
-                || self == &T![==]
-                || self == &T![!=]
-                // comparison
-                || self == &T![>]
-                || self == &T![>=]
-                || self == &T![<]
-                || self == &T![<=]
-                // bitwise
-                || self == &T![^]
-                || self == &T![&]
-                || self == &T![|]
-                || self == &T![<<]
-                || self == &T![>>]
-                // range
-                || self == &T![..]
-                // special
-                || self == &T![.]
-            }
         }
     }
 }
@@ -159,7 +111,7 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
     });
 
     quote! {
-        /// Returns the [SyntaxKind] variants corresponding to the provided token
+        /// Returns the [SyntaxKind] variant corresponding to the provided token
         /// as written in the grammar.
         ///
         /// Note that certain tokens such as parentheses, braces, and brackets need
@@ -177,6 +129,36 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// # }
         /// ```
         pub macro T {
+            #(#arms)*
+        }
+    }
+}
+
+/// Generates the `N!` macro.
+fn generate_n_macro(grammar: &Engram) -> TokenStream {
+    let arms = grammar.nodes().map(|node| {
+        let node_name: TokenStream = node.name.as_str().parse().unwrap();
+
+        let syntax_kind_name = node.syntax_kind_info().ident;
+
+        quote! {
+            [#node_name] => { $crate::SyntaxKind::#syntax_kind_name },
+        }
+    });
+
+    quote! {
+        /// Returns the [SyntaxKind] variant corresponding to the provided node
+        /// as written in the grammar.
+        ///
+        /// # Example
+        ///
+        /// ```no_run,
+        /// # use metal_ast_ng::{N, AstToken, BinaryExprOpNode};
+        /// # fn example(binary_op_node: BinaryExprOpNode) {
+        /// assert!(binary_op_node.syntax().kind() == N![BinaryExprOpNode]);
+        /// # }
+        /// ```
+        pub macro N {
             #(#arms)*
         }
     }

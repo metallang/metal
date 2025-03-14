@@ -1,13 +1,14 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
 use crate::type_::parse_type;
 
 pub fn parse_name_type(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::NAME_TYPE_NODE);
+    parser.start_node(N![NameType]);
 
-    parser.maybe_eat(SyntaxKind::LIT_IDENT_TOKEN);
+    parser.maybe_eat(T![@ident]);
 
-    if parser.peek_is(SyntaxKind::L_BRACKET_TOKEN) {
+    if parser.peek_is(T!['[']) {
         parse_name_type_generics(parser);
     }
 
@@ -15,21 +16,21 @@ pub fn parse_name_type(parser: &mut crate::parser::parser_type!()) {
 }
 
 pub fn parse_name_type_generics(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::NAME_TYPE_GENERICS_NODE);
+    parser.start_node(N![NameTypeGenerics]);
 
-    parser.maybe_eat(SyntaxKind::L_BRACKET_TOKEN);
+    parser.maybe_eat(T!['[']);
     parse_name_type_generics_inner(parser);
-    parser.maybe_eat(SyntaxKind::R_BRACKET_TOKEN);
+    parser.maybe_eat(T![']']);
 
     parser.end_node();
 }
 
 pub fn parse_name_type_generics_inner(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE);
+    parser.start_node(N![NameTypeGenericsInner]);
 
-    while !(parser.peek_is(SyntaxKind::R_BRACKET_TOKEN) || parser.is_eof()) {
+    while !(parser.peek_is(T![']']) || parser.is_eof()) {
         parse_type(parser);
-        parser.maybe_eat(SyntaxKind::COMMA_TOKEN);
+        parser.maybe_eat(T![,]);
     }
 
     parser.end_node();

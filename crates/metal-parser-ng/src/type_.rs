@@ -3,6 +3,8 @@ use crate::type_::name::parse_name_type;
 use crate::type_::ref_::parse_ref_type;
 
 use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
 mod name;
 mod ref_;
@@ -10,12 +12,12 @@ mod ref_;
 pub fn parse_type(parser: &mut crate::parser::parser_type!()) {
     let at = parser.checkpoint();
 
-    parser.start_node(SyntaxKind::TYPE_NODE);
+    parser.start_node(N![Type]);
     let old_mode = parser.enter_mode(ParserMode::Type);
 
     match parser.peek().expect("expected a type").kind {
-        SyntaxKind::LIT_IDENT_TOKEN => parse_name_type(parser),
-        SyntaxKind::AMP_TOKEN => parse_ref_type(parser),
+        T![@ident] => parse_name_type(parser),
+        T![&] => parse_ref_type(parser),
         other => todo!("{other:#?}"),
     }
 
@@ -34,5 +36,5 @@ pub fn parse_type(parser: &mut crate::parser::parser_type!()) {
 }
 
 fn is_binary_type_op(kind: SyntaxKind) -> bool {
-    kind == SyntaxKind::AMP_TOKEN
+    kind == T![&]
 }

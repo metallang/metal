@@ -1,26 +1,27 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
-use super::fn_::parse_fn_signature;
 use crate::common::parse_name;
 use crate::common::parse_visibility;
+use crate::item::fn_::parse_fn_signature;
 
 pub fn parse_abstract_item(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::ABSTRACT_ITEM_NODE);
+    parser.start_node(N![AbstractItem]);
 
     parse_visibility(parser);
-    parser.maybe_eat(SyntaxKind::ABSTRACT_TOKEN);
+    parser.maybe_eat(T![abstract]);
     parse_name(parser);
-    parser.maybe_eat(SyntaxKind::L_BRACE_TOKEN); // TODO: fix L_BRACE_TOKEN docs
+    parser.maybe_eat(T!['{']);
     parse_abstract_body(parser);
-    parser.maybe_eat(SyntaxKind::R_BRACE_TOKEN);
+    parser.maybe_eat(T!['}']);
 
     parser.end_node();
 }
 
 pub fn parse_abstract_body(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::ABSTRACT_BODY_NODE);
+    parser.start_node(N![AbstractBody]);
 
-    while !(parser.peek_is(SyntaxKind::R_BRACE_TOKEN) || parser.is_eof()) {
+    while !(parser.peek_is(T!['}']) || parser.is_eof()) {
         parse_abstract_fn_item(parser);
     }
 
@@ -28,12 +29,12 @@ pub fn parse_abstract_body(parser: &mut crate::parser::parser_type!()) {
 }
 
 pub fn parse_abstract_fn_item(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::ABSTRACT_FN_ITEM_NODE);
+    parser.start_node(N![AbstractFnItem]);
 
-    parser.maybe_eat(SyntaxKind::DEF_TOKEN);
+    parser.maybe_eat(T![def]);
     parse_name(parser);
     parse_fn_signature(parser);
-    parser.maybe_eat(SyntaxKind::SEMICOLON_TOKEN);
+    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }

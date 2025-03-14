@@ -1,17 +1,18 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
 use crate::expr::parse_expr;
 
 pub fn parse_return_item(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::RETURN_ITEM_NODE);
+    parser.start_node(N![ReturnItem]);
 
-    parser.maybe_eat(SyntaxKind::RETURN_TOKEN);
+    parser.maybe_eat(T![return]);
 
-    if !parser.peek_is(SyntaxKind::SEMICOLON_TOKEN) {
+    if !parser.peek_is(T![;]) {
         parse_expr(parser);
     }
 
-    parser.maybe_eat(SyntaxKind::SEMICOLON_TOKEN);
+    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }

@@ -1,25 +1,26 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
 use crate::common::parse_name;
 use crate::common::parse_visibility;
 
 pub fn parse_import_item(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_ITEM_NODE);
+    parser.start_node(N![ImportItem]);
 
     parse_visibility(parser);
-    parser.maybe_eat(SyntaxKind::IMPORT_TOKEN);
+    parser.maybe_eat(T![import]);
     parse_import_tree(parser);
-    parser.maybe_eat(SyntaxKind::SEMICOLON_TOKEN);
+    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }
 
 pub fn parse_import_tree(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_TREE_NODE);
+    parser.start_node(N![ImportTree]);
 
     match parser.peek().expect("expected an import tree").kind {
-        SyntaxKind::LIT_IDENT_TOKEN => parse_import_leaf(parser),
-        SyntaxKind::L_BRACE_TOKEN => parse_import_branch(parser),
+        T![@ident] => parse_import_leaf(parser),
+        T!['{'] => parse_import_branch(parser),
         _ => todo!(),
     }
 
@@ -27,11 +28,11 @@ pub fn parse_import_tree(parser: &mut crate::parser::parser_type!()) {
 }
 
 pub fn parse_import_leaf(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_LEAF_NODE);
+    parser.start_node(N![ImportLeaf]);
 
     parse_name(parser);
 
-    if parser.peek_is(SyntaxKind::DOT_TOKEN) {
+    if parser.peek_is(T![.]) {
         parse_import_segment(parser);
     }
 
@@ -39,30 +40,30 @@ pub fn parse_import_leaf(parser: &mut crate::parser::parser_type!()) {
 }
 
 pub fn parse_import_segment(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_SEGMENT_NODE);
+    parser.start_node(N![ImportSegment]);
 
-    parser.maybe_eat(SyntaxKind::DOT_TOKEN);
+    parser.maybe_eat(T![.]);
     parse_import_tree(parser);
 
     parser.end_node();
 }
 
 pub fn parse_import_branch(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_BRANCH_NODE);
+    parser.start_node(N![ImportBranch]);
 
-    parser.maybe_eat(SyntaxKind::L_BRACE_TOKEN);
+    parser.maybe_eat(T!['{']);
     parse_import_branch_subtrees(parser);
-    parser.maybe_eat(SyntaxKind::R_BRACE_TOKEN);
+    parser.maybe_eat(T!['}']);
 
     parser.end_node();
 }
 
 pub fn parse_import_branch_subtrees(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE);
+    parser.start_node(N![ImportBranchSubtrees]);
 
-    while !(parser.peek_is(SyntaxKind::R_BRACE_TOKEN) || parser.is_eof()) {
+    while !(parser.peek_is(T!['}']) || parser.is_eof()) {
         parse_import_tree(parser);
-        parser.maybe_eat(SyntaxKind::COMMA_TOKEN);
+        parser.maybe_eat(T![,]);
     }
 
     parser.end_node();

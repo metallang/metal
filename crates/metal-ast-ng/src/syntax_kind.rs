@@ -5,101 +5,101 @@
 #[repr(u8)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum SyntaxKind {
-    /// Corresponds to [crate::BlockNode].
+    /// Don't try to remember this! Use [`N![Block]`](N) instead.
     BLOCK_NODE,
-    /// Corresponds to [crate::BlockItemsNode].
+    /// Don't try to remember this! Use [`N![BlockItems]`](N) instead.
     BLOCK_ITEMS_NODE,
-    /// Corresponds to [crate::ItemNode].
+    /// Don't try to remember this! Use [`N![Item]`](N) instead.
     ITEM_NODE,
-    /// Corresponds to [crate::NameNode].
+    /// Don't try to remember this! Use [`N![Name]`](N) instead.
     NAME_NODE,
-    /// Corresponds to [crate::VisNode].
+    /// Don't try to remember this! Use [`N![Visibility]`](N) instead.
     VIS_NODE,
-    /// Corresponds to [crate::MutnessNode].
+    /// Don't try to remember this! Use [`N![Mutability]`](N) instead.
     MUTNESS_NODE,
-    /// Corresponds to [crate::ExprSpecNode].
+    /// Don't try to remember this! Use [`N![ExprSpecifier]`](N) instead.
     EXPR_SPEC_NODE,
-    /// Corresponds to [crate::ExprNode].
+    /// Don't try to remember this! Use [`N![Expr]`](N) instead.
     EXPR_NODE,
-    /// Corresponds to [crate::TypeQualNode].
+    /// Don't try to remember this! Use [`N![TypeQualifier]`](N) instead.
     TYPE_QUAL_NODE,
-    /// Corresponds to [crate::TypeNode].
+    /// Don't try to remember this! Use [`N![Type]`](N) instead.
     TYPE_NODE,
-    /// Corresponds to [crate::AbstractItemNode].
+    /// Don't try to remember this! Use [`N![AbstractItem]`](N) instead.
     ABSTRACT_ITEM_NODE,
-    /// Corresponds to [crate::ConstItemNode].
+    /// Don't try to remember this! Use [`N![ConstItem]`](N) instead.
     CONST_ITEM_NODE,
-    /// Corresponds to [crate::EnumItemNode].
+    /// Don't try to remember this! Use [`N![EnumItem]`](N) instead.
     ENUM_ITEM_NODE,
-    /// Corresponds to [crate::FnItemNode].
+    /// Don't try to remember this! Use [`N![FnItem]`](N) instead.
     FN_ITEM_NODE,
-    /// Corresponds to [crate::ImportItemNode].
+    /// Don't try to remember this! Use [`N![ImportItem]`](N) instead.
     IMPORT_ITEM_NODE,
-    /// Corresponds to [crate::ReturnItemNode].
+    /// Don't try to remember this! Use [`N![ReturnItem]`](N) instead.
     RETURN_ITEM_NODE,
-    /// Corresponds to [crate::StructItemNode].
+    /// Don't try to remember this! Use [`N![StructItem]`](N) instead.
     STRUCT_ITEM_NODE,
-    /// Corresponds to [crate::TypeAliasItemNode].
+    /// Don't try to remember this! Use [`N![TypeAliasItem]`](N) instead.
     TYPE_ALIAS_ITEM_NODE,
-    /// Corresponds to [crate::AbstractBodyNode].
+    /// Don't try to remember this! Use [`N![AbstractBody]`](N) instead.
     ABSTRACT_BODY_NODE,
-    /// Corresponds to [crate::AbstractFnItemNode].
+    /// Don't try to remember this! Use [`N![AbstractFnItem]`](N) instead.
     ABSTRACT_FN_ITEM_NODE,
-    /// Corresponds to [crate::FnSignatureNode].
+    /// Don't try to remember this! Use [`N![FnSignature]`](N) instead.
     FN_SIGNATURE_NODE,
-    /// Corresponds to [crate::EnumBodyNode].
+    /// Don't try to remember this! Use [`N![EnumBody]`](N) instead.
     ENUM_BODY_NODE,
-    /// Corresponds to [crate::EnumBodyItemNode].
+    /// Don't try to remember this! Use [`N![EnumBodyItem]`](N) instead.
     ENUM_BODY_ITEM_NODE,
-    /// Corresponds to [crate::EnumVariantNode].
+    /// Don't try to remember this! Use [`N![EnumVariant]`](N) instead.
     ENUM_VARIANT_NODE,
-    /// Corresponds to [crate::EnumVariantDataTypeNode].
+    /// Don't try to remember this! Use [`N![EnumVariantDataType]`](N) instead.
     ENUM_VARIANT_DATA_TYPE_NODE,
-    /// Corresponds to [crate::FnInputsNode].
+    /// Don't try to remember this! Use [`N![FnInputs]`](N) instead.
     FN_INPUTS_NODE,
-    /// Corresponds to [crate::FnInputNode].
+    /// Don't try to remember this! Use [`N![FnInput]`](N) instead.
     FN_INPUT_NODE,
-    /// Corresponds to [crate::ImportTreeNode].
+    /// Don't try to remember this! Use [`N![ImportTree]`](N) instead.
     IMPORT_TREE_NODE,
-    /// Corresponds to [crate::ImportLeafNode].
+    /// Don't try to remember this! Use [`N![ImportLeaf]`](N) instead.
     IMPORT_LEAF_NODE,
-    /// Corresponds to [crate::ImportBranchNode].
+    /// Don't try to remember this! Use [`N![ImportBranch]`](N) instead.
     IMPORT_BRANCH_NODE,
-    /// Corresponds to [crate::ImportSegmentNode].
+    /// Don't try to remember this! Use [`N![ImportSegment]`](N) instead.
     IMPORT_SEGMENT_NODE,
-    /// Corresponds to [crate::ImportBranchSubtreesNode].
+    /// Don't try to remember this! Use [`N![ImportBranchSubtrees]`](N) instead.
     IMPORT_BRANCH_SUBTREES_NODE,
-    /// Corresponds to [crate::StructBodyNode].
+    /// Don't try to remember this! Use [`N![StructBody]`](N) instead.
     STRUCT_BODY_NODE,
-    /// Corresponds to [crate::StructBodyItemNode].
+    /// Don't try to remember this! Use [`N![StructBodyItem]`](N) instead.
     STRUCT_BODY_ITEM_NODE,
-    /// Corresponds to [crate::StructFieldNode].
+    /// Don't try to remember this! Use [`N![StructField]`](N) instead.
     STRUCT_FIELD_NODE,
-    /// Corresponds to [crate::NameTypeNode].
+    /// Don't try to remember this! Use [`N![NameType]`](N) instead.
     NAME_TYPE_NODE,
-    /// Corresponds to [crate::RefTypeNode].
+    /// Don't try to remember this! Use [`N![RefType]`](N) instead.
     REF_TYPE_NODE,
-    /// Corresponds to [crate::BinaryTypeNode].
+    /// Don't try to remember this! Use [`N![BinaryType]`](N) instead.
     BINARY_TYPE_NODE,
-    /// Corresponds to [crate::NameTypeGenericsNode].
+    /// Don't try to remember this! Use [`N![NameTypeGenerics]`](N) instead.
     NAME_TYPE_GENERICS_NODE,
-    /// Corresponds to [crate::NameTypeGenericsInnerNode].
+    /// Don't try to remember this! Use [`N![NameTypeGenericsInner]`](N) instead.
     NAME_TYPE_GENERICS_INNER_NODE,
-    /// Corresponds to [crate::BinaryTypeOpNode].
+    /// Don't try to remember this! Use [`N![BinaryTypeOp]`](N) instead.
     BINARY_TYPE_OP_NODE,
-    /// Corresponds to [crate::PrefixExprNode].
+    /// Don't try to remember this! Use [`N![PrefixExpr]`](N) instead.
     PREFIX_EXPR_NODE,
-    /// Corresponds to [crate::BinaryExprNode].
+    /// Don't try to remember this! Use [`N![BinaryExpr]`](N) instead.
     BINARY_EXPR_NODE,
-    /// Corresponds to [crate::CallExprNode].
+    /// Don't try to remember this! Use [`N![CallExpr]`](N) instead.
     CALL_EXPR_NODE,
-    /// Corresponds to [crate::LitExprNode].
+    /// Don't try to remember this! Use [`N![LitExpr]`](N) instead.
     LIT_EXPR_NODE,
-    /// Corresponds to [crate::PrefixExprOpNode].
+    /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
-    /// Corresponds to [crate::BinaryExprOpNode].
+    /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
     BINARY_EXPR_OP_NODE,
-    /// Corresponds to [crate::CallExprArgsNode].
+    /// Don't try to remember this! Use [`N![CallExprArgs]`](N) instead.
     CALL_EXPR_ARGS_NODE,
     /// Don't try to remember this! Use [`T!['{']`](T) instead.
     L_BRACE_TOKEN,
@@ -241,22 +241,8 @@ impl SyntaxKind {
     pub fn is_whitespace(&self) -> bool {
         matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
     }
-    pub fn is_prefix_expr_op(&self) -> bool {
-        self == &T![+] || self == &T![-] || self == &T![!] || self == &T![~]
-    }
-    pub fn is_binary_expr_op(&self) -> bool {
-        self == &T![=] || self == &T![+=] || self == &T![-=] || self == &T![/=]
-            || self == &T![*=] || self == &T![* *=] || self == &T![%=] || self == &T![^=]
-            || self == &T![&=] || self == &T![|=] || self == &T![<<=] || self == &T![>>=]
-            || self == &T![+] || self == &T![-] || self == &T![/] || self == &T![*]
-            || self == &T![* *] || self == &T![%] || self == &T![&&] || self == &T![||]
-            || self == &T![==] || self == &T![!=] || self == &T![>] || self == &T![>=]
-            || self == &T![<] || self == &T![<=] || self == &T![^] || self == &T![&]
-            || self == &T![|] || self == &T![<<] || self == &T![>>] || self == &T![..]
-            || self == &T![.]
-    }
 }
-/// Returns the [SyntaxKind] variants corresponding to the provided token
+/// Returns the [SyntaxKind] variant corresponding to the provided token
 /// as written in the grammar.
 ///
 /// Note that certain tokens such as parentheses, braces, and brackets need
@@ -310,4 +296,58 @@ pub macro T {
     $crate ::SyntaxKind::GT2_TOKEN }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@
     number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
     ::SyntaxKind::LIT_STR_TOKEN },
+}
+/// Returns the [SyntaxKind] variant corresponding to the provided node
+/// as written in the grammar.
+///
+/// # Example
+///
+/// ```no_run,
+/// # use metal_ast_ng::{N, AstToken, BinaryExprOpNode};
+/// # fn example(binary_op_node: BinaryExprOpNode) {
+/// assert!(binary_op_node.syntax().kind() == N![BinaryExprOpNode]);
+/// # }
+/// ```
+pub macro N {
+    [Block] => { $crate ::SyntaxKind::BLOCK_NODE }, [BlockItems] => { $crate
+    ::SyntaxKind::BLOCK_ITEMS_NODE }, [Item] => { $crate ::SyntaxKind::ITEM_NODE },
+    [Name] => { $crate ::SyntaxKind::NAME_NODE }, [Visibility] => { $crate
+    ::SyntaxKind::VIS_NODE }, [Mutability] => { $crate ::SyntaxKind::MUTNESS_NODE },
+    [ExprSpecifier] => { $crate ::SyntaxKind::EXPR_SPEC_NODE }, [Expr] => { $crate
+    ::SyntaxKind::EXPR_NODE }, [TypeQualifier] => { $crate ::SyntaxKind::TYPE_QUAL_NODE
+    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [AbstractItem] => { $crate
+    ::SyntaxKind::ABSTRACT_ITEM_NODE }, [ConstItem] => { $crate
+    ::SyntaxKind::CONST_ITEM_NODE }, [EnumItem] => { $crate ::SyntaxKind::ENUM_ITEM_NODE
+    }, [FnItem] => { $crate ::SyntaxKind::FN_ITEM_NODE }, [ImportItem] => { $crate
+    ::SyntaxKind::IMPORT_ITEM_NODE }, [ReturnItem] => { $crate
+    ::SyntaxKind::RETURN_ITEM_NODE }, [StructItem] => { $crate
+    ::SyntaxKind::STRUCT_ITEM_NODE }, [TypeAliasItem] => { $crate
+    ::SyntaxKind::TYPE_ALIAS_ITEM_NODE }, [AbstractBody] => { $crate
+    ::SyntaxKind::ABSTRACT_BODY_NODE }, [AbstractFnItem] => { $crate
+    ::SyntaxKind::ABSTRACT_FN_ITEM_NODE }, [FnSignature] => { $crate
+    ::SyntaxKind::FN_SIGNATURE_NODE }, [EnumBody] => { $crate
+    ::SyntaxKind::ENUM_BODY_NODE }, [EnumBodyItem] => { $crate
+    ::SyntaxKind::ENUM_BODY_ITEM_NODE }, [EnumVariant] => { $crate
+    ::SyntaxKind::ENUM_VARIANT_NODE }, [EnumVariantDataType] => { $crate
+    ::SyntaxKind::ENUM_VARIANT_DATA_TYPE_NODE }, [FnInputs] => { $crate
+    ::SyntaxKind::FN_INPUTS_NODE }, [FnInput] => { $crate ::SyntaxKind::FN_INPUT_NODE },
+    [ImportTree] => { $crate ::SyntaxKind::IMPORT_TREE_NODE }, [ImportLeaf] => { $crate
+    ::SyntaxKind::IMPORT_LEAF_NODE }, [ImportBranch] => { $crate
+    ::SyntaxKind::IMPORT_BRANCH_NODE }, [ImportSegment] => { $crate
+    ::SyntaxKind::IMPORT_SEGMENT_NODE }, [ImportBranchSubtrees] => { $crate
+    ::SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE }, [StructBody] => { $crate
+    ::SyntaxKind::STRUCT_BODY_NODE }, [StructBodyItem] => { $crate
+    ::SyntaxKind::STRUCT_BODY_ITEM_NODE }, [StructField] => { $crate
+    ::SyntaxKind::STRUCT_FIELD_NODE }, [NameType] => { $crate
+    ::SyntaxKind::NAME_TYPE_NODE }, [RefType] => { $crate ::SyntaxKind::REF_TYPE_NODE },
+    [BinaryType] => { $crate ::SyntaxKind::BINARY_TYPE_NODE }, [NameTypeGenerics] => {
+    $crate ::SyntaxKind::NAME_TYPE_GENERICS_NODE }, [NameTypeGenericsInner] => { $crate
+    ::SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE }, [BinaryTypeOp] => { $crate
+    ::SyntaxKind::BINARY_TYPE_OP_NODE }, [PrefixExpr] => { $crate
+    ::SyntaxKind::PREFIX_EXPR_NODE }, [BinaryExpr] => { $crate
+    ::SyntaxKind::BINARY_EXPR_NODE }, [CallExpr] => { $crate ::SyntaxKind::CALL_EXPR_NODE
+    }, [LitExpr] => { $crate ::SyntaxKind::LIT_EXPR_NODE }, [PrefixExprOp] => { $crate
+    ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
+    ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
+    ::SyntaxKind::CALL_EXPR_ARGS_NODE },
 }

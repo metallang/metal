@@ -1,4 +1,5 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
+use metal_ast_ng::T;
 
 use crate::block::parse_block;
 use crate::common::parse_expr_specifier;
@@ -8,10 +9,10 @@ use crate::common::parse_type_qualifier;
 use crate::common::parse_visibility;
 
 pub fn parse_fn_item(parser: &mut crate::parser::parser_type!(), at: rowan::Checkpoint) {
-    parser.start_node_at(SyntaxKind::FN_ITEM_NODE, at);
+    parser.start_node_at(N![FnItem], at);
 
     parse_visibility(parser);
-    parser.maybe_eat(SyntaxKind::DEF_TOKEN);
+    parser.maybe_eat(T![def]);
     parse_name(parser);
     parse_fn_signature(parser);
     parse_block(parser);
@@ -20,11 +21,11 @@ pub fn parse_fn_item(parser: &mut crate::parser::parser_type!(), at: rowan::Chec
 }
 
 pub fn parse_fn_signature(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::FN_SIGNATURE_NODE);
+    parser.start_node(N![FnSignature]);
 
-    parser.maybe_eat(SyntaxKind::L_PAREN_TOKEN);
+    parser.maybe_eat(T!['(']);
     parse_fn_inputs(parser);
-    parser.maybe_eat(SyntaxKind::R_PAREN_TOKEN);
+    parser.maybe_eat(T![')']);
 
     parse_type_qualifier(parser);
 
@@ -32,18 +33,18 @@ pub fn parse_fn_signature(parser: &mut crate::parser::parser_type!()) {
 }
 
 pub fn parse_fn_inputs(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::FN_INPUTS_NODE);
+    parser.start_node(N![FnInputs]);
 
-    while !(parser.peek_is(SyntaxKind::R_PAREN_TOKEN) || parser.is_eof()) {
+    while !(parser.peek_is(T![')']) || parser.is_eof()) {
         parse_fn_input(parser);
-        parser.maybe_eat(SyntaxKind::COMMA_TOKEN);
+        parser.maybe_eat(T![,]);
     }
 
     parser.end_node();
 }
 
 pub fn parse_fn_input(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::FN_INPUT_NODE);
+    parser.start_node(N![FnInput]);
 
     parse_mutability(parser);
     parse_name(parser);

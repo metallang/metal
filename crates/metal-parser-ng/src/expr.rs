@@ -1,4 +1,5 @@
 use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
 use metal_ast_ng::T;
 
 use crate::common::parse_name;
@@ -12,21 +13,21 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
     let checkpoint = parser.checkpoint();
 
     // main expression
-    parser.start_node(SyntaxKind::EXPR_NODE);
+    parser.start_node(N![Expr]);
 
     match parser.peek().unwrap().kind {
-        SyntaxKind::LIT_IDENT_TOKEN => parse_name(parser),
-        SyntaxKind::LIT_NUM_TOKEN | SyntaxKind::LIT_STR_TOKEN => {
-            parser.start_node(SyntaxKind::LIT_EXPR_NODE);
+        T![@ident] => parse_name(parser),
+        T![@number] | T![@string] => {
+            parser.start_node(N![LitExpr]);
             parser.eat_any();
             parser.end_node();
         }
         // prefix ops
         op if let Some(bp) = prefix_binding_power_for(op) => {
-            parser.start_node_at(SyntaxKind::PREFIX_EXPR_NODE, checkpoint);
+            parser.start_node_at(N![PrefixExpr], checkpoint);
 
             // for prettiness we use _at again so that the prefix op node comes before the expr node
-            parser.start_node_at(SyntaxKind::PREFIX_EXPR_OP_NODE, checkpoint);
+            parser.start_node_at(N![PrefixExprOp], checkpoint);
             parser.eat_any();
             parser.end_node();
 
@@ -45,12 +46,12 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
         .map(|token| infix_binding_power_for(token.kind))
         && (bp.l_value() >= min_bp.l_value())
     {
-        parser.start_node_at(SyntaxKind::EXPR_NODE, checkpoint);
-        parser.start_node_at(SyntaxKind::BINARY_EXPR_NODE, checkpoint);
+        parser.start_node_at(N![Expr], checkpoint);
+        parser.start_node_at(N![BinaryExpr], checkpoint);
 
         // the lhs is now here
 
-        parser.start_node(SyntaxKind::BINARY_EXPR_OP_NODE);
+        parser.start_node(N![BinaryExprOp]);
         parser.eat_any();
         parser.end_node();
 
@@ -68,14 +69,14 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
     {
         match parser.peek().unwrap().kind {
             T!['('] => {
-                parser.start_node_at(SyntaxKind::EXPR_NODE, checkpoint);
-                parser.start_node_at(SyntaxKind::CALL_EXPR_NODE, checkpoint);
+                parser.start_node_at(N![Expr], checkpoint);
+                parser.start_node_at(N![CallExpr], checkpoint);
 
                 // the callee is now here
 
                 parser.eat_any(); // guaranteed to be an l_paren
 
-                parser.start_node(SyntaxKind::CALL_EXPR_ARGS_NODE);
+                parser.start_node(N![CallExprArgs]);
                 while !(parser.peek_is(T![')']) || parser.is_eof()) {
                     parse_expr(parser);
                     parser.maybe_eat(T![,]);

@@ -1,5 +1,6 @@
 use metal_ast_ng::SyntaxKind;
 use metal_ast_ng::SyntaxNode;
+use metal_ast_ng::T;
 use metal_lexer_ng::Span;
 use metal_lexer_ng::Token;
 use peekable::Peekable;
@@ -90,19 +91,17 @@ where
             }
         }
 
-        if matches!(self.mode, ParserMode::Type)
-            && matches!(new_current_token.kind, SyntaxKind::AMP2_TOKEN)
-        {
+        if matches!(self.mode, ParserMode::Type) && new_current_token.kind == T![&&] {
             // split && into two &
             let first = Token {
-                kind: SyntaxKind::AMP_TOKEN,
+                kind: T![&],
                 span: Span {
                     start: new_current_token.span.start,
                     end: new_current_token.span.end - 1,
                 },
             };
             let second = Token {
-                kind: SyntaxKind::AMP_TOKEN,
+                kind: T![&],
                 span: Span {
                     start: new_current_token.span.start + 1,
                     end: new_current_token.span.end,

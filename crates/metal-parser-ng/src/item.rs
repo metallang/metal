@@ -1,4 +1,5 @@
 use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::T;
 
 use crate::expr::parse_expr;
 use crate::item::abstract_::parse_abstract_item;
@@ -25,14 +26,14 @@ pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
     let at = parser.checkpoint();
 
     match parser.peek().expect("expected an item").kind {
-        SyntaxKind::ABSTRACT_TOKEN => parse_abstract_item(parser),
-        SyntaxKind::CONST_TOKEN => parse_const_item(parser),
-        SyntaxKind::DEF_TOKEN => parse_fn_item(parser, at),
-        SyntaxKind::ENUM_TOKEN => parse_enum_item(parser),
-        SyntaxKind::IMPORT_TOKEN => parse_import_item(parser),
-        SyntaxKind::RETURN_TOKEN => parse_return_item(parser),
-        SyntaxKind::STRUCT_TOKEN => parse_struct_item(parser),
-        SyntaxKind::TYPE_TOKEN => parse_type_alias_item(parser),
+        T![abstract] => parse_abstract_item(parser),
+        T![const] => parse_const_item(parser),
+        T![def] => parse_fn_item(parser, at),
+        T![enum] => parse_enum_item(parser),
+        T![import] => parse_import_item(parser),
+        T![return] => parse_return_item(parser),
+        T![struct] => parse_struct_item(parser),
+        T![type] => parse_type_alias_item(parser),
         _ => parse_expr(parser),
     }
 
