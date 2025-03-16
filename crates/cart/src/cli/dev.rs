@@ -15,7 +15,7 @@ pub enum DevCommand {
     Parse(DevParseCommand),
     /// Debug-print the result of lexing the provided file.
     LexNg(DevLexNgCommand),
-    /// Parse a Metal source file using the new parser and debug-print it's AST.
+    /// Parse a Metal source file using the new parser and debug-print its AST.
     ParseNg(DevParseNgCommand),
 }
 
