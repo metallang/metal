@@ -2,13 +2,11 @@ use metal_ast_ng::N;
 use metal_ast_ng::T;
 
 use crate::common::parse_name;
-use crate::common::parse_visibility;
 use crate::item::fn_::parse_fn_signature;
 
 pub fn parse_abstract_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![AbstractItem]);
 
-    parse_visibility(parser);
     parser.maybe_eat(T![abstract]);
     parse_name(parser);
     parser.maybe_eat(T!['{']);

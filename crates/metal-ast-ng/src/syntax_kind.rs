@@ -25,6 +25,8 @@ pub enum SyntaxKind {
     TYPE_QUAL_NODE,
     /// Don't try to remember this! Use [`N![Type]`](N) instead.
     TYPE_NODE,
+    /// Don't try to remember this! Use [`N![ItemKind]`](N) instead.
+    ITEM_KIND_NODE,
     /// Don't try to remember this! Use [`N![AbstractItem]`](N) instead.
     ABSTRACT_ITEM_NODE,
     /// Don't try to remember this! Use [`N![ConstItem]`](N) instead.
@@ -53,6 +55,8 @@ pub enum SyntaxKind {
     ENUM_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![EnumVariant]`](N) instead.
     ENUM_VARIANT_NODE,
+    /// Don't try to remember this! Use [`N![EnumFn]`](N) instead.
+    ENUM_FN_NODE,
     /// Don't try to remember this! Use [`N![EnumVariantDataType]`](N) instead.
     ENUM_VARIANT_DATA_TYPE_NODE,
     /// Don't try to remember this! Use [`N![FnInputs]`](N) instead.
@@ -75,6 +79,8 @@ pub enum SyntaxKind {
     STRUCT_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![StructField]`](N) instead.
     STRUCT_FIELD_NODE,
+    /// Don't try to remember this! Use [`N![StructFn]`](N) instead.
+    STRUCT_FN_NODE,
     /// Don't try to remember this! Use [`N![NameType]`](N) instead.
     NAME_TYPE_NODE,
     /// Don't try to remember this! Use [`N![RefType]`](N) instead.
@@ -315,7 +321,8 @@ pub macro N {
     ::SyntaxKind::VIS_NODE }, [Mutability] => { $crate ::SyntaxKind::MUTNESS_NODE },
     [ExprSpecifier] => { $crate ::SyntaxKind::EXPR_SPEC_NODE }, [Expr] => { $crate
     ::SyntaxKind::EXPR_NODE }, [TypeQualifier] => { $crate ::SyntaxKind::TYPE_QUAL_NODE
-    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [AbstractItem] => { $crate
+    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [ItemKind] => { $crate
+    ::SyntaxKind::ITEM_KIND_NODE }, [AbstractItem] => { $crate
     ::SyntaxKind::ABSTRACT_ITEM_NODE }, [ConstItem] => { $crate
     ::SyntaxKind::CONST_ITEM_NODE }, [EnumItem] => { $crate ::SyntaxKind::ENUM_ITEM_NODE
     }, [FnItem] => { $crate ::SyntaxKind::FN_ITEM_NODE }, [ImportItem] => { $crate
@@ -328,20 +335,22 @@ pub macro N {
     ::SyntaxKind::FN_SIGNATURE_NODE }, [EnumBody] => { $crate
     ::SyntaxKind::ENUM_BODY_NODE }, [EnumBodyItem] => { $crate
     ::SyntaxKind::ENUM_BODY_ITEM_NODE }, [EnumVariant] => { $crate
-    ::SyntaxKind::ENUM_VARIANT_NODE }, [EnumVariantDataType] => { $crate
-    ::SyntaxKind::ENUM_VARIANT_DATA_TYPE_NODE }, [FnInputs] => { $crate
-    ::SyntaxKind::FN_INPUTS_NODE }, [FnInput] => { $crate ::SyntaxKind::FN_INPUT_NODE },
-    [ImportTree] => { $crate ::SyntaxKind::IMPORT_TREE_NODE }, [ImportLeaf] => { $crate
+    ::SyntaxKind::ENUM_VARIANT_NODE }, [EnumFn] => { $crate ::SyntaxKind::ENUM_FN_NODE },
+    [EnumVariantDataType] => { $crate ::SyntaxKind::ENUM_VARIANT_DATA_TYPE_NODE },
+    [FnInputs] => { $crate ::SyntaxKind::FN_INPUTS_NODE }, [FnInput] => { $crate
+    ::SyntaxKind::FN_INPUT_NODE }, [ImportTree] => { $crate
+    ::SyntaxKind::IMPORT_TREE_NODE }, [ImportLeaf] => { $crate
     ::SyntaxKind::IMPORT_LEAF_NODE }, [ImportBranch] => { $crate
     ::SyntaxKind::IMPORT_BRANCH_NODE }, [ImportSegment] => { $crate
     ::SyntaxKind::IMPORT_SEGMENT_NODE }, [ImportBranchSubtrees] => { $crate
     ::SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE }, [StructBody] => { $crate
     ::SyntaxKind::STRUCT_BODY_NODE }, [StructBodyItem] => { $crate
     ::SyntaxKind::STRUCT_BODY_ITEM_NODE }, [StructField] => { $crate
-    ::SyntaxKind::STRUCT_FIELD_NODE }, [NameType] => { $crate
-    ::SyntaxKind::NAME_TYPE_NODE }, [RefType] => { $crate ::SyntaxKind::REF_TYPE_NODE },
-    [BinaryType] => { $crate ::SyntaxKind::BINARY_TYPE_NODE }, [NameTypeGenerics] => {
-    $crate ::SyntaxKind::NAME_TYPE_GENERICS_NODE }, [NameTypeGenericsInner] => { $crate
+    ::SyntaxKind::STRUCT_FIELD_NODE }, [StructFn] => { $crate
+    ::SyntaxKind::STRUCT_FN_NODE }, [NameType] => { $crate ::SyntaxKind::NAME_TYPE_NODE
+    }, [RefType] => { $crate ::SyntaxKind::REF_TYPE_NODE }, [BinaryType] => { $crate
+    ::SyntaxKind::BINARY_TYPE_NODE }, [NameTypeGenerics] => { $crate
+    ::SyntaxKind::NAME_TYPE_GENERICS_NODE }, [NameTypeGenericsInner] => { $crate
     ::SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE }, [BinaryTypeOp] => { $crate
     ::SyntaxKind::BINARY_TYPE_OP_NODE }, [PrefixExpr] => { $crate
     ::SyntaxKind::PREFIX_EXPR_NODE }, [BinaryExpr] => { $crate

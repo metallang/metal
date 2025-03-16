@@ -1,40 +1,40 @@
-abstract Interactable {
+pub abstract Interactable {
     def interact(with: GameObject): void;
 }
 
-const OBJECT_POOL_SIZE: usize = fibbonacci(pow(2, 4), CONSTANTS.FIB_COEFF);
+pub const OBJECT_POOL_SIZE: usize = fibbonacci(pow(2, 4), CONSTANTS.FIB_COEFF);
 
-enum PlayerKind {
+pub enum PlayerKind {
     Local
     Remote
     Unknown(String)
 
-    def is_known(self): bool {
+    pub def is_known(self): bool {
         return true;
     }
 }
 
-def replace_with_zeroes(mut string: String): void {
+pub def replace_with_zeroes(mut string: String): void {
     // todo
 }
 
-import std.{fs.File, io.{open, close}};
+pub import std.{fs.File, io.{open, close}};
 
-return;
+pub return;
 
-struct GameObject {
+pub struct GameObject {
     pub id: usize;
     generation: usize;
 
-    def new(): Self {
+    pub def new(): Self {
         // todo
     }
 }
 
-type PlayerType = PlayerKind;
+pub type PlayerType = PlayerKind;
 type GenericNameType = Array[usize]
 type RefType = &mut GenericNameType
 type ReallyRefType = &mut &&mut GenericNameType
 type BinaryType = GenericNameType & RefType & SomeOtherTye
 
-a.b.c()
+pub a.b.c()

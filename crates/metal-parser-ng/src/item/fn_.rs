@@ -6,12 +6,10 @@ use crate::common::parse_expr_specifier;
 use crate::common::parse_mutability;
 use crate::common::parse_name;
 use crate::common::parse_type_qualifier;
-use crate::common::parse_visibility;
 
-pub fn parse_fn_item(parser: &mut crate::parser::parser_type!(), at: rowan::Checkpoint) {
-    parser.start_node_at(N![FnItem], at);
+pub fn parse_fn_item(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![FnItem]);
 
-    parse_visibility(parser);
     parser.maybe_eat(T![def]);
     parse_name(parser);
     parse_fn_signature(parser);

@@ -1,6 +1,7 @@
-use metal_ast_ng::SyntaxKind;
+use metal_ast_ng::N;
 use metal_ast_ng::T;
 
+use crate::common::parse_visibility;
 use crate::expr::parse_expr;
 use crate::item::abstract_::parse_abstract_item;
 use crate::item::const_::parse_const_item;
@@ -21,14 +22,21 @@ mod struct_;
 mod type_;
 
 pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(SyntaxKind::ITEM_NODE);
+    parser.start_node(N![Item]);
 
-    let at = parser.checkpoint();
+    parse_visibility(parser);
+    parse_item_kind(parser);
+
+    parser.end_node();
+}
+
+pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![ItemKind]);
 
     match parser.peek().expect("expected an item").kind {
         T![abstract] => parse_abstract_item(parser),
         T![const] => parse_const_item(parser),
-        T![def] => parse_fn_item(parser, at),
+        T![def] => parse_fn_item(parser),
         T![enum] => parse_enum_item(parser),
         T![import] => parse_import_item(parser),
         T![return] => parse_return_item(parser),

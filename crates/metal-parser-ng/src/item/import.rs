@@ -2,12 +2,10 @@ use metal_ast_ng::N;
 use metal_ast_ng::T;
 
 use crate::common::parse_name;
-use crate::common::parse_visibility;
 
 pub fn parse_import_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![ImportItem]);
 
-    parse_visibility(parser);
     parser.maybe_eat(T![import]);
     parse_import_tree(parser);
     parser.maybe_eat(T![;]);
