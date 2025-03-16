@@ -2,6 +2,9 @@
 
 //! Metal library for compiling to LLVM IR using MIR.
 
+#![feature(string_from_utf8_lossy_owned)]
+#![feature(let_chains)]
+
 use core::StructRepository;
 use std::{collections::BTreeMap, ffi::CString};
 
@@ -12,6 +15,8 @@ use metal_mir::{
 
 pub mod core;
 pub mod expr;
+pub mod linking;
+pub mod llc;
 pub mod primitives;
 pub mod safeties;
 pub mod stmt;

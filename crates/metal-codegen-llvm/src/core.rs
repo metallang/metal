@@ -6,8 +6,9 @@ use std::{borrow::Cow, collections::HashMap, ffi::CString};
 use llvm_sys::{
     analysis::LLVMVerifyModule,
     bit_writer,
-    core::{LLVMPrintModuleToString, LLVMSetSourceFileName},
+    core::{LLVMPrintModuleToString, LLVMSetSourceFileName, LLVMSetTarget},
     prelude::LLVMTypeRef,
+    target_machine::LLVMGetDefaultTargetTriple,
 };
 use metal_mir::{parcel::Module, struct_::Struct};
 
@@ -75,7 +76,7 @@ impl<'a> PathBuilder<'a> {
 
 /// Compiles an LLVM module and returns either human-readable
 /// LLVM IR or LLVM bytecode depending on `human_readable`.
-pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
+pub fn compile_module(module: &Module, human_readable: bool, triple: &Option<String>) -> Vec<u8> {
     let mut llvm = LLVMRefs::new(module);
 
     let c_filename = CString::new(module.filename.as_str()).unwrap();
@@ -84,6 +85,15 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
     for stmt in &module.statements {
         stmt.llvm_value(&mut llvm, module);
+    }
+
+    unsafe {
+        if let Some(triple) = triple {
+            let string = CString::new(triple.as_str()).unwrap();
+            LLVMSetTarget(llvm.module, string.as_ptr());
+        } else {
+            LLVMSetTarget(llvm.module, LLVMGetDefaultTargetTriple());
+        }
     }
 
     let error = LLVMErrorMessage::new();
@@ -129,13 +139,14 @@ mod tests {
             filename: name,
             statements: Vec::new(),
             imports: Vec::new(),
+            library: false,
         }
     }
 
     #[test]
     fn test_empty_module() {
         let module = get_empty_module("empty".to_string());
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
@@ -178,7 +189,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
@@ -208,7 +219,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        compile_module(&module, true);
+        compile_module(&module, true, &None);
     }
 
     #[test]
@@ -252,7 +263,7 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 }
