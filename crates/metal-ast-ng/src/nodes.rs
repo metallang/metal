@@ -845,6 +845,10 @@ impl EnumVariantNode {
     pub fn data_ty_node(&self) -> Option<EnumVariantDataTypeNode> {
         self.syntax.child()
     }
+    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
+    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
+        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+    }
 }
 /// Represents the `EnumVariantDataType` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

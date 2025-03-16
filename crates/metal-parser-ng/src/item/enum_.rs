@@ -48,6 +48,7 @@ pub fn parse_enum_variant(parser: &mut crate::parser::parser_type!()) {
 
     parse_name(parser);
     parse_enum_variant_data_type(parser);
+    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }

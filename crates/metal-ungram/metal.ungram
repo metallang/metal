@@ -44,7 +44,7 @@ ConstItem = vis:Visibility 'const' Name ty:TypeQualifier? value:ExprSpecifier ';
 EnumItem = vis:Visibility 'enum' Name '{' body:EnumBody '}'
 EnumBody = items:(EnumBodyItem*)
 EnumBodyItem = EnumVariant | FnItem
-EnumVariant = Name data_ty:EnumVariantDataType?
+EnumVariant = Name data_ty:EnumVariantDataType? ';'
 EnumVariantDataType = ('(' Type ')')
 
 FnItem = vis:Visibility 'def' Name sig:FnSignature body:Block
