@@ -7,8 +7,6 @@ edition = "2021"
 rowan = { workspace = true }
 metal-lexer-ng = { workspace = true }
 metal-ast-ng = { workspace = true }
-thiserror = { workspace = true }
-extend = { workspace = true }
 
 [lints]
 workspace = true

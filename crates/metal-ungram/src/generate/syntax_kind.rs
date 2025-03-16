@@ -153,9 +153,9 @@ fn generate_n_macro(grammar: &Engram) -> TokenStream {
         /// # Example
         ///
         /// ```no_run,
-        /// # use metal_ast_ng::{N, AstToken, BinaryExprOpNode};
+        /// # use metal_ast_ng::{N, AstNode, BinaryExprOpNode};
         /// # fn example(binary_op_node: BinaryExprOpNode) {
-        /// assert!(binary_op_node.syntax().kind() == N![BinaryExprOpNode]);
+        /// assert!(binary_op_node.syntax().kind() == N![BinaryExprOp]);
         /// # }
         /// ```
         pub macro N {
