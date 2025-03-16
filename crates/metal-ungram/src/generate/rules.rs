@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+use std::collections::HashMap;
+
 use proc_macro2::TokenStream;
 use quote::quote;
 use ungrammar::{NodeData, Rule, TokenData};
@@ -7,7 +9,7 @@ use ungrammar::{NodeData, Rule, TokenData};
 use crate::{
     debug::debug_rule,
     engram::Engram,
-    grammar_item::{GrammarItem, GrammarItemInfo, NodeDataExt},
+    grammar_item::{GrammarItem, GrammarItemInfo, NodeDataExt, RuleExt},
     utils::call_site_ident,
 };
 
@@ -17,19 +19,24 @@ pub fn generate_top_rule(grammar: &Engram, rule: &Rule) -> TokenStream {
         Rule::Labeled { label, rule } => match rule.as_ref() {
             Rule::Seq(rules) => generate_seq_rule(grammar, rules.as_slice(), Some(label.as_str())),
             Rule::Rep(rule) => generate_rep_rule(grammar, rule.as_ref(), Some(label.as_str())),
-            other => generate_rule(grammar, other, Some(label.as_str())),
+            other => generate_rule(grammar, other, Some(label.as_str()), 0),
         },
         Rule::Seq(rules) => generate_seq_rule(grammar, rules.as_slice(), None),
         Rule::Rep(rule) => generate_rep_rule(grammar, rule.as_ref(), None),
-        other => generate_rule(grammar, other, None),
+        other => generate_rule(grammar, other, None, 0),
     }
 }
 
 /// Same as [generate_top_rule], but rejects top-level-only rules.
-fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStream {
+fn generate_rule(
+    grammar: &Engram,
+    rule: &Rule,
+    label: Option<&str>,
+    same_type_item_count: usize,
+) -> TokenStream {
     match rule {
-        Rule::Node(node) => generate_node_rule(&grammar[node], label),
-        Rule::Token(token) => generate_token_rule(&grammar[token], label),
+        Rule::Node(node) => generate_node_rule(&grammar[node], label, same_type_item_count),
+        Rule::Token(token) => generate_token_rule(&grammar[token], label, same_type_item_count),
         Rule::Labeled {
             label: new_label,
             rule: new_rule,
@@ -39,7 +46,12 @@ fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStr
                 panic!("nested labels detected when evaluating rule {:?}. nested labels have no effect and are not supported", debug_rule(grammar, rule));
             }
 
-            generate_rule(grammar, new_rule.as_ref(), Some(new_label.as_str()))
+            generate_rule(
+                grammar,
+                new_rule.as_ref(),
+                Some(new_label.as_str()),
+                same_type_item_count,
+            )
         }
         Rule::Opt(new_rule) => {
             // count this as an error, just for correctness
@@ -47,7 +59,7 @@ fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStr
                 panic!("nested optionals detected when evaluating rule {:?}. nested optionals have no effect and are not supported", debug_rule(grammar, rule))
             }
 
-            generate_rule(grammar, new_rule.as_ref(), label)
+            generate_rule(grammar, new_rule.as_ref(), label, same_type_item_count)
         }
         other => {
             let suggestion = if matches!(other, Rule::Rep(_)) {
@@ -67,7 +79,11 @@ fn generate_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStr
 }
 
 /// Generates an accessor method corresponding to a node rule.
-fn generate_node_rule(node: &NodeData, label: Option<&str>) -> TokenStream {
+fn generate_node_rule(
+    node: &NodeData,
+    label: Option<&str>,
+    same_type_item_count: usize,
+) -> TokenStream {
     let GrammarItemInfo {
         ident: fn_name,
         doc: fn_doc,
@@ -78,13 +94,17 @@ fn generate_node_rule(node: &NodeData, label: Option<&str>) -> TokenStream {
     quote! {
         #[doc = #fn_doc]
         pub fn #fn_name(&self) -> Option<#item_name> {
-            self.syntax.child()
+            self.syntax.child(#same_type_item_count)
         }
     }
 }
 
 /// Generates an accessor method corresponding to a token rule.
-fn generate_token_rule(token: &TokenData, label: Option<&str>) -> TokenStream {
+fn generate_token_rule(
+    token: &TokenData,
+    label: Option<&str>,
+    same_type_item_count: usize,
+) -> TokenStream {
     let GrammarItemInfo {
         ident: fn_name,
         doc: fn_doc,
@@ -95,7 +115,7 @@ fn generate_token_rule(token: &TokenData, label: Option<&str>) -> TokenStream {
     quote! {
         #[doc = #fn_doc]
         pub fn #fn_name(&self) -> Option<SyntaxToken> {
-            self.syntax.find_child_token(SyntaxKind::#syntax_kind_name)
+            self.syntax.child_token(SyntaxKind::#syntax_kind_name, #same_type_item_count)
         }
     }
 }
@@ -133,10 +153,23 @@ fn generate_seq_rule(grammar: &Engram, rules: &[Rule], label: Option<&str>) -> T
 /// Generates an accessor method corresponding to a "simple" sequence rule, i.e.
 /// a sequence of nodes and tokens.
 fn generate_simple_seq_rule(grammar: &Engram, rules: &[Rule]) -> TokenStream {
-    rules
-        .iter()
-        .map(|rule| generate_rule(grammar, rule, None))
-        .collect()
+    let mut impl_ = TokenStream::new();
+    let mut same_type_rules = HashMap::new();
+
+    for rule in rules {
+        let Some(index) = rule.simple_index() else {
+            panic!("only simple rules are allowed");
+        };
+
+        let count = *same_type_rules
+            .entry(index)
+            .and_modify(|c| *c += 1)
+            .or_insert(0usize);
+
+        impl_.extend(generate_rule(grammar, rule, None, count));
+    }
+
+    impl_
 }
 
 /// Generates an accessor method corresponding to a "repetition-sequence" rule, i.e.

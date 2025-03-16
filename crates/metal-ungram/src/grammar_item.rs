@@ -2,7 +2,7 @@
 
 use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
-use ungrammar::{NodeData, TokenData};
+use ungrammar::{NodeData, Rule, TokenData};
 
 use crate::utils::call_site_ident;
 
@@ -175,6 +175,28 @@ pub impl NodeData {
         );
 
         (ident, doc).into()
+    }
+}
+
+/// See [RuleExt::simple_index].
+#[derive(Hash, Eq, PartialEq)]
+pub enum NodeOrTokenIndex {
+    NodeIndex(ungrammar::Node),
+    TokenIndex(ungrammar::Token),
+}
+
+/// Additional methods for [Rule].
+#[extend::ext]
+pub impl Rule {
+    /// Returns the [NodeOrTokenIndex] of a simple rule (or `None` if it's not simple).
+    fn simple_index(&self) -> Option<NodeOrTokenIndex> {
+        match self {
+            Rule::Labeled { label: _, rule } => rule.simple_index(),
+            Rule::Opt(rule) => rule.simple_index(),
+            Rule::Node(node) => Some(NodeOrTokenIndex::NodeIndex(*node)),
+            Rule::Token(token) => Some(NodeOrTokenIndex::TokenIndex(*token)),
+            _ => None,
+        }
     }
 }
 
