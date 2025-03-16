@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast_ng::SyntaxKind;
 use metal_ast_ng::N;
 use metal_ast_ng::T;
@@ -97,7 +99,6 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
                 parser.end_node();
                 parser.end_node();
             }
-            T!['['] => todo!(), // FIXME: not in the grammar yet
             _ => unreachable!(),
         }
     }
@@ -180,7 +181,7 @@ fn infix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
 fn postfix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
     Some(
         match op {
-            T!['('] | T!['['] => (27, Assoc::Inapplicable),
+            T!['('] => (27, Assoc::Inapplicable),
             _ => return None,
         }
         .into(),

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::parser::ParserMode;
 use crate::type_::name::parse_name_type;
 use crate::type_::ref_::parse_ref_type;
@@ -24,7 +26,7 @@ pub fn parse_type(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 
     if parser.peek().is_some_and(|t| is_binary_type_op(t.kind)) {
-        parser.start_node_at(SyntaxKind::BINARY_TYPE_OP_NODE, at);
+        parser.start_node_at(N![BinaryTypeOp], at);
 
         parser.eat_any();
         parse_type(parser);

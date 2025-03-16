@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast_ng::SyntaxKind;
 use metal_ast_ng::SyntaxNode;
 use metal_ast_ng::T;
 use metal_lexer_ng::Span;
 use metal_lexer_ng::Token;
-use peekable::Peekable;
 use rowan::GreenNodeBuilder;
 
 #[derive(Clone, Copy, Debug)]
@@ -25,7 +26,7 @@ pub struct Parser<'src, L> {
 
 impl<'src, L> Parser<'src, L>
 where
-    L: Peekable<Item = Token>,
+    L: Iterator<Item = Token>,
 {
     pub fn new(lexer: L, source: &'src str) -> Self {
         let mut parser = Self {
@@ -165,5 +166,5 @@ where
 }
 
 pub macro parser_type() {
-    $crate::parser::Parser<impl ::peekable::Peekable<Item = ::metal_lexer_ng::Token>>
+    $crate::parser::Parser<impl ::std::iter::Iterator<Item = ::metal_lexer_ng::Token>>
 }
