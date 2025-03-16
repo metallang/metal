@@ -2,11 +2,11 @@
 
 use crate::error::Error;
 
-pub struct DevLexNgCommand {
+pub struct DevParseNgCommand {
     path: String,
 }
 
-impl tapcli::Command for DevLexNgCommand {
+impl tapcli::Command for DevParseNgCommand {
     type Error = Error;
 
     fn parse(parser: &mut tapcli::Parser) -> Result<Self, Self::Error> {
@@ -20,9 +20,12 @@ impl tapcli::Command for DevLexNgCommand {
     fn run(self) -> Result<Self::Output, Self::Error> {
         let contents = std::fs::read_to_string(self.path).unwrap();
 
-        for token in metal_lexer_ng::Lexer::new(&contents) {
-            eprintln!("{token:?}");
-        }
+        let lexer = metal_lexer_ng::Lexer::new(&contents).peekable();
+        let mut parser = metal_parser_ng::Parser::new(lexer, &contents);
+
+        metal_parser_ng::parse_root(&mut parser);
+
+        eprintln!("{:#?}", parser.finish());
 
         Ok(())
     }

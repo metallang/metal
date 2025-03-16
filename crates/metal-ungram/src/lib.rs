@@ -9,9 +9,8 @@ use ungrammar::Grammar;
 
 use crate::{
     generate::{
-        nodes::generate_nodes_file,
-        syntax_kind::generate_syntax_kind_file,
-        tokens::{generate_token_kind_file, generate_tokens_file},
+        nodes::generate_nodes_file, syntax_kind::generate_syntax_kind_file,
+        tokens::generate_tokens_file,
     },
     utils::save_generated,
 };
@@ -20,7 +19,6 @@ const GRAMMAR: &str = include_str!("../metal.ungram");
 const SYNTAX_KIND: &str = "../metal-ast-ng/src/syntax_kind.rs";
 const TOKENS: &str = "../metal-ast-ng/src/tokens.rs";
 const NODES: &str = "../metal-ast-ng/src/nodes.rs";
-const TOKEN_KIND: &str = "../metal-lexer-ng/src/token_kind.rs";
 
 mod debug;
 mod engram;
@@ -42,19 +40,6 @@ pub fn generate_ast() -> Result<(), Error> {
     save_generated(generate_syntax_kind_file(&grammar), SYNTAX_KIND)?;
     save_generated(generate_tokens_file(&grammar), TOKENS)?;
     save_generated(generate_nodes_file(&grammar), NODES)?;
-
-    Ok(())
-}
-
-/// Runs the lexer generator.
-pub fn generate_lexer() -> Result<(), Error> {
-    if !std::fs::exists("./src/")? {
-        return Err(Error::InvalidInvocation);
-    }
-
-    let grammar = Grammar::from_str(GRAMMAR)?.into();
-
-    save_generated(generate_token_kind_file(&grammar), TOKEN_KIND)?;
 
     Ok(())
 }

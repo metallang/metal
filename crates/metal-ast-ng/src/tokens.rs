@@ -114,6 +114,22 @@ impl AstToken for ColonToken {
         &self.syntax
     }
 }
+/// Represents the `;` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct SemicolonToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for SemicolonToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::SEMICOLON_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `abstract` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AbstractToken {
@@ -138,22 +154,6 @@ pub struct DefToken {
 impl AstToken for DefToken {
     fn can_cast(kind: SyntaxKind) -> bool {
         kind == SyntaxKind::DEF_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
-/// Represents the `;` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct SemicolonToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for SemicolonToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::SEMICOLON_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -434,6 +434,22 @@ impl AstToken for TildeToken {
         &self.syntax
     }
 }
+/// Represents the `*` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StarToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for StarToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STAR_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `+=` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PlusEqToken {
@@ -618,22 +634,6 @@ pub struct SlashToken {
 impl AstToken for SlashToken {
     fn can_cast(kind: SyntaxKind) -> bool {
         kind == SyntaxKind::SLASH_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
-/// Represents the `*` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StarToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for StarToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::STAR_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -914,6 +914,43 @@ impl AstToken for LitStrToken {
         &self.syntax
     }
 }
+/// Represents the `LitExpr` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum LitExprToken {
+    /// See [LitNumToken].
+    LitNum(LitNumToken),
+    /// See [LitStrToken].
+    LitStr(LitStrToken),
+}
+impl AstToken for LitExprToken {
+    #[allow(clippy::match_like_matches_macro)]
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn can_cast(kind: SyntaxKind) -> bool {
+        match kind {
+            SyntaxKind::LIT_NUM_TOKEN => true,
+            SyntaxKind::LIT_STR_TOKEN => true,
+            _ => false,
+        }
+    }
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        match syntax.kind() {
+            SyntaxKind::LIT_NUM_TOKEN => {
+                Some(LitExprToken::LitNum(LitNumToken::cast(syntax)?))
+            }
+            SyntaxKind::LIT_STR_TOKEN => {
+                Some(LitExprToken::LitStr(LitStrToken::cast(syntax)?))
+            }
+            _ => None,
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        match self {
+            LitExprToken::LitNum(it) => it.syntax(),
+            LitExprToken::LitStr(it) => it.syntax(),
+        }
+    }
+}
 /// Represents the `PrefixExprOp` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum PrefixExprOpToken {
@@ -925,6 +962,8 @@ pub enum PrefixExprOpToken {
     Bang(BangToken),
     /// See [TildeToken].
     Tilde(TildeToken),
+    /// See [StarToken].
+    Star(StarToken),
 }
 impl AstToken for PrefixExprOpToken {
     #[allow(clippy::match_like_matches_macro)]
@@ -935,6 +974,7 @@ impl AstToken for PrefixExprOpToken {
             SyntaxKind::MINUS_TOKEN => true,
             SyntaxKind::BANG_TOKEN => true,
             SyntaxKind::TILDE_TOKEN => true,
+            SyntaxKind::STAR_TOKEN => true,
             _ => false,
         }
     }
@@ -953,6 +993,9 @@ impl AstToken for PrefixExprOpToken {
             SyntaxKind::TILDE_TOKEN => {
                 Some(PrefixExprOpToken::Tilde(TildeToken::cast(syntax)?))
             }
+            SyntaxKind::STAR_TOKEN => {
+                Some(PrefixExprOpToken::Star(StarToken::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -962,6 +1005,7 @@ impl AstToken for PrefixExprOpToken {
             PrefixExprOpToken::Minus(it) => it.syntax(),
             PrefixExprOpToken::Bang(it) => it.syntax(),
             PrefixExprOpToken::Tilde(it) => it.syntax(),
+            PrefixExprOpToken::Star(it) => it.syntax(),
         }
     }
 }

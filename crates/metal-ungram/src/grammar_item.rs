@@ -2,9 +2,11 @@
 
 use heck::{ToShoutySnakeCase, ToSnakeCase, ToUpperCamelCase};
 use syn::Ident;
-use ungrammar::{NodeData, TokenData};
+use ungrammar::{NodeData, Rule, TokenData};
 
 use crate::utils::call_site_ident;
+
+pub const PAREN_TOKENS: &[&str] = &["{", "}", "(", ")", "[", "]"];
 
 /// An alias for [String] to improve type readability.
 // note: we want this to be a newtype as RA "sees through" normal type aliases
@@ -82,10 +84,12 @@ impl GrammarItem for TokenData {
     fn syntax_kind_info(&self) -> GrammarItemInfo {
         let name = token_name(&self.name);
         let ident = call_site_ident(name.to_shouty_snake_case());
-        let doc = format_docstring!(
-            "Don't try to remember this! Use [`T![{}]`](T) instead.",
-            self.name.as_str(),
-        );
+        let usage = if PAREN_TOKENS.contains(&self.name.as_str()) {
+            format!("T!['{}']", self.name.as_str())
+        } else {
+            format!("T![{}]", self.name.as_str())
+        };
+        let doc = format_docstring!("Don't try to remember this! Use [`{}`](T) instead.", usage);
 
         (ident, doc).into()
     }
@@ -128,7 +132,10 @@ impl GrammarItem for NodeData {
     fn syntax_kind_info(&self) -> GrammarItemInfo {
         let name = node_name(&self.name);
         let ident = call_site_ident(name.to_shouty_snake_case());
-        let doc = format_docstring!("Corresponds to [{}].", self.item_info().ident);
+        let doc = format_docstring!(
+            "Don't try to remember this! Use [`N![{}]`](N) instead.",
+            &self.name
+        );
 
         (ident, doc).into()
     }
@@ -168,6 +175,28 @@ pub impl NodeData {
         );
 
         (ident, doc).into()
+    }
+}
+
+/// See [RuleExt::simple_index].
+#[derive(Hash, Eq, PartialEq)]
+pub enum NodeOrTokenIndex {
+    NodeIndex(ungrammar::Node),
+    TokenIndex(ungrammar::Token),
+}
+
+/// Additional methods for [Rule].
+#[extend::ext]
+pub impl Rule {
+    /// Returns the [NodeOrTokenIndex] of a simple rule (or `None` if it's not simple).
+    fn simple_index(&self) -> Option<NodeOrTokenIndex> {
+        match self {
+            Rule::Labeled { label: _, rule } => rule.simple_index(),
+            Rule::Opt(rule) => rule.simple_index(),
+            Rule::Node(node) => Some(NodeOrTokenIndex::NodeIndex(*node)),
+            Rule::Token(token) => Some(NodeOrTokenIndex::TokenIndex(*token)),
+            _ => None,
+        }
     }
 }
 

@@ -1,19 +1,20 @@
-version: 2
+---
 updates:
-  - package-ecosystem: "cargo"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      time: "07:00"
-    reviewers:
-      - "elenakrittik"
-      - "VincentRPS"
-    commit-message:
-      prefix: "deps"
-    labels:
-      - "a: deps"
+  - commit-message:
+      prefix: deps
+    directory: /
     groups:
       cargo:
         applies-to: version-updates
         patterns:
-          - "*"
+          - '*'
+    labels:
+      - 'a: deps'
+    package-ecosystem: cargo
+    reviewers:
+      - elenakrittik
+      - VincentRPS
+    schedule:
+      interval: weekly
+      time: '07:00'
+version: 2

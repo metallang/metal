@@ -29,15 +29,16 @@ impl<N: AstNode> Iterator for AstChildren<N> {
 #[extend::ext]
 pub impl SyntaxNode {
     #[inline]
-    fn find_child_token(&self, kind: SyntaxKind) -> Option<SyntaxToken> {
+    fn child_token(&self, kind: SyntaxKind, n: usize) -> Option<SyntaxToken> {
         self.children_with_tokens()
             .filter_map(|it| it.into_token())
-            .find(|it| it.kind() == kind)
+            .filter(|it| it.kind() == kind)
+            .nth(n)
     }
 
     #[inline]
-    fn child<N: AstNode>(&self) -> Option<N> {
-        self.children().find_map(N::cast)
+    fn child<N: AstNode>(&self, n: usize) -> Option<N> {
+        self.children().filter_map(N::cast).nth(n)
     }
 
     #[inline]

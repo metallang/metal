@@ -1,9 +1,11 @@
 [package]
-name = "metal-lexer-ng"
+name = "metal-parser-ng"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rowan = { workspace = true }
+metal-lexer-ng = { workspace = true }
 metal-ast-ng = { workspace = true }
 
 [lints]

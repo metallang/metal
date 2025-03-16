@@ -10,10 +10,12 @@ use crate::grammar_item::{GrammarItem, GrammarItemInfo};
 pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
     let syntax_kind = generate_syntax_kind(grammar);
     let t = generate_t_macro(grammar);
+    let n = generate_n_macro(grammar);
 
     quote! {
         #syntax_kind
         #t
+        #n
     }
 }
 
@@ -51,9 +53,37 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
         pub enum SyntaxKind {
             #(#variants)*
+            /// Represents a multi- or single-line comment.
+            COMMENT_TOKEN,
+            /// Represents a whitespace token, such as a space or a tab, among others.
+            WHITESPACE_TOKEN,
+            /// A special token representing an unknown token.
+            UNKNOWN_TOKEN,
             /// A special syntax kind used for transmute safety checks. You shouldn't worry
             /// about (and even less rely on) this.
             __LAST,
+        }
+
+        impl From<rowan::SyntaxKind> for SyntaxKind {
+            fn from(value: rowan::SyntaxKind) -> Self {
+                let d = value.0 as u8;
+
+                assert!(d <= (SyntaxKind::__LAST as u8));
+
+                unsafe { std::mem::transmute::<u8, SyntaxKind>(d) }
+            }
+        }
+
+        impl From<SyntaxKind> for rowan::SyntaxKind {
+            fn from(val: SyntaxKind) -> Self {
+                rowan::SyntaxKind(val as u16)
+            }
+        }
+
+        impl SyntaxKind {
+            pub fn is_whitespace(&self) -> bool {
+                matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
+            }
         }
     }
 }
@@ -81,7 +111,7 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
     });
 
     quote! {
-        /// Returns the [SyntaxKind] variants corresponding to the provided token
+        /// Returns the [SyntaxKind] variant corresponding to the provided token
         /// as written in the grammar.
         ///
         /// Note that certain tokens such as parentheses, braces, and brackets need
@@ -99,6 +129,36 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// # }
         /// ```
         pub macro T {
+            #(#arms)*
+        }
+    }
+}
+
+/// Generates the `N!` macro.
+fn generate_n_macro(grammar: &Engram) -> TokenStream {
+    let arms = grammar.nodes().map(|node| {
+        let node_name: TokenStream = node.name.as_str().parse().unwrap();
+
+        let syntax_kind_name = node.syntax_kind_info().ident;
+
+        quote! {
+            [#node_name] => { $crate::SyntaxKind::#syntax_kind_name },
+        }
+    });
+
+    quote! {
+        /// Returns the [SyntaxKind] variant corresponding to the provided node
+        /// as written in the grammar.
+        ///
+        /// # Example
+        ///
+        /// ```no_run,
+        /// # use metal_ast_ng::{N, AstNode, BinaryExprOpNode};
+        /// # fn example(binary_op_node: BinaryExprOpNode) {
+        /// assert!(binary_op_node.syntax().kind() == N![BinaryExprOp]);
+        /// # }
+        /// ```
+        pub macro N {
             #(#arms)*
         }
     }

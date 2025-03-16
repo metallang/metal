@@ -24,7 +24,10 @@ TypeQualifier = ':' Type
 
 // Items
 
-Item =
+// things like returns and exprs don't technically have a visibility, but i haven't found
+// a clean way to express that in the AST without making the parser ultra messy
+Item = vis:Visibility? kind:ItemKind ';'?
+ItemKind =
   AbstractItem
   | ConstItem
   | EnumItem
@@ -35,38 +38,40 @@ Item =
   | StructItem
   | TypeAliasItem
 
-AbstractItem = vis:Visibility 'abstract' Name '{' body:AbstractBody '}'
+AbstractItem = 'abstract' Name '{' body:AbstractBody '}'
 AbstractBody = AbstractFnItem*
 AbstractFnItem = 'def' Name sig:FnSignature ';'
 
-ConstItem = vis:Visibility 'const' Name ty:TypeQualifier? value:ExprSpecifier ';'
+ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier
 
-EnumItem = vis:Visibility 'enum' Name '{' body:EnumBody '}'
+EnumItem = 'enum' Name '{' body:EnumBody '}'
 EnumBody = items:(EnumBodyItem*)
-EnumBodyItem = EnumVariant | FnItem
-EnumVariant = Name data_ty:EnumVariantDataType?
+EnumBodyItem = EnumVariant | EnumFn
+EnumVariant = Name data_ty:EnumVariantDataType? ';'
 EnumVariantDataType = ('(' Type ')')
+EnumFn = vis:Visibility FnItem
 
-FnItem = vis:Visibility 'def' Name sig:FnSignature body:Block
+FnItem = 'def' Name sig:FnSignature body:Block
 FnSignature = '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
 FnInputs = FnInput (',' FnInput)* ','?
 FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
 
-ImportItem = vis:Visibility 'import' tree:ImportTree ';'
-ImportTree = ImportLeaf | ImportSegment | ImportBranch
-ImportLeaf = Name
-ImportSegment = segment:Name '.' rest:ImportTree
+ImportItem = 'import' tree:ImportTree
+ImportTree = ImportLeaf | ImportBranch
+ImportLeaf = segment:Name rest:ImportSegment?
+ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
-ReturnItem = 'return' Expr? ';'
+ReturnItem = 'return' Expr?
 
-StructItem = vis:Visibility 'struct' Name '{' body:StructBody '}'
+StructItem = 'struct' Name '{' body:StructBody '}'
 StructBody = items:(StructBodyItem*)
-StructBodyItem = StructField | FnItem
+StructBodyItem = StructField | StructFn
 StructField = vis:Visibility Name ty:TypeQualifier ';'
+StructFn = vis:Visibility FnItem
 
-TypeAliasItem = vis:Visibility 'type' Name '=' Type ';'
+TypeAliasItem = 'type' Name '=' Type
 
 // Type expressions
 
@@ -75,9 +80,9 @@ Type =
   | RefType
   | BinaryType
 
-NameType = Name generics:NameTypeMaybeGenerics?
-NameTypeMaybeGenerics = '[' generics:NameTypeGenerics ']'
-NameTypeGenerics = Type*
+NameType = Name generics:NameTypeGenerics?
+NameTypeGenerics = '[' generics:NameTypeGenericsInner ']'
+NameTypeGenericsInner = Type (',' Type)* ','?
 
 RefType = '&' mutness:Mutability Type
 
@@ -93,10 +98,11 @@ Expr =
   | BinaryExpr
   | CallExpr
   | LitExpr
+  | ParenExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
-PrefixExprOp = '+' | '-' | '!' | '~'
+PrefixExprOp = '+' | '-' | '!' | '~' | '*'
 
 BinaryExpr = lhs:Expr op:BinaryExprOp rhs:Expr
 
@@ -140,13 +146,12 @@ BinaryExprOp =
     // range
   | '..'
     // special
-  | '.'
+  | '.' // member access
 
 CallExpr = callee:Expr '(' args:CallExprArgs? ')'
 CallExprArgs = Expr (',' Expr)* ','?
 
-// no BoolLit, `true` and `false` are regular Name (identifier/variable) values
-LitExpr = NumLit | StrLit
+// no @bool, `true` and `false` are regular Name (identifier/variable) values
+LitExpr = '@number' | '@string'
 
-NumLit = '@number'
-StrLit = '@string'
+ParenExpr = '(' Expr ')'

@@ -26,15 +26,15 @@ impl AstNode for BlockNode {
 impl BlockNode {
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [BlockItemsNode].
     pub fn items_node(&self) -> Option<BlockItemsNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
     }
 }
 /// Represents the `BlockItems` node.
@@ -61,84 +61,32 @@ impl BlockItemsNode {
 }
 /// Represents the `Item` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum ItemNode {
-    /// See [AbstractItemNode].
-    AbstractItem(AbstractItemNode),
-    /// See [ConstItemNode].
-    ConstItem(ConstItemNode),
-    /// See [EnumItemNode].
-    EnumItem(EnumItemNode),
-    /// See [ExprNode].
-    Expr(ExprNode),
-    /// See [FnItemNode].
-    FnItem(FnItemNode),
-    /// See [ImportItemNode].
-    ImportItem(ImportItemNode),
-    /// See [ReturnItemNode].
-    ReturnItem(ReturnItemNode),
-    /// See [StructItemNode].
-    StructItem(StructItemNode),
-    /// See [TypeAliasItemNode].
-    TypeAliasItem(TypeAliasItemNode),
+pub struct ItemNode {
+    syntax: SyntaxNode,
 }
 impl AstNode for ItemNode {
-    #[allow(clippy::match_like_matches_macro)]
-    #[allow(clippy::wildcard_enum_match_arm)]
     fn can_cast(kind: SyntaxKind) -> bool {
-        match kind {
-            SyntaxKind::ABSTRACT_ITEM_NODE => true,
-            SyntaxKind::CONST_ITEM_NODE => true,
-            SyntaxKind::ENUM_ITEM_NODE => true,
-            SyntaxKind::EXPR_NODE => true,
-            SyntaxKind::FN_ITEM_NODE => true,
-            SyntaxKind::IMPORT_ITEM_NODE => true,
-            SyntaxKind::RETURN_ITEM_NODE => true,
-            SyntaxKind::STRUCT_ITEM_NODE => true,
-            SyntaxKind::TYPE_ALIAS_ITEM_NODE => true,
-            _ => false,
-        }
+        kind == SyntaxKind::ITEM_NODE
     }
-    #[allow(clippy::wildcard_enum_match_arm)]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
-        match syntax.kind() {
-            SyntaxKind::ABSTRACT_ITEM_NODE => {
-                Some(ItemNode::AbstractItem(AbstractItemNode::cast(syntax)?))
-            }
-            SyntaxKind::CONST_ITEM_NODE => {
-                Some(ItemNode::ConstItem(ConstItemNode::cast(syntax)?))
-            }
-            SyntaxKind::ENUM_ITEM_NODE => {
-                Some(ItemNode::EnumItem(EnumItemNode::cast(syntax)?))
-            }
-            SyntaxKind::EXPR_NODE => Some(ItemNode::Expr(ExprNode::cast(syntax)?)),
-            SyntaxKind::FN_ITEM_NODE => Some(ItemNode::FnItem(FnItemNode::cast(syntax)?)),
-            SyntaxKind::IMPORT_ITEM_NODE => {
-                Some(ItemNode::ImportItem(ImportItemNode::cast(syntax)?))
-            }
-            SyntaxKind::RETURN_ITEM_NODE => {
-                Some(ItemNode::ReturnItem(ReturnItemNode::cast(syntax)?))
-            }
-            SyntaxKind::STRUCT_ITEM_NODE => {
-                Some(ItemNode::StructItem(StructItemNode::cast(syntax)?))
-            }
-            SyntaxKind::TYPE_ALIAS_ITEM_NODE => {
-                Some(ItemNode::TypeAliasItem(TypeAliasItemNode::cast(syntax)?))
-            }
-            _ => None,
-        }
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
     }
     fn syntax(&self) -> &SyntaxNode {
-        match self {
-            ItemNode::AbstractItem(it) => it.syntax(),
-            ItemNode::ConstItem(it) => it.syntax(),
-            ItemNode::EnumItem(it) => it.syntax(),
-            ItemNode::Expr(it) => it.syntax(),
-            ItemNode::FnItem(it) => it.syntax(),
-            ItemNode::ImportItem(it) => it.syntax(),
-            ItemNode::ReturnItem(it) => it.syntax(),
-            ItemNode::StructItem(it) => it.syntax(),
-            ItemNode::TypeAliasItem(it) => it.syntax(),
-        }
+        &self.syntax
+    }
+}
+impl ItemNode {
+    /// Find a child node of type [VisNode].
+    pub fn vis_node(&self) -> Option<VisNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [ItemKindNode].
+    pub fn kind_node(&self) -> Option<ItemKindNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
+    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::SEMICOLON_TOKEN, 0usize)
     }
 }
 /// Represents the `Name` node.
@@ -160,7 +108,7 @@ impl AstNode for NameNode {
 impl NameNode {
     /// Find a child token of variant [SyntaxKind::LIT_IDENT_TOKEN].
     pub fn lit_ident_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::LIT_IDENT_TOKEN)
+        self.syntax.child_token(SyntaxKind::LIT_IDENT_TOKEN, 0usize)
     }
 }
 /// Represents the `Visibility` node.
@@ -182,7 +130,7 @@ impl AstNode for VisNode {
 impl VisNode {
     /// Find a child token of variant [SyntaxKind::PUB_TOKEN].
     pub fn pub_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::PUB_TOKEN)
+        self.syntax.child_token(SyntaxKind::PUB_TOKEN, 0usize)
     }
 }
 /// Represents the `Mutability` node.
@@ -204,7 +152,7 @@ impl AstNode for MutnessNode {
 impl MutnessNode {
     /// Find a child token of variant [SyntaxKind::MUT_TOKEN].
     pub fn mut_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::MUT_TOKEN)
+        self.syntax.child_token(SyntaxKind::MUT_TOKEN, 0usize)
     }
 }
 /// Represents the `ExprSpecifier` node.
@@ -226,11 +174,11 @@ impl AstNode for ExprSpecNode {
 impl ExprSpecNode {
     /// Find a child token of variant [SyntaxKind::EQ_TOKEN].
     pub fn eq_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::EQ_TOKEN)
+        self.syntax.child_token(SyntaxKind::EQ_TOKEN, 0usize)
     }
     /// Find a child node of type [ExprNode].
     pub fn expr_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `Expr` node.
@@ -246,6 +194,8 @@ pub enum ExprNode {
     CallExpr(CallExprNode),
     /// See [LitExprNode].
     LitExpr(LitExprNode),
+    /// See [ParenExprNode].
+    ParenExpr(ParenExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -257,6 +207,7 @@ impl AstNode for ExprNode {
             SyntaxKind::BINARY_EXPR_NODE => true,
             SyntaxKind::CALL_EXPR_NODE => true,
             SyntaxKind::LIT_EXPR_NODE => true,
+            SyntaxKind::PAREN_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -276,6 +227,9 @@ impl AstNode for ExprNode {
             SyntaxKind::LIT_EXPR_NODE => {
                 Some(ExprNode::LitExpr(LitExprNode::cast(syntax)?))
             }
+            SyntaxKind::PAREN_EXPR_NODE => {
+                Some(ExprNode::ParenExpr(ParenExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -286,6 +240,7 @@ impl AstNode for ExprNode {
             ExprNode::BinaryExpr(it) => it.syntax(),
             ExprNode::CallExpr(it) => it.syntax(),
             ExprNode::LitExpr(it) => it.syntax(),
+            ExprNode::ParenExpr(it) => it.syntax(),
         }
     }
 }
@@ -308,11 +263,11 @@ impl AstNode for TypeQualNode {
 impl TypeQualNode {
     /// Find a child token of variant [SyntaxKind::COLON_TOKEN].
     pub fn colon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::COLON_TOKEN)
+        self.syntax.child_token(SyntaxKind::COLON_TOKEN, 0usize)
     }
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `Type` node.
@@ -359,6 +314,90 @@ impl AstNode for TypeNode {
         }
     }
 }
+/// Represents the `ItemKind` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum ItemKindNode {
+    /// See [AbstractItemNode].
+    AbstractItem(AbstractItemNode),
+    /// See [ConstItemNode].
+    ConstItem(ConstItemNode),
+    /// See [EnumItemNode].
+    EnumItem(EnumItemNode),
+    /// See [ExprNode].
+    Expr(ExprNode),
+    /// See [FnItemNode].
+    FnItem(FnItemNode),
+    /// See [ImportItemNode].
+    ImportItem(ImportItemNode),
+    /// See [ReturnItemNode].
+    ReturnItem(ReturnItemNode),
+    /// See [StructItemNode].
+    StructItem(StructItemNode),
+    /// See [TypeAliasItemNode].
+    TypeAliasItem(TypeAliasItemNode),
+}
+impl AstNode for ItemKindNode {
+    #[allow(clippy::match_like_matches_macro)]
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn can_cast(kind: SyntaxKind) -> bool {
+        match kind {
+            SyntaxKind::ABSTRACT_ITEM_NODE => true,
+            SyntaxKind::CONST_ITEM_NODE => true,
+            SyntaxKind::ENUM_ITEM_NODE => true,
+            SyntaxKind::EXPR_NODE => true,
+            SyntaxKind::FN_ITEM_NODE => true,
+            SyntaxKind::IMPORT_ITEM_NODE => true,
+            SyntaxKind::RETURN_ITEM_NODE => true,
+            SyntaxKind::STRUCT_ITEM_NODE => true,
+            SyntaxKind::TYPE_ALIAS_ITEM_NODE => true,
+            _ => false,
+        }
+    }
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        match syntax.kind() {
+            SyntaxKind::ABSTRACT_ITEM_NODE => {
+                Some(ItemKindNode::AbstractItem(AbstractItemNode::cast(syntax)?))
+            }
+            SyntaxKind::CONST_ITEM_NODE => {
+                Some(ItemKindNode::ConstItem(ConstItemNode::cast(syntax)?))
+            }
+            SyntaxKind::ENUM_ITEM_NODE => {
+                Some(ItemKindNode::EnumItem(EnumItemNode::cast(syntax)?))
+            }
+            SyntaxKind::EXPR_NODE => Some(ItemKindNode::Expr(ExprNode::cast(syntax)?)),
+            SyntaxKind::FN_ITEM_NODE => {
+                Some(ItemKindNode::FnItem(FnItemNode::cast(syntax)?))
+            }
+            SyntaxKind::IMPORT_ITEM_NODE => {
+                Some(ItemKindNode::ImportItem(ImportItemNode::cast(syntax)?))
+            }
+            SyntaxKind::RETURN_ITEM_NODE => {
+                Some(ItemKindNode::ReturnItem(ReturnItemNode::cast(syntax)?))
+            }
+            SyntaxKind::STRUCT_ITEM_NODE => {
+                Some(ItemKindNode::StructItem(StructItemNode::cast(syntax)?))
+            }
+            SyntaxKind::TYPE_ALIAS_ITEM_NODE => {
+                Some(ItemKindNode::TypeAliasItem(TypeAliasItemNode::cast(syntax)?))
+            }
+            _ => None,
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        match self {
+            ItemKindNode::AbstractItem(it) => it.syntax(),
+            ItemKindNode::ConstItem(it) => it.syntax(),
+            ItemKindNode::EnumItem(it) => it.syntax(),
+            ItemKindNode::Expr(it) => it.syntax(),
+            ItemKindNode::FnItem(it) => it.syntax(),
+            ItemKindNode::ImportItem(it) => it.syntax(),
+            ItemKindNode::ReturnItem(it) => it.syntax(),
+            ItemKindNode::StructItem(it) => it.syntax(),
+            ItemKindNode::TypeAliasItem(it) => it.syntax(),
+        }
+    }
+}
 /// Represents the `AbstractItem` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AbstractItemNode {
@@ -376,29 +415,25 @@ impl AstNode for AbstractItemNode {
     }
 }
 impl AbstractItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::ABSTRACT_TOKEN].
     pub fn abstract_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::ABSTRACT_TOKEN)
+        self.syntax.child_token(SyntaxKind::ABSTRACT_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [AbstractBodyNode].
     pub fn body_node(&self) -> Option<AbstractBodyNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
     }
 }
 /// Represents the `ConstItem` node.
@@ -418,29 +453,21 @@ impl AstNode for ConstItemNode {
     }
 }
 impl ConstItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::CONST_TOKEN].
     pub fn const_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::CONST_TOKEN)
+        self.syntax.child_token(SyntaxKind::CONST_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [TypeQualNode].
     pub fn ty_node(&self) -> Option<TypeQualNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [ExprSpecNode].
     pub fn value_node(&self) -> Option<ExprSpecNode> {
-        self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `EnumItem` node.
@@ -460,29 +487,25 @@ impl AstNode for EnumItemNode {
     }
 }
 impl EnumItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::ENUM_TOKEN].
     pub fn enum_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::ENUM_TOKEN)
+        self.syntax.child_token(SyntaxKind::ENUM_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [EnumBodyNode].
     pub fn body_node(&self) -> Option<EnumBodyNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
     }
 }
 /// Represents the `FnItem` node.
@@ -502,25 +525,21 @@ impl AstNode for FnItemNode {
     }
 }
 impl FnItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::DEF_TOKEN].
     pub fn def_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::DEF_TOKEN)
+        self.syntax.child_token(SyntaxKind::DEF_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [FnSignatureNode].
     pub fn sig_node(&self) -> Option<FnSignatureNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [BlockNode].
     pub fn body_node(&self) -> Option<BlockNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `ImportItem` node.
@@ -540,21 +559,13 @@ impl AstNode for ImportItemNode {
     }
 }
 impl ImportItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::IMPORT_TOKEN].
     pub fn import_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::IMPORT_TOKEN)
+        self.syntax.child_token(SyntaxKind::IMPORT_TOKEN, 0usize)
     }
     /// Find a child node of type [ImportTreeNode].
     pub fn tree_node(&self) -> Option<ImportTreeNode> {
-        self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `ReturnItem` node.
@@ -576,15 +587,11 @@ impl AstNode for ReturnItemNode {
 impl ReturnItemNode {
     /// Find a child token of variant [SyntaxKind::RETURN_TOKEN].
     pub fn return_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::RETURN_TOKEN)
+        self.syntax.child_token(SyntaxKind::RETURN_TOKEN, 0usize)
     }
     /// Find a child node of type [ExprNode].
     pub fn expr_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `StructItem` node.
@@ -604,29 +611,25 @@ impl AstNode for StructItemNode {
     }
 }
 impl StructItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::STRUCT_TOKEN].
     pub fn struct_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::STRUCT_TOKEN)
+        self.syntax.child_token(SyntaxKind::STRUCT_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [StructBodyNode].
     pub fn body_node(&self) -> Option<StructBodyNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
     }
 }
 /// Represents the `TypeAliasItem` node.
@@ -646,29 +649,21 @@ impl AstNode for TypeAliasItemNode {
     }
 }
 impl TypeAliasItemNode {
-    /// Find a child node of type [VisNode].
-    pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
-    }
     /// Find a child token of variant [SyntaxKind::TYPE_TOKEN].
     pub fn type_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::TYPE_TOKEN)
+        self.syntax.child_token(SyntaxKind::TYPE_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::EQ_TOKEN].
     pub fn eq_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::EQ_TOKEN)
+        self.syntax.child_token(SyntaxKind::EQ_TOKEN, 0usize)
     }
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `AbstractBody` node.
@@ -712,19 +707,19 @@ impl AstNode for AbstractFnItemNode {
 impl AbstractFnItemNode {
     /// Find a child token of variant [SyntaxKind::DEF_TOKEN].
     pub fn def_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::DEF_TOKEN)
+        self.syntax.child_token(SyntaxKind::DEF_TOKEN, 0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [FnSignatureNode].
     pub fn sig_node(&self) -> Option<FnSignatureNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
     pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child_token(SyntaxKind::SEMICOLON_TOKEN, 0usize)
     }
 }
 /// Represents the `FnSignature` node.
@@ -746,19 +741,19 @@ impl AstNode for FnSignatureNode {
 impl FnSignatureNode {
     /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
     pub fn l_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_PAREN_TOKEN, 0usize)
     }
     /// Find a child node of type [FnInputsNode].
     pub fn inputs_node(&self) -> Option<FnInputsNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
     pub fn r_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_PAREN_TOKEN, 0usize)
     }
     /// Find a child node of type [TypeQualNode].
     pub fn return_ty_node(&self) -> Option<TypeQualNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `EnumBody` node.
@@ -788,8 +783,8 @@ impl EnumBodyNode {
 pub enum EnumBodyItemNode {
     /// See [EnumVariantNode].
     EnumVariant(EnumVariantNode),
-    /// See [FnItemNode].
-    FnItem(FnItemNode),
+    /// See [EnumFnNode].
+    EnumFn(EnumFnNode),
 }
 impl AstNode for EnumBodyItemNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -797,7 +792,7 @@ impl AstNode for EnumBodyItemNode {
     fn can_cast(kind: SyntaxKind) -> bool {
         match kind {
             SyntaxKind::ENUM_VARIANT_NODE => true,
-            SyntaxKind::FN_ITEM_NODE => true,
+            SyntaxKind::ENUM_FN_NODE => true,
             _ => false,
         }
     }
@@ -807,8 +802,8 @@ impl AstNode for EnumBodyItemNode {
             SyntaxKind::ENUM_VARIANT_NODE => {
                 Some(EnumBodyItemNode::EnumVariant(EnumVariantNode::cast(syntax)?))
             }
-            SyntaxKind::FN_ITEM_NODE => {
-                Some(EnumBodyItemNode::FnItem(FnItemNode::cast(syntax)?))
+            SyntaxKind::ENUM_FN_NODE => {
+                Some(EnumBodyItemNode::EnumFn(EnumFnNode::cast(syntax)?))
             }
             _ => None,
         }
@@ -816,7 +811,7 @@ impl AstNode for EnumBodyItemNode {
     fn syntax(&self) -> &SyntaxNode {
         match self {
             EnumBodyItemNode::EnumVariant(it) => it.syntax(),
-            EnumBodyItemNode::FnItem(it) => it.syntax(),
+            EnumBodyItemNode::EnumFn(it) => it.syntax(),
         }
     }
 }
@@ -839,11 +834,41 @@ impl AstNode for EnumVariantNode {
 impl EnumVariantNode {
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [EnumVariantDataTypeNode].
     pub fn data_ty_node(&self) -> Option<EnumVariantDataTypeNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
+    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::SEMICOLON_TOKEN, 0usize)
+    }
+}
+/// Represents the `EnumFn` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct EnumFnNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for EnumFnNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::ENUM_FN_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl EnumFnNode {
+    /// Find a child node of type [VisNode].
+    pub fn vis_node(&self) -> Option<VisNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [FnItemNode].
+    pub fn fn_item_node(&self) -> Option<FnItemNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `EnumVariantDataType` node.
@@ -865,15 +890,15 @@ impl AstNode for EnumVariantDataTypeNode {
 impl EnumVariantDataTypeNode {
     /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
     pub fn l_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_PAREN_TOKEN, 0usize)
     }
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
     pub fn r_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_PAREN_TOKEN, 0usize)
     }
 }
 /// Represents the `FnInputs` node.
@@ -932,19 +957,19 @@ impl AstNode for FnInputNode {
 impl FnInputNode {
     /// Find a child node of type [MutnessNode].
     pub fn mutness_node(&self) -> Option<MutnessNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [TypeQualNode].
     pub fn ty_node(&self) -> Option<TypeQualNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [ExprSpecNode].
     pub fn default_node(&self) -> Option<ExprSpecNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `ImportTree` node.
@@ -952,8 +977,6 @@ impl FnInputNode {
 pub enum ImportTreeNode {
     /// See [ImportLeafNode].
     ImportLeaf(ImportLeafNode),
-    /// See [ImportSegmentNode].
-    ImportSegment(ImportSegmentNode),
     /// See [ImportBranchNode].
     ImportBranch(ImportBranchNode),
 }
@@ -963,7 +986,6 @@ impl AstNode for ImportTreeNode {
     fn can_cast(kind: SyntaxKind) -> bool {
         match kind {
             SyntaxKind::IMPORT_LEAF_NODE => true,
-            SyntaxKind::IMPORT_SEGMENT_NODE => true,
             SyntaxKind::IMPORT_BRANCH_NODE => true,
             _ => false,
         }
@@ -974,9 +996,6 @@ impl AstNode for ImportTreeNode {
             SyntaxKind::IMPORT_LEAF_NODE => {
                 Some(ImportTreeNode::ImportLeaf(ImportLeafNode::cast(syntax)?))
             }
-            SyntaxKind::IMPORT_SEGMENT_NODE => {
-                Some(ImportTreeNode::ImportSegment(ImportSegmentNode::cast(syntax)?))
-            }
             SyntaxKind::IMPORT_BRANCH_NODE => {
                 Some(ImportTreeNode::ImportBranch(ImportBranchNode::cast(syntax)?))
             }
@@ -986,7 +1005,6 @@ impl AstNode for ImportTreeNode {
     fn syntax(&self) -> &SyntaxNode {
         match self {
             ImportTreeNode::ImportLeaf(it) => it.syntax(),
-            ImportTreeNode::ImportSegment(it) => it.syntax(),
             ImportTreeNode::ImportBranch(it) => it.syntax(),
         }
     }
@@ -1009,38 +1027,12 @@ impl AstNode for ImportLeafNode {
 }
 impl ImportLeafNode {
     /// Find a child node of type [NameNode].
-    pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
-    }
-}
-/// Represents the `ImportSegment` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ImportSegmentNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for ImportSegmentNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::IMPORT_SEGMENT_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl ImportSegmentNode {
-    /// Find a child node of type [NameNode].
     pub fn segment_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
-    /// Find a child token of variant [SyntaxKind::DOT_TOKEN].
-    pub fn dot_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::DOT_TOKEN)
-    }
-    /// Find a child node of type [ImportTreeNode].
-    pub fn rest_node(&self) -> Option<ImportTreeNode> {
-        self.syntax.child()
+    /// Find a child node of type [ImportSegmentNode].
+    pub fn rest_node(&self) -> Option<ImportSegmentNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `ImportBranch` node.
@@ -1062,15 +1054,41 @@ impl AstNode for ImportBranchNode {
 impl ImportBranchNode {
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
     pub fn l_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [ImportBranchSubtreesNode].
     pub fn subtrees_node(&self) -> Option<ImportBranchSubtreesNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACE_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
+    }
+}
+/// Represents the `ImportSegment` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ImportSegmentNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for ImportSegmentNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IMPORT_SEGMENT_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportSegmentNode {
+    /// Find a child token of variant [SyntaxKind::DOT_TOKEN].
+    pub fn dot_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::DOT_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ImportTreeNode].
+    pub fn subtree_node(&self) -> Option<ImportTreeNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `ImportBranchSubtrees` node.
@@ -1137,8 +1155,8 @@ impl StructBodyNode {
 pub enum StructBodyItemNode {
     /// See [StructFieldNode].
     StructField(StructFieldNode),
-    /// See [FnItemNode].
-    FnItem(FnItemNode),
+    /// See [StructFnNode].
+    StructFn(StructFnNode),
 }
 impl AstNode for StructBodyItemNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -1146,7 +1164,7 @@ impl AstNode for StructBodyItemNode {
     fn can_cast(kind: SyntaxKind) -> bool {
         match kind {
             SyntaxKind::STRUCT_FIELD_NODE => true,
-            SyntaxKind::FN_ITEM_NODE => true,
+            SyntaxKind::STRUCT_FN_NODE => true,
             _ => false,
         }
     }
@@ -1156,8 +1174,8 @@ impl AstNode for StructBodyItemNode {
             SyntaxKind::STRUCT_FIELD_NODE => {
                 Some(StructBodyItemNode::StructField(StructFieldNode::cast(syntax)?))
             }
-            SyntaxKind::FN_ITEM_NODE => {
-                Some(StructBodyItemNode::FnItem(FnItemNode::cast(syntax)?))
+            SyntaxKind::STRUCT_FN_NODE => {
+                Some(StructBodyItemNode::StructFn(StructFnNode::cast(syntax)?))
             }
             _ => None,
         }
@@ -1165,7 +1183,7 @@ impl AstNode for StructBodyItemNode {
     fn syntax(&self) -> &SyntaxNode {
         match self {
             StructBodyItemNode::StructField(it) => it.syntax(),
-            StructBodyItemNode::FnItem(it) => it.syntax(),
+            StructBodyItemNode::StructFn(it) => it.syntax(),
         }
     }
 }
@@ -1188,19 +1206,45 @@ impl AstNode for StructFieldNode {
 impl StructFieldNode {
     /// Find a child node of type [VisNode].
     pub fn vis_node(&self) -> Option<VisNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [TypeQualNode].
     pub fn ty_node(&self) -> Option<TypeQualNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
     pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+        self.syntax.child_token(SyntaxKind::SEMICOLON_TOKEN, 0usize)
+    }
+}
+/// Represents the `StructFn` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StructFnNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for StructFnNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STRUCT_FN_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl StructFnNode {
+    /// Find a child node of type [VisNode].
+    pub fn vis_node(&self) -> Option<VisNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [FnItemNode].
+    pub fn fn_item_node(&self) -> Option<FnItemNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `NameType` node.
@@ -1222,11 +1266,11 @@ impl AstNode for NameTypeNode {
 impl NameTypeNode {
     /// Find a child node of type [NameNode].
     pub fn name_node(&self) -> Option<NameNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
-    /// Find a child node of type [NameTypeMaybeGenericsNode].
-    pub fn generics_node(&self) -> Option<NameTypeMaybeGenericsNode> {
-        self.syntax.child()
+    /// Find a child node of type [NameTypeGenericsNode].
+    pub fn generics_node(&self) -> Option<NameTypeGenericsNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `RefType` node.
@@ -1248,15 +1292,15 @@ impl AstNode for RefTypeNode {
 impl RefTypeNode {
     /// Find a child token of variant [SyntaxKind::AMP_TOKEN].
     pub fn amp_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::AMP_TOKEN)
+        self.syntax.child_token(SyntaxKind::AMP_TOKEN, 0usize)
     }
     /// Find a child node of type [MutnessNode].
     pub fn mutness_node(&self) -> Option<MutnessNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `BinaryType` node.
@@ -1278,45 +1322,15 @@ impl AstNode for BinaryTypeNode {
 impl BinaryTypeNode {
     /// Find a child node of type [TypeNode].
     pub fn lhs_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [BinaryTypeOpNode].
     pub fn op_node(&self) -> Option<BinaryTypeOpNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [TypeNode].
     pub fn rhs_node(&self) -> Option<TypeNode> {
-        self.syntax.child()
-    }
-}
-/// Represents the `NameTypeMaybeGenerics` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NameTypeMaybeGenericsNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for NameTypeMaybeGenericsNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::NAME_TYPE_MAYBE_GENERICS_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl NameTypeMaybeGenericsNode {
-    /// Find a child token of variant [SyntaxKind::L_BRACKET_TOKEN].
-    pub fn l_bracket_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_BRACKET_TOKEN)
-    }
-    /// Find a child node of type [NameTypeGenericsNode].
-    pub fn generics_node(&self) -> Option<NameTypeGenericsNode> {
-        self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::R_BRACKET_TOKEN].
-    pub fn r_bracket_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_BRACKET_TOKEN)
+        self.syntax.child(1usize)
     }
 }
 /// Represents the `NameTypeGenerics` node.
@@ -1336,9 +1350,54 @@ impl AstNode for NameTypeGenericsNode {
     }
 }
 impl NameTypeGenericsNode {
-    /// Find all children nodes of type [TypeNode].
-    pub fn types_nodes(&self) -> impl Iterator<Item = TypeNode> {
-        self.syntax.children().filter_map(TypeNode::cast)
+    /// Find a child token of variant [SyntaxKind::L_BRACKET_TOKEN].
+    pub fn l_bracket_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::L_BRACKET_TOKEN, 0usize)
+    }
+    /// Find a child node of type [NameTypeGenericsInnerNode].
+    pub fn generics_node(&self) -> Option<NameTypeGenericsInnerNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::R_BRACKET_TOKEN].
+    pub fn r_bracket_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::R_BRACKET_TOKEN, 0usize)
+    }
+}
+/// Represents the `NameTypeGenericsInner` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct NameTypeGenericsInnerNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for NameTypeGenericsInnerNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl NameTypeGenericsInnerNode {
+    /// Returns an iterator over the children nodes of this node.
+    pub fn children(&self) -> impl Iterator<Item = TypeNode> {
+        self.children_with_delimiters()
+            .filter_map(|either| match either {
+                Either::Left(node) => Some(node),
+                Either::Right(_) => None,
+            })
+    }
+    /// Returns an iterator over the children nodes and token of this node.
+    pub fn children_with_delimiters(
+        &self,
+    ) -> impl Iterator<Item = Either<TypeNode, CommaToken>> {
+        self.syntax
+            .children_with_tokens()
+            .filter_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(node) => TypeNode::cast(node).map(Either::Left),
+                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
+            })
     }
 }
 /// Represents the `BinaryTypeOp` node.
@@ -1360,7 +1419,7 @@ impl AstNode for BinaryTypeOpNode {
 impl BinaryTypeOpNode {
     /// Find a child token of variant [SyntaxKind::PLUS_TOKEN].
     pub fn plus_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::PLUS_TOKEN)
+        self.syntax.child_token(SyntaxKind::PLUS_TOKEN, 0usize)
     }
 }
 /// Represents the `PrefixExpr` node.
@@ -1382,11 +1441,11 @@ impl AstNode for PrefixExprNode {
 impl PrefixExprNode {
     /// Find a child node of type [PrefixExprOpNode].
     pub fn op_node(&self) -> Option<PrefixExprOpNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [ExprNode].
     pub fn expr_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `BinaryExpr` node.
@@ -1408,15 +1467,15 @@ impl AstNode for BinaryExprNode {
 impl BinaryExprNode {
     /// Find a child node of type [ExprNode].
     pub fn lhs_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [BinaryExprOpNode].
     pub fn op_node(&self) -> Option<BinaryExprOpNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child node of type [ExprNode].
     pub fn rhs_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
+        self.syntax.child(1usize)
     }
 }
 /// Represents the `CallExpr` node.
@@ -1438,56 +1497,76 @@ impl AstNode for CallExprNode {
 impl CallExprNode {
     /// Find a child node of type [ExprNode].
     pub fn callee_node(&self) -> Option<ExprNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
     pub fn l_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::L_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::L_PAREN_TOKEN, 0usize)
     }
     /// Find a child node of type [CallExprArgsNode].
     pub fn args_node(&self) -> Option<CallExprArgsNode> {
-        self.syntax.child()
+        self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
     pub fn r_paren_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::R_PAREN_TOKEN)
+        self.syntax.child_token(SyntaxKind::R_PAREN_TOKEN, 0usize)
     }
 }
 /// Represents the `LitExpr` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum LitExprNode {
-    /// See [NumLitNode].
-    NumLit(NumLitNode),
-    /// See [StrLitNode].
-    StrLit(StrLitNode),
+pub struct LitExprNode {
+    syntax: SyntaxNode,
 }
 impl AstNode for LitExprNode {
-    #[allow(clippy::match_like_matches_macro)]
-    #[allow(clippy::wildcard_enum_match_arm)]
     fn can_cast(kind: SyntaxKind) -> bool {
-        match kind {
-            SyntaxKind::NUM_LIT_NODE => true,
-            SyntaxKind::STR_LIT_NODE => true,
-            _ => false,
-        }
+        kind == SyntaxKind::LIT_EXPR_NODE
     }
-    #[allow(clippy::wildcard_enum_match_arm)]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
-        match syntax.kind() {
-            SyntaxKind::NUM_LIT_NODE => {
-                Some(LitExprNode::NumLit(NumLitNode::cast(syntax)?))
-            }
-            SyntaxKind::STR_LIT_NODE => {
-                Some(LitExprNode::StrLit(StrLitNode::cast(syntax)?))
-            }
-            _ => None,
-        }
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
     }
     fn syntax(&self) -> &SyntaxNode {
-        match self {
-            LitExprNode::NumLit(it) => it.syntax(),
-            LitExprNode::StrLit(it) => it.syntax(),
-        }
+        &self.syntax
+    }
+}
+impl LitExprNode {
+    /// Returns the inner token associated with this node.
+    pub fn token(&self) -> Option<LitExprToken> {
+        self.syntax
+            .children_with_tokens()
+            .find_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(_) => None,
+                NodeOrToken::Token(token) => LitExprToken::cast(token),
+            })
+    }
+}
+/// Represents the `ParenExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ParenExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for ParenExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::PAREN_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ParenExprNode {
+    /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
+    pub fn l_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::L_PAREN_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
+    pub fn r_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::R_PAREN_TOKEN, 0usize)
     }
 }
 /// Represents the `PrefixExprOp` node.
@@ -1579,49 +1658,5 @@ impl CallExprArgsNode {
                 NodeOrToken::Node(node) => ExprNode::cast(node).map(Either::Left),
                 NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
             })
-    }
-}
-/// Represents the `NumLit` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NumLitNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for NumLitNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::NUM_LIT_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl NumLitNode {
-    /// Find a child token of variant [SyntaxKind::LIT_NUM_TOKEN].
-    pub fn lit_num_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::LIT_NUM_TOKEN)
-    }
-}
-/// Represents the `StrLit` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StrLitNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for StrLitNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::STR_LIT_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl StrLitNode {
-    /// Find a child token of variant [SyntaxKind::LIT_STR_TOKEN].
-    pub fn lit_str_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::LIT_STR_TOKEN)
     }
 }
