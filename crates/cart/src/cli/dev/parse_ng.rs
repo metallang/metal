@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-use metal_lexer_ng::Lexer;
-
 use crate::error::Error;
 
 pub struct DevParseNgCommand {
