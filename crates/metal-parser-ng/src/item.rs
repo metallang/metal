@@ -26,6 +26,7 @@ pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
 
     parse_visibility(parser);
     parse_item_kind(parser);
+    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }

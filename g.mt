@@ -37,4 +37,6 @@ type RefType = &mut GenericNameType
 type ReallyRefType = &mut &&mut GenericNameType
 type BinaryType = GenericNameType & RefType & SomeOtherTye
 
-pub a.b.c()
+pub a.b.c();
+
+(2 + 2) * 2

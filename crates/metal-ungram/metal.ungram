@@ -26,7 +26,7 @@ TypeQualifier = ':' Type
 
 // things like returns and exprs don't technically have a visibility, but i haven't found
 // a clean way to express that in the AST without making the parser ultra messy
-Item = vis:Visibility? kind:ItemKind
+Item = vis:Visibility? kind:ItemKind ';'?
 ItemKind =
   AbstractItem
   | ConstItem
@@ -42,7 +42,7 @@ AbstractItem = 'abstract' Name '{' body:AbstractBody '}'
 AbstractBody = AbstractFnItem*
 AbstractFnItem = 'def' Name sig:FnSignature ';'
 
-ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier ';'
+ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier
 
 EnumItem = 'enum' Name '{' body:EnumBody '}'
 EnumBody = items:(EnumBodyItem*)
@@ -56,14 +56,14 @@ FnSignature = '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
 FnInputs = FnInput (',' FnInput)* ','?
 FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
 
-ImportItem = 'import' tree:ImportTree ';'
+ImportItem = 'import' tree:ImportTree
 ImportTree = ImportLeaf | ImportBranch
 ImportLeaf = segment:Name rest:ImportSegment?
 ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
-ReturnItem = 'return' Expr? ';'
+ReturnItem = 'return' Expr?
 
 StructItem = 'struct' Name '{' body:StructBody '}'
 StructBody = items:(StructBodyItem*)
@@ -71,7 +71,7 @@ StructBodyItem = StructField | StructFn
 StructField = vis:Visibility Name ty:TypeQualifier ';'
 StructFn = vis:Visibility FnItem
 
-TypeAliasItem = 'type' Name '=' Type ';'
+TypeAliasItem = 'type' Name '=' Type
 
 // Type expressions
 
@@ -98,6 +98,7 @@ Expr =
   | BinaryExpr
   | CallExpr
   | LitExpr
+  | ParenExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -152,3 +153,5 @@ CallExprArgs = Expr (',' Expr)* ','?
 
 // no @bool, `true` and `false` are regular Name (identifier/variable) values
 LitExpr = '@number' | '@string'
+
+ParenExpr = '(' Expr ')'

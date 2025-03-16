@@ -101,6 +101,8 @@ pub enum SyntaxKind {
     CALL_EXPR_NODE,
     /// Don't try to remember this! Use [`N![LitExpr]`](N) instead.
     LIT_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![ParenExpr]`](N) instead.
+    PAREN_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
@@ -121,12 +123,12 @@ pub enum SyntaxKind {
     EQ_TOKEN,
     /// Don't try to remember this! Use [`T![:]`](T) instead.
     COLON_TOKEN,
+    /// Don't try to remember this! Use [`T![;]`](T) instead.
+    SEMICOLON_TOKEN,
     /// Don't try to remember this! Use [`T![abstract]`](T) instead.
     ABSTRACT_TOKEN,
     /// Don't try to remember this! Use [`T![def]`](T) instead.
     DEF_TOKEN,
-    /// Don't try to remember this! Use [`T![;]`](T) instead.
-    SEMICOLON_TOKEN,
     /// Don't try to remember this! Use [`T![const]`](T) instead.
     CONST_TOKEN,
     /// Don't try to remember this! Use [`T![enum]`](T) instead.
@@ -270,38 +272,37 @@ pub macro T {
     ::SyntaxKind::R_BRACE_TOKEN }, [@ ident] => { $crate ::SyntaxKind::LIT_IDENT_TOKEN },
     [pub] => { $crate ::SyntaxKind::PUB_TOKEN }, [mut] => { $crate
     ::SyntaxKind::MUT_TOKEN }, [=] => { $crate ::SyntaxKind::EQ_TOKEN }, [:] => { $crate
-    ::SyntaxKind::COLON_TOKEN }, [abstract] => { $crate ::SyntaxKind::ABSTRACT_TOKEN },
-    [def] => { $crate ::SyntaxKind::DEF_TOKEN }, [;] => { $crate
-    ::SyntaxKind::SEMICOLON_TOKEN }, [const] => { $crate ::SyntaxKind::CONST_TOKEN },
-    [enum] => { $crate ::SyntaxKind::ENUM_TOKEN }, ['('] => { $crate
-    ::SyntaxKind::L_PAREN_TOKEN }, [')'] => { $crate ::SyntaxKind::R_PAREN_TOKEN }, [,]
-    => { $crate ::SyntaxKind::COMMA_TOKEN }, [import] => { $crate
-    ::SyntaxKind::IMPORT_TOKEN }, [.] => { $crate ::SyntaxKind::DOT_TOKEN }, [return] =>
-    { $crate ::SyntaxKind::RETURN_TOKEN }, [struct] => { $crate
-    ::SyntaxKind::STRUCT_TOKEN }, [type] => { $crate ::SyntaxKind::TYPE_TOKEN }, ['['] =>
-    { $crate ::SyntaxKind::L_BRACKET_TOKEN }, [']'] => { $crate
-    ::SyntaxKind::R_BRACKET_TOKEN }, [&] => { $crate ::SyntaxKind::AMP_TOKEN }, [+] => {
-    $crate ::SyntaxKind::PLUS_TOKEN }, [-] => { $crate ::SyntaxKind::MINUS_TOKEN }, [!]
-    => { $crate ::SyntaxKind::BANG_TOKEN }, [~] => { $crate ::SyntaxKind::TILDE_TOKEN },
-    [*] => { $crate ::SyntaxKind::STAR_TOKEN }, [+=] => { $crate
-    ::SyntaxKind::PLUS_EQ_TOKEN }, [-=] => { $crate ::SyntaxKind::MINUS_EQ_TOKEN }, [/=]
-    => { $crate ::SyntaxKind::SLASH_EQ_TOKEN }, [*=] => { $crate
-    ::SyntaxKind::STAR_EQ_TOKEN }, [**=] => { $crate ::SyntaxKind::STAR2_EQ_TOKEN }, [%=]
-    => { $crate ::SyntaxKind::PERCENT_EQ_TOKEN }, [^=] => { $crate
-    ::SyntaxKind::CARET_EQ_TOKEN }, [&=] => { $crate ::SyntaxKind::AMP_EQ_TOKEN }, [|=]
-    => { $crate ::SyntaxKind::PIPE_EQ_TOKEN }, [<<=] => { $crate
-    ::SyntaxKind::LT2_EQ_TOKEN }, [>>=] => { $crate ::SyntaxKind::GT2_EQ_TOKEN }, [/] =>
-    { $crate ::SyntaxKind::SLASH_TOKEN }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN },
-    [%] => { $crate ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate
-    ::SyntaxKind::AMP2_TOKEN }, [||] => { $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => {
-    $crate ::SyntaxKind::EQ2_TOKEN }, [!=] => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>]
-    => { $crate ::SyntaxKind::GT_TOKEN }, [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN },
-    [<] => { $crate ::SyntaxKind::LT_TOKEN }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN
-    }, [^] => { $crate ::SyntaxKind::CARET_TOKEN }, [|] => { $crate
-    ::SyntaxKind::PIPE_TOKEN }, [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => {
-    $crate ::SyntaxKind::GT2_TOKEN }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@
-    number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
-    ::SyntaxKind::LIT_STR_TOKEN },
+    ::SyntaxKind::COLON_TOKEN }, [;] => { $crate ::SyntaxKind::SEMICOLON_TOKEN },
+    [abstract] => { $crate ::SyntaxKind::ABSTRACT_TOKEN }, [def] => { $crate
+    ::SyntaxKind::DEF_TOKEN }, [const] => { $crate ::SyntaxKind::CONST_TOKEN }, [enum] =>
+    { $crate ::SyntaxKind::ENUM_TOKEN }, ['('] => { $crate ::SyntaxKind::L_PAREN_TOKEN },
+    [')'] => { $crate ::SyntaxKind::R_PAREN_TOKEN }, [,] => { $crate
+    ::SyntaxKind::COMMA_TOKEN }, [import] => { $crate ::SyntaxKind::IMPORT_TOKEN }, [.]
+    => { $crate ::SyntaxKind::DOT_TOKEN }, [return] => { $crate
+    ::SyntaxKind::RETURN_TOKEN }, [struct] => { $crate ::SyntaxKind::STRUCT_TOKEN },
+    [type] => { $crate ::SyntaxKind::TYPE_TOKEN }, ['['] => { $crate
+    ::SyntaxKind::L_BRACKET_TOKEN }, [']'] => { $crate ::SyntaxKind::R_BRACKET_TOKEN },
+    [&] => { $crate ::SyntaxKind::AMP_TOKEN }, [+] => { $crate ::SyntaxKind::PLUS_TOKEN
+    }, [-] => { $crate ::SyntaxKind::MINUS_TOKEN }, [!] => { $crate
+    ::SyntaxKind::BANG_TOKEN }, [~] => { $crate ::SyntaxKind::TILDE_TOKEN }, [*] => {
+    $crate ::SyntaxKind::STAR_TOKEN }, [+=] => { $crate ::SyntaxKind::PLUS_EQ_TOKEN },
+    [-=] => { $crate ::SyntaxKind::MINUS_EQ_TOKEN }, [/=] => { $crate
+    ::SyntaxKind::SLASH_EQ_TOKEN }, [*=] => { $crate ::SyntaxKind::STAR_EQ_TOKEN }, [**=]
+    => { $crate ::SyntaxKind::STAR2_EQ_TOKEN }, [%=] => { $crate
+    ::SyntaxKind::PERCENT_EQ_TOKEN }, [^=] => { $crate ::SyntaxKind::CARET_EQ_TOKEN },
+    [&=] => { $crate ::SyntaxKind::AMP_EQ_TOKEN }, [|=] => { $crate
+    ::SyntaxKind::PIPE_EQ_TOKEN }, [<<=] => { $crate ::SyntaxKind::LT2_EQ_TOKEN }, [>>=]
+    => { $crate ::SyntaxKind::GT2_EQ_TOKEN }, [/] => { $crate ::SyntaxKind::SLASH_TOKEN
+    }, [**] => { $crate ::SyntaxKind::STAR2_TOKEN }, [%] => { $crate
+    ::SyntaxKind::PERCENT_TOKEN }, [&&] => { $crate ::SyntaxKind::AMP2_TOKEN }, [||] => {
+    $crate ::SyntaxKind::PIPE2_TOKEN }, [==] => { $crate ::SyntaxKind::EQ2_TOKEN }, [!=]
+    => { $crate ::SyntaxKind::BANG_EQ_TOKEN }, [>] => { $crate ::SyntaxKind::GT_TOKEN },
+    [>=] => { $crate ::SyntaxKind::GT_EQ_TOKEN }, [<] => { $crate ::SyntaxKind::LT_TOKEN
+    }, [<=] => { $crate ::SyntaxKind::LT_EQ_TOKEN }, [^] => { $crate
+    ::SyntaxKind::CARET_TOKEN }, [|] => { $crate ::SyntaxKind::PIPE_TOKEN }, [<<] => {
+    $crate ::SyntaxKind::LT2_TOKEN }, [>>] => { $crate ::SyntaxKind::GT2_TOKEN }, [..] =>
+    { $crate ::SyntaxKind::DOT2_TOKEN }, [@ number] => { $crate
+    ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate ::SyntaxKind::LIT_STR_TOKEN },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
@@ -355,7 +356,8 @@ pub macro N {
     ::SyntaxKind::BINARY_TYPE_OP_NODE }, [PrefixExpr] => { $crate
     ::SyntaxKind::PREFIX_EXPR_NODE }, [BinaryExpr] => { $crate
     ::SyntaxKind::BINARY_EXPR_NODE }, [CallExpr] => { $crate ::SyntaxKind::CALL_EXPR_NODE
-    }, [LitExpr] => { $crate ::SyntaxKind::LIT_EXPR_NODE }, [PrefixExprOp] => { $crate
+    }, [LitExpr] => { $crate ::SyntaxKind::LIT_EXPR_NODE }, [ParenExpr] => { $crate
+    ::SyntaxKind::PAREN_EXPR_NODE }, [PrefixExprOp] => { $crate
     ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
     ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
     ::SyntaxKind::CALL_EXPR_ARGS_NODE },

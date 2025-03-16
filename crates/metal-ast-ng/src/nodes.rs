@@ -84,6 +84,10 @@ impl ItemNode {
     pub fn kind_node(&self) -> Option<ItemKindNode> {
         self.syntax.child()
     }
+    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
+    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
+        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
+    }
 }
 /// Represents the `Name` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -190,6 +194,8 @@ pub enum ExprNode {
     CallExpr(CallExprNode),
     /// See [LitExprNode].
     LitExpr(LitExprNode),
+    /// See [ParenExprNode].
+    ParenExpr(ParenExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -201,6 +207,7 @@ impl AstNode for ExprNode {
             SyntaxKind::BINARY_EXPR_NODE => true,
             SyntaxKind::CALL_EXPR_NODE => true,
             SyntaxKind::LIT_EXPR_NODE => true,
+            SyntaxKind::PAREN_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -220,6 +227,9 @@ impl AstNode for ExprNode {
             SyntaxKind::LIT_EXPR_NODE => {
                 Some(ExprNode::LitExpr(LitExprNode::cast(syntax)?))
             }
+            SyntaxKind::PAREN_EXPR_NODE => {
+                Some(ExprNode::ParenExpr(ParenExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -230,6 +240,7 @@ impl AstNode for ExprNode {
             ExprNode::BinaryExpr(it) => it.syntax(),
             ExprNode::CallExpr(it) => it.syntax(),
             ExprNode::LitExpr(it) => it.syntax(),
+            ExprNode::ParenExpr(it) => it.syntax(),
         }
     }
 }
@@ -458,10 +469,6 @@ impl ConstItemNode {
     pub fn value_node(&self) -> Option<ExprSpecNode> {
         self.syntax.child()
     }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
-    }
 }
 /// Represents the `EnumItem` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -560,10 +567,6 @@ impl ImportItemNode {
     pub fn tree_node(&self) -> Option<ImportTreeNode> {
         self.syntax.child()
     }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
-    }
 }
 /// Represents the `ReturnItem` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -589,10 +592,6 @@ impl ReturnItemNode {
     /// Find a child node of type [ExprNode].
     pub fn expr_node(&self) -> Option<ExprNode> {
         self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
     }
 }
 /// Represents the `StructItem` node.
@@ -665,10 +664,6 @@ impl TypeAliasItemNode {
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
         self.syntax.child()
-    }
-    /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
-    pub fn semicolon_token(&self) -> Option<SyntaxToken> {
-        self.syntax.find_child_token(SyntaxKind::SEMICOLON_TOKEN)
     }
 }
 /// Represents the `AbstractBody` node.
@@ -1542,6 +1537,36 @@ impl LitExprNode {
                 NodeOrToken::Node(_) => None,
                 NodeOrToken::Token(token) => LitExprToken::cast(token),
             })
+    }
+}
+/// Represents the `ParenExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ParenExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for ParenExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::PAREN_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ParenExprNode {
+    /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
+    pub fn l_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.find_child_token(SyntaxKind::L_PAREN_TOKEN)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
+        self.syntax.child()
+    }
+    /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
+    pub fn r_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.find_child_token(SyntaxKind::R_PAREN_TOKEN)
     }
 }
 /// Represents the `PrefixExprOp` node.

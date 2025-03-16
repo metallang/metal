@@ -114,6 +114,22 @@ impl AstToken for ColonToken {
         &self.syntax
     }
 }
+/// Represents the `;` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct SemicolonToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for SemicolonToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::SEMICOLON_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `abstract` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AbstractToken {
@@ -138,22 +154,6 @@ pub struct DefToken {
 impl AstToken for DefToken {
     fn can_cast(kind: SyntaxKind) -> bool {
         kind == SyntaxKind::DEF_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
-/// Represents the `;` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct SemicolonToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for SemicolonToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::SEMICOLON_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
