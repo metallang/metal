@@ -12,7 +12,7 @@
 // Also, if you use the ungrammar language server, make sure to disable auto-formatting.
 
 // Blocks
-Block = '{' items:BlockStmts '}'
+Block = '{' stmts:BlockStmts '}'
 BlockStmts = Stmt*
 
 // Common (shared) constructs
