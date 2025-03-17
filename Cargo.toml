@@ -24,6 +24,7 @@ serde = { version = "1", features = ["derive"] }
 salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8eab92de89edf4073b03601" }
 semver = "1"
 bincode = "1"
+colored = "2.1.0"
 
 cart = { path = "crates/cart" }
 metal-analyzer = { path = "crates/metal-analyzer" }
