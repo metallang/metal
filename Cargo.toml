@@ -59,6 +59,7 @@ ignored = [
     "cart",
     "metal-linter",
     "metal-lsp",
+    "drill",
 ]
 
 [workspace.lints.clippy]
