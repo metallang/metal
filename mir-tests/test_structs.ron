@@ -3,6 +3,7 @@
   filename: "test_variables.mt",
   parent: None,
   children: [],
+  library: true,
   statements: [
     FunctionDefine(
         (
@@ -32,7 +33,14 @@
                 Return(Some(
                     Return(Variable(Load(
                         name: "var",
-                        ty: Primitive(I8)
+                        ty: Struct((
+                            name: "TestStruct",
+                            fields: [(
+                                name: "pokemon_idx",
+                                ty: Primitive(I8)
+                            )],
+                            vis: Public
+                        ))
                     )))
                 ))
             ]
@@ -63,14 +71,5 @@
         vis: Public
     )
   ],
-  imports: [],
-  constants: [
-    (
-        name: "test_constant",
-        expr: Literal(Number(Number ( primitive: I8, value: 15 ))),
-        ty: I8,
-        vis: Public
-    )
-  ],
-  structs: []
+  imports: []
 )

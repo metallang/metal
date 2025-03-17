@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// An immutable global constant value.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Constant {
     /// The name of this constant.
     pub name: String,

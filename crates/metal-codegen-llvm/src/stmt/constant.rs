@@ -9,7 +9,7 @@ use llvm_sys::{
 use metal_mir::{expr::Expr, stmt::constant::Constant};
 
 use super::{CodeGenType, CodeGenValue};
-use crate::{core::get_module_full_name, get_linkage_from_vis};
+use crate::get_linkage_from_vis;
 
 impl CodeGenValue for Constant {
     fn llvm_value(
@@ -17,8 +17,7 @@ impl CodeGenValue for Constant {
         llvm: &mut crate::LLVMRefs,
         module: &metal_mir::parcel::Module,
     ) -> LLVMValueRef {
-        let module_name = get_module_full_name(module.to_owned());
-        let cname = CString::new(module_name + "." + self.name.as_str()).unwrap();
+        let cname = CString::new(module.name.clone() + "." + self.name.as_str()).unwrap();
 
         unsafe {
             let global_var =
