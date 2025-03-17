@@ -4,13 +4,11 @@ use metal_ast_ng::N;
 use metal_ast_ng::T;
 
 use crate::common::parse_visibility;
-use crate::expr::parse_expr;
 use crate::item::abstract_::parse_abstract_item;
 use crate::item::const_::parse_const_item;
 use crate::item::enum_::parse_enum_item;
 use crate::item::fn_::parse_fn_item;
 use crate::item::import::parse_import_item;
-use crate::item::return_::parse_return_item;
 use crate::item::struct_::parse_struct_item;
 use crate::item::type_::parse_type_alias_item;
 
@@ -19,7 +17,6 @@ mod const_;
 mod enum_;
 mod fn_;
 mod import;
-mod return_;
 mod struct_;
 mod type_;
 
@@ -28,7 +25,6 @@ pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
 
     parse_visibility(parser);
     parse_item_kind(parser);
-    parser.maybe_eat(T![;]);
 
     parser.end_node();
 }
@@ -42,10 +38,9 @@ pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
         T![def] => parse_fn_item(parser),
         T![enum] => parse_enum_item(parser),
         T![import] => parse_import_item(parser),
-        T![return] => parse_return_item(parser),
         T![struct] => parse_struct_item(parser),
         T![type] => parse_type_alias_item(parser),
-        _ => parse_expr(parser),
+        other => todo!("{other:#?}"),
     }
 
     parser.end_node();

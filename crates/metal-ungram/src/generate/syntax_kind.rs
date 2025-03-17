@@ -84,6 +84,20 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
             pub fn is_whitespace(&self) -> bool {
                 matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
             }
+
+            pub fn is_item_start(&self) -> bool {
+                matches!(
+                    self,
+                    T![abstract]
+                    | T![const]
+                    | T![enum]
+                    | T![def]
+                    | T![import]
+                    | T![struct]
+                    | T![type]
+                    | T![pub] // non-items don't have visibility
+                )
+            }
         }
     }
 }
