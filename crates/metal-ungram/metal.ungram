@@ -24,7 +24,7 @@ TypeQualifier = ':' Type
 
 // Items
 
-Stmt = StmtKind ';'?
+Stmt = kind:StmtKind ';'?
 
 StmtKind = Item | Expr
 

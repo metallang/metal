@@ -77,7 +77,7 @@ impl AstNode for StmtNode {
 }
 impl StmtNode {
     /// Find a child node of type [StmtKindNode].
-    pub fn stmt_kind_node(&self) -> Option<StmtKindNode> {
+    pub fn kind_node(&self) -> Option<StmtKindNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
