@@ -82,7 +82,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
 
         impl SyntaxKind {
             pub fn is_whitespace(&self) -> bool {
-                matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
+                matches!(self, T![@comment] | T![@whitespace] | T![@unknown])
             }
         }
     }
@@ -130,6 +130,9 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// ```
         pub macro T {
             #(#arms)*
+            [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
+            [@whitespace] => { $crate::SyntaxKind::WHITESPACE_TOKEN },
+            [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN },
         }
     }
 }
