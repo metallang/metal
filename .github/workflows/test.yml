@@ -21,14 +21,15 @@ jobs:
             os: "macos-latest"
           - id: "darwin-amd64"
             os: "macos-13"
+          - id: "windows-amd64"
+            os: "windows-latest"
     runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-llvm
       - uses: rui314/setup-mold@v1
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly-2024-12-01
+          toolchain: nightly-2025-03-09
 
       - uses: taiki-e/install-action@nextest
 

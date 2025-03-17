@@ -2,6 +2,10 @@
 
 //! Metal library for compiling to LLVM IR using MIR.
 
+#![feature(string_from_utf8_lossy_owned)]
+#![feature(let_chains)]
+
+use core::StructRepository;
 use std::{collections::BTreeMap, ffi::CString};
 
 use metal_mir::{
@@ -11,6 +15,8 @@ use metal_mir::{
 
 pub mod core;
 pub mod expr;
+pub mod linking;
+pub mod llc;
 pub mod primitives;
 pub mod safeties;
 pub mod stmt;
@@ -30,6 +36,7 @@ pub struct LLVMRefs {
     builder: LLVMBuilderRef,
     module: LLVMModuleRef,
     locals: BTreeMap<String, LLVMValueRef>,
+    struct_repo: StructRepository,
 }
 
 impl LLVMRefs {
@@ -42,6 +49,7 @@ impl LLVMRefs {
                 builder: LLVMCreateBuilder(),
                 module: LLVMModuleCreateWithNameInContext(module_name.as_ptr(), ctx),
                 locals: BTreeMap::new(),
+                struct_repo: StructRepository::default(),
             }
         }
     }
@@ -62,11 +70,11 @@ pub trait CodeGenValue {
 }
 
 pub trait CodeGenType {
-    fn llvm_type(&self, llvm: &LLVMRefs, module: &Module) -> LLVMTypeRef;
+    fn llvm_type(&self, llvm: &mut LLVMRefs, module: &Module) -> LLVMTypeRef;
 }
 
 pub fn get_types<'a>(
-    llvm: &LLVMRefs,
+    llvm: &mut LLVMRefs,
     module: &Module,
     cap: &usize,
     types: impl IntoIterator<Item = &'a Type>,

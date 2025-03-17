@@ -24,7 +24,7 @@ use crate::{parcel::Module, struct_, types};
 ///     ]
 /// }
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Import {
     /// The module imported.
     pub module: Box<Module>,

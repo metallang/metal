@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::{visibility::Visibility, Type};
 
 /// Represents the fields of a struct, i.e. `a: B`.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct StructField {
     /// The name of the struct field, i.e. `a`.
     pub name: String,
@@ -21,7 +21,7 @@ pub struct StructField {
 ///     pub c: i32
 /// }
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Struct {
     /// The name of this struct.
     pub name: String,

@@ -1,19 +1,52 @@
 // SPDX-License-Identifier: MIT
 //! Compilation step for modules from MIR to LLVM IR
 
-use std::{borrow::Cow, ffi::CString};
+use std::{borrow::Cow, collections::HashMap, ffi::CString};
 
 use llvm_sys::{
     analysis::LLVMVerifyModule,
     bit_writer,
-    core::{LLVMPrintModuleToString, LLVMSetSourceFileName},
+    core::{LLVMPrintModuleToString, LLVMSetSourceFileName, LLVMSetTarget},
+    prelude::LLVMTypeRef,
+    target_machine::LLVMGetDefaultTargetTriple,
 };
-use metal_mir::parcel::Module;
+use metal_mir::{parcel::Module, struct_::Struct};
 
 use crate::{
     safeties::{LLVMErrorMessage, MemoryBuffer},
-    CodeGenValue, LLVMRefs,
+    CodeGenType, CodeGenValue, LLVMRefs,
 };
+
+#[derive(Default)]
+pub struct StructRepository {
+    structs: HashMap<String, LLVMTypeRef>,
+}
+
+impl StructRepository {
+    pub fn insert(&mut self, name: String, ty: LLVMTypeRef) {
+        self.structs.insert(name, ty);
+    }
+
+    pub fn get(&self, name: &str) -> Option<LLVMTypeRef> {
+        self.structs.get(name).copied()
+    }
+
+    pub fn get_or_insert(
+        &mut self,
+        name: String,
+        struct_: &Struct,
+        llvm: &mut LLVMRefs,
+        module: &Module,
+    ) -> LLVMTypeRef {
+        if let Some(struct_) = self.get(&name) {
+            struct_
+        } else {
+            let ty = struct_.llvm_type(llvm, module);
+            self.insert(name, ty);
+            ty
+        }
+    }
+}
 
 // TODO: move to AST once ast-ng is complete.
 pub struct PathBuilder<'a> {
@@ -41,21 +74,9 @@ impl<'a> PathBuilder<'a> {
     }
 }
 
-pub fn get_module_full_name(module: Module) -> String {
-    let mut builder = PathBuilder::new();
-    let mut last_module = &Some(Box::new(module));
-
-    while let Some(module) = last_module {
-        builder.push(module.name.as_str());
-        last_module = &module.parent;
-    }
-
-    builder.finish()
-}
-
 /// Compiles an LLVM module and returns either human-readable
 /// LLVM IR or LLVM bytecode depending on `human_readable`.
-pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
+pub fn compile_module(module: &Module, human_readable: bool, triple: &Option<String>) -> Vec<u8> {
     let mut llvm = LLVMRefs::new(module);
 
     let c_filename = CString::new(module.filename.as_str()).unwrap();
@@ -64,6 +85,15 @@ pub fn compile_module(module: &Module, human_readable: bool) -> Vec<u8> {
 
     for stmt in &module.statements {
         stmt.llvm_value(&mut llvm, module);
+    }
+
+    unsafe {
+        if let Some(triple) = triple {
+            let string = CString::new(triple.as_str()).unwrap();
+            LLVMSetTarget(llvm.module, string.as_ptr());
+        } else {
+            LLVMSetTarget(llvm.module, LLVMGetDefaultTargetTriple());
+        }
     }
 
     let error = LLVMErrorMessage::new();
@@ -103,30 +133,26 @@ mod tests {
 
     use super::*;
 
-    fn get_empty_module(name: String, parent: Option<Module>) -> Module {
+    fn get_empty_module(name: String) -> Module {
         Module {
             name: name.clone(),
             filename: name,
-            parent: parent.map(Box::new),
-            children: Vec::new(),
             statements: Vec::new(),
-            function_signatures: Vec::new(),
             imports: Vec::new(),
-            constants: Vec::new(),
-            structs: Vec::new(),
+            library: false,
         }
     }
 
     #[test]
     fn test_empty_module() {
-        let module = get_empty_module("empty".to_string(), None);
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let module = get_empty_module("empty".to_string());
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
     #[test]
     fn test_module_function() {
-        let mut module = get_empty_module("testing".to_string(), None);
+        let mut module = get_empty_module("testing".to_string());
 
         // add function to module
         let sig = FunctionSignature {
@@ -161,17 +187,16 @@ mod tests {
         };
         let stmt = Statement::FunctionDefine(Box::new(def));
 
-        module.function_signatures.push(Box::new(sig));
         module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 
     #[test]
     #[should_panic]
     fn test_panic_global_var_expr() {
-        let mut module = get_empty_module("testing".to_string(), None);
+        let mut module = get_empty_module("testing".to_string());
         let global_var = Constant {
             name: "some_constant".to_string(),
             expr: Expr::Div(Box::new(MathematicalValue {
@@ -194,16 +219,14 @@ mod tests {
 
         module.statements.push(Box::new(stmt));
 
-        compile_module(&module, true);
+        compile_module(&module, true, &None);
     }
 
     #[test]
     fn test_nested_module_function() {
         // NOTE `children` is not appended as to avoid lengthy duplication
         // of modules as this test doesn't use the children
-        let module = get_empty_module("core".to_string(), None);
-        let another_module = get_empty_module("lib".to_string(), Some(module));
-        let mut last_module = get_empty_module("str".to_string(), Some(another_module));
+        let mut module = get_empty_module("core.string".to_string());
 
         // add function to module
         let sig = FunctionSignature {
@@ -238,10 +261,9 @@ mod tests {
         };
         let stmt = Statement::FunctionDefine(Box::new(def));
 
-        last_module.function_signatures.push(Box::new(sig));
-        last_module.statements.push(Box::new(stmt));
+        module.statements.push(Box::new(stmt));
 
-        let compiled = String::from_utf8(compile_module(&last_module, true)).unwrap();
+        let compiled = String::from_utf8(compile_module(&module, true, &None)).unwrap();
         assert_ne!(compiled, "".to_string());
     }
 }

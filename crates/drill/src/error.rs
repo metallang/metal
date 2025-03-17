@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("No arguments were given! Run with `--help` to see usage.")]

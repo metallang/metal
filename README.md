@@ -1,6 +1,7 @@
 # Metal
 
-Prototype compiled language built in Rust with LLVM.
+A prototype compiled programming language, striving to be an easy-to-use, borrow checked, non-garbage-collected,
+memory safe, robust programming language.
 
 ## Contributing
 
@@ -10,8 +11,12 @@ opening an issue, or [joining our Discord](https://discord.gg/fDCMSbgpsB) and sa
 
 ## Development
 
-Use nightly Rust.
+### Rust
 
-If you want to add a dependency, add it to the workspace Cargo.toml and then
-in the crate that you want to use this dependency in specify that dependency as `dep_name = { workspace = true }`.
-This makes updating deps much easier.
+The Metal toolchain uses the nightly Rust channel, so to work on it you should use a reasonably recent nightly Rust installation.
+
+#### Adding Dependencies
+
+When adding dependencies to Metal please make sure to only add the main dependency information (i.e. `tokio = { version = "1", features = ["full"] }`)
+to the `Cargo.toml` in Metal's root directory. Then, when using the dependency in one of Metal's child crates, in lieu of adding it directly, only add it
+as a workspace dependency (i.e. `tokio = { workspace = true }`).
