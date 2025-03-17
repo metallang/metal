@@ -6,7 +6,7 @@ use crate::error::Error;
 // use colored::*;
 
 // const VERSION: &str = env!("CARGO_PKG_VERSION");
-// const DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
+const DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
 
 pub struct HelpCommand {}
 
@@ -18,7 +18,13 @@ impl Command for HelpCommand {
     }
 
     fn run(self) -> Result<Self::Output, Self::Error> {
-        println!("TODO!");
+        let help_msg = format!(
+            "{}\n\n{}",
+            DESCRIPTION,
+            "Usage: drill <cmd> [options]"
+        );
+
+        println!("{}", help_msg);
 
         Ok(())
     }
