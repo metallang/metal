@@ -29,7 +29,7 @@ impl BlockNode {
         self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
     }
     /// Find a child node of type [BlockStmtsNode].
-    pub fn items_node(&self) -> Option<BlockStmtsNode> {
+    pub fn stmts_node(&self) -> Option<BlockStmtsNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
