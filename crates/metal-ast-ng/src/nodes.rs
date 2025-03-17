@@ -55,7 +55,7 @@ impl AstNode for BlockItemsNode {
 }
 impl BlockItemsNode {
     /// Find all children nodes of type [ItemNode].
-    pub fn items_nodes(&self) -> impl Iterator<Item = ItemNode> {
+    pub fn item_nodes(&self) -> impl Iterator<Item = ItemNode> {
         self.syntax.children().filter_map(ItemNode::cast)
     }
 }
@@ -684,7 +684,7 @@ impl AstNode for AbstractBodyNode {
 }
 impl AbstractBodyNode {
     /// Find all children nodes of type [AbstractFnItemNode].
-    pub fn abstract_fn_items_nodes(&self) -> impl Iterator<Item = AbstractFnItemNode> {
+    pub fn abstract_fn_item_nodes(&self) -> impl Iterator<Item = AbstractFnItemNode> {
         self.syntax.children().filter_map(AbstractFnItemNode::cast)
     }
 }
