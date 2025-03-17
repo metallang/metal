@@ -14,6 +14,7 @@ impl Command for MainCommand {
     fn parse(parser: &mut Parser) -> Result<Self, Self::Error> {
         match parser.next() {
             Some(arg) => {
+                #[allow(clippy::wildcard_enum_match_arm)]
                 match arg.as_ref() {
                     ArgRef::Long("help") => Ok(Self::Help(HelpCommand::parse(parser)?)),
                     ArgRef::Value("help") => Ok(Self::Help(HelpCommand::parse(parser)?)),
