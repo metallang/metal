@@ -92,6 +92,7 @@ BinaryTypeOp = '+'
 
 // Value expressions
 
+// don't forget to update SyntaxKind::is_expr_start when changing this
 Expr =
   Name
   | PrefixExpr
@@ -103,6 +104,7 @@ Expr =
 
 PrefixExpr = op:PrefixExprOp Expr
 
+// don't forget to update SyntaxKind::is_prefix_op when changing this
 PrefixExprOp = '+' | '-' | '!' | '~' | '*'
 
 BinaryExpr = lhs:Expr op:BinaryExprOp rhs:Expr

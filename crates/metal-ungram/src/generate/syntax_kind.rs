@@ -98,6 +98,29 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T![pub] // non-items don't have visibility
                 )
             }
+
+            pub fn is_prefix_op(&self) -> bool {
+                matches!(
+                    self,
+                    T![+]
+                    | T![-]
+                    | T![!]
+                    | T![~]
+                    | T![*]
+                )
+            }
+
+            pub fn is_expr_start(&self) -> bool {
+                matches!(
+                    self,
+                    T![@ident]
+                    | T![@number]
+                    | T![@string]
+                    | T!['(']
+                    | T![return]
+                )
+                || self.is_prefix_op()
+            }
         }
     }
 }
