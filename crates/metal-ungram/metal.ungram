@@ -102,6 +102,7 @@ Expr =
   | LitExpr
   | ParenExpr
   | ReturnExpr
+  | IfExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -161,3 +162,6 @@ LitExpr = '@number' | '@string'
 ParenExpr = '(' Expr ')'
 
 ReturnExpr = 'return' Expr?
+
+IfExpr = 'if' cond:Expr if_branch:Expr else_clause:IfExprElseClause?
+IfExprElseClause = 'else' else_branch:Expr

@@ -232,6 +232,8 @@ impl Lexer<'_> {
             b"return" => SyntaxKind::RETURN_TOKEN,
             b"struct" => SyntaxKind::STRUCT_TOKEN,
             b"type" => SyntaxKind::TYPE_TOKEN,
+            b"if" => SyntaxKind::IF_TOKEN,
+            b"else" => SyntaxKind::ELSE_TOKEN,
             _ => SyntaxKind::LIT_IDENT_TOKEN,
         }
     }
