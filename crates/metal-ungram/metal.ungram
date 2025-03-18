@@ -12,8 +12,8 @@
 // Also, if you use the ungrammar language server, make sure to disable auto-formatting.
 
 // Blocks
-Block = '{' items:BlockItems '}'
-BlockItems = Item*
+Block = '{' stmts:BlockStmts '}'
+BlockStmts = Stmt*
 
 // Common (shared) constructs
 Name = '@ident'
@@ -24,17 +24,19 @@ TypeQualifier = ':' Type
 
 // Items
 
-// things like returns and exprs don't technically have a visibility, but i haven't found
-// a clean way to express that in the AST without making the parser ultra messy
-Item = vis:Visibility? kind:ItemKind ';'?
+Stmt = kind:StmtKind ';'?
+
+StmtKind = Item | Expr
+
+Item = vis:Visibility? kind:ItemKind
+
+// don't forget to update SyntaxKind::is_item_start when changing this
 ItemKind =
   AbstractItem
   | ConstItem
   | EnumItem
-  | Expr
   | FnItem
   | ImportItem
-  | ReturnItem
   | StructItem
   | TypeAliasItem
 
@@ -63,8 +65,6 @@ ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
-ReturnItem = 'return' Expr?
-
 StructItem = 'struct' Name '{' body:StructBody '}'
 StructBody = items:(StructBodyItem*)
 StructBodyItem = StructField | StructFn
@@ -92,6 +92,7 @@ BinaryTypeOp = '+'
 
 // Value expressions
 
+// don't forget to update SyntaxKind::is_expr_start when changing this
 Expr =
   Name
   | PrefixExpr
@@ -99,9 +100,11 @@ Expr =
   | CallExpr
   | LitExpr
   | ParenExpr
+  | ReturnExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
+// don't forget to update SyntaxKind::is_prefix_op when changing this
 PrefixExprOp = '+' | '-' | '!' | '~' | '*'
 
 BinaryExpr = lhs:Expr op:BinaryExprOp rhs:Expr
@@ -155,3 +158,5 @@ CallExprArgs = Expr (',' Expr)* ','?
 LitExpr = '@number' | '@string'
 
 ParenExpr = '(' Expr ')'
+
+ReturnExpr = 'return' Expr?

@@ -84,6 +84,43 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
             pub fn is_whitespace(&self) -> bool {
                 matches!(self, T![@comment] | T![@whitespace] | T![@unknown])
             }
+
+            pub fn is_item_start(&self) -> bool {
+                matches!(
+                    self,
+                    T![abstract]
+                    | T![const]
+                    | T![enum]
+                    | T![def]
+                    | T![import]
+                    | T![struct]
+                    | T![type]
+                    | T![pub] // non-items don't have visibility
+                )
+            }
+
+            pub fn is_prefix_op(&self) -> bool {
+                matches!(
+                    self,
+                    T![+]
+                    | T![-]
+                    | T![!]
+                    | T![~]
+                    | T![*]
+                )
+            }
+
+            pub fn is_expr_start(&self) -> bool {
+                matches!(
+                    self,
+                    T![@ident]
+                    | T![@number]
+                    | T![@string]
+                    | T!['(']
+                    | T![return]
+                )
+                || self.is_prefix_op()
+            }
         }
     }
 }

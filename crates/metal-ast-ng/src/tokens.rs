@@ -274,22 +274,6 @@ impl AstToken for DotToken {
         &self.syntax
     }
 }
-/// Represents the `return` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ReturnToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for ReturnToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::RETURN_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
 /// Represents the `struct` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct StructToken {
@@ -906,6 +890,22 @@ pub struct LitStrToken {
 impl AstToken for LitStrToken {
     fn can_cast(kind: SyntaxKind) -> bool {
         kind == SyntaxKind::LIT_STR_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `return` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ReturnToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for ReturnToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::RETURN_TOKEN
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
