@@ -196,6 +196,8 @@ pub enum ExprNode {
     ParenExpr(ParenExprNode),
     /// See [ReturnExprNode].
     ReturnExpr(ReturnExprNode),
+    /// See [IfExprNode].
+    IfExpr(IfExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -210,6 +212,7 @@ impl AstNode for ExprNode {
             SyntaxKind::LIT_EXPR_NODE => true,
             SyntaxKind::PAREN_EXPR_NODE => true,
             SyntaxKind::RETURN_EXPR_NODE => true,
+            SyntaxKind::IF_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -236,6 +239,7 @@ impl AstNode for ExprNode {
             SyntaxKind::RETURN_EXPR_NODE => {
                 Some(ExprNode::ReturnExpr(ReturnExprNode::cast(syntax)?))
             }
+            SyntaxKind::IF_EXPR_NODE => Some(ExprNode::IfExpr(IfExprNode::cast(syntax)?)),
             _ => None,
         }
     }
@@ -249,6 +253,7 @@ impl AstNode for ExprNode {
             ExprNode::LitExpr(it) => it.syntax(),
             ExprNode::ParenExpr(it) => it.syntax(),
             ExprNode::ReturnExpr(it) => it.syntax(),
+            ExprNode::IfExpr(it) => it.syntax(),
         }
     }
 }
@@ -1624,6 +1629,40 @@ impl ReturnExprNode {
         self.syntax.child(0usize)
     }
 }
+/// Represents the `IfExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct IfExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for IfExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IF_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl IfExprNode {
+    /// Find a child token of variant [SyntaxKind::IF_TOKEN].
+    pub fn if_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::IF_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn cond_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn if_branch_node(&self) -> Option<ExprNode> {
+        self.syntax.child(1usize)
+    }
+    /// Find a child node of type [IfExprElseClauseNode].
+    pub fn else_clause_node(&self) -> Option<IfExprElseClauseNode> {
+        self.syntax.child(0usize)
+    }
+}
 /// Represents the `PrefixExprOp` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PrefixExprOpNode {
@@ -1713,5 +1752,31 @@ impl CallExprArgsNode {
                 NodeOrToken::Node(node) => ExprNode::cast(node).map(Either::Left),
                 NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
             })
+    }
+}
+/// Represents the `IfExprElseClause` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct IfExprElseClauseNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for IfExprElseClauseNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl IfExprElseClauseNode {
+    /// Find a child token of variant [SyntaxKind::ELSE_TOKEN].
+    pub fn else_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::ELSE_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn else_branch_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
     }
 }

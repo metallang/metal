@@ -914,6 +914,38 @@ impl AstToken for ReturnToken {
         &self.syntax
     }
 }
+/// Represents the `if` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct IfToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for IfToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IF_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `else` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ElseToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for ElseToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::ELSE_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `LitExpr` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum LitExprToken {

@@ -47,6 +47,25 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
 
             parser.end_node();
         }
+        T![if] => {
+            parser.start_node(N![IfExpr]);
+
+            parser.eat_any();
+
+            parse_expr(parser); // condition
+            parse_expr(parser); // 'true' branch
+
+            if parser.peek_is(T![else]) {
+                parser.start_node(N![IfExprElseClause]);
+
+                parser.eat_any();
+                parse_expr(parser); // 'false' branch
+
+                parser.end_node();
+            }
+
+            parser.end_node();
+        }
         // prefix ops
         op if let Some(bp) = prefix_binding_power_for(op) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);

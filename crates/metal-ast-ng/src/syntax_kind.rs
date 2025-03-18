@@ -107,12 +107,16 @@ pub enum SyntaxKind {
     PAREN_EXPR_NODE,
     /// Don't try to remember this! Use [`N![ReturnExpr]`](N) instead.
     RETURN_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![IfExpr]`](N) instead.
+    IF_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
     BINARY_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![CallExprArgs]`](N) instead.
     CALL_EXPR_ARGS_NODE,
+    /// Don't try to remember this! Use [`N![IfExprElseClause]`](N) instead.
+    IF_EXPR_ELSE_CLAUSE_NODE,
     /// Don't try to remember this! Use [`T!['{']`](T) instead.
     L_BRACE_TOKEN,
     /// Don't try to remember this! Use [`T!['}']`](T) instead.
@@ -227,6 +231,10 @@ pub enum SyntaxKind {
     LIT_STR_TOKEN,
     /// Don't try to remember this! Use [`T![return]`](T) instead.
     RETURN_TOKEN,
+    /// Don't try to remember this! Use [`T![if]`](T) instead.
+    IF_TOKEN,
+    /// Don't try to remember this! Use [`T![else]`](T) instead.
+    ELSE_TOKEN,
     /// Represents a multi- or single-line comment.
     COMMENT_TOKEN,
     /// Represents a whitespace token, such as a space or a tab, among others.
@@ -272,7 +280,13 @@ impl SyntaxKind {
     pub fn is_expr_start(&self) -> bool {
         matches!(
             self,
-            T![@ ident] | T!['{'] | T![@ number] | T![@ string] | T!['('] | T![return]
+            T![@ ident]
+            | T!['{']
+            | T![@ number]
+            | T![@ string]
+            | T!['(']
+            | T![return]
+            | T![if]
         ) || self.is_prefix_op()
     }
 }
@@ -328,10 +342,11 @@ pub macro T {
     ::SyntaxKind::PIPE_TOKEN }, [<<] => { $crate ::SyntaxKind::LT2_TOKEN }, [>>] => {
     $crate ::SyntaxKind::GT2_TOKEN }, [..] => { $crate ::SyntaxKind::DOT2_TOKEN }, [@
     number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
-    ::SyntaxKind::LIT_STR_TOKEN }, [return] => { $crate ::SyntaxKind::RETURN_TOKEN }, [@
-    comment] => { $crate ::SyntaxKind::COMMENT_TOKEN }, [@ whitespace] => { $crate
-    ::SyntaxKind::WHITESPACE_TOKEN }, [@ unknown] => { $crate ::SyntaxKind::UNKNOWN_TOKEN
-    },
+    ::SyntaxKind::LIT_STR_TOKEN }, [return] => { $crate ::SyntaxKind::RETURN_TOKEN },
+    [if] => { $crate ::SyntaxKind::IF_TOKEN }, [else] => { $crate
+    ::SyntaxKind::ELSE_TOKEN }, [@ comment] => { $crate ::SyntaxKind::COMMENT_TOKEN }, [@
+    whitespace] => { $crate ::SyntaxKind::WHITESPACE_TOKEN }, [@ unknown] => { $crate
+    ::SyntaxKind::UNKNOWN_TOKEN },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
@@ -387,8 +402,9 @@ pub macro N {
     ::SyntaxKind::BINARY_EXPR_NODE }, [CallExpr] => { $crate ::SyntaxKind::CALL_EXPR_NODE
     }, [LitExpr] => { $crate ::SyntaxKind::LIT_EXPR_NODE }, [ParenExpr] => { $crate
     ::SyntaxKind::PAREN_EXPR_NODE }, [ReturnExpr] => { $crate
-    ::SyntaxKind::RETURN_EXPR_NODE }, [PrefixExprOp] => { $crate
-    ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
-    ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
-    ::SyntaxKind::CALL_EXPR_ARGS_NODE },
+    ::SyntaxKind::RETURN_EXPR_NODE }, [IfExpr] => { $crate ::SyntaxKind::IF_EXPR_NODE },
+    [PrefixExprOp] => { $crate ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => {
+    $crate ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
+    ::SyntaxKind::CALL_EXPR_ARGS_NODE }, [IfExprElseClause] => { $crate
+    ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE },
 }
