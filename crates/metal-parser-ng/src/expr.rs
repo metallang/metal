@@ -4,6 +4,7 @@ use metal_ast_ng::SyntaxKind;
 use metal_ast_ng::N;
 use metal_ast_ng::T;
 
+use crate::block::parse_block;
 use crate::common::parse_name;
 
 pub fn parse_expr(parser: &mut crate::parser::parser_type!()) {
@@ -33,6 +34,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
 
             parser.end_node();
         }
+        T!['{'] => parse_block(parser),
         T![return] => {
             parser.start_node(N![ReturnExpr]);
 

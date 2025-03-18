@@ -95,6 +95,7 @@ BinaryTypeOp = '+'
 // don't forget to update SyntaxKind::is_expr_start when changing this
 Expr =
   Name
+  | Block
   | PrefixExpr
   | BinaryExpr
   | CallExpr
