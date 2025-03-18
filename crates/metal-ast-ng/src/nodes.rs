@@ -182,6 +182,8 @@ impl ExprSpecNode {
 pub enum ExprNode {
     /// See [NameNode].
     Name(NameNode),
+    /// See [BlockNode].
+    Block(BlockNode),
     /// See [PrefixExprNode].
     PrefixExpr(PrefixExprNode),
     /// See [BinaryExprNode].
@@ -201,6 +203,7 @@ impl AstNode for ExprNode {
     fn can_cast(kind: SyntaxKind) -> bool {
         match kind {
             SyntaxKind::NAME_NODE => true,
+            SyntaxKind::BLOCK_NODE => true,
             SyntaxKind::PREFIX_EXPR_NODE => true,
             SyntaxKind::BINARY_EXPR_NODE => true,
             SyntaxKind::CALL_EXPR_NODE => true,
@@ -214,6 +217,7 @@ impl AstNode for ExprNode {
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         match syntax.kind() {
             SyntaxKind::NAME_NODE => Some(ExprNode::Name(NameNode::cast(syntax)?)),
+            SyntaxKind::BLOCK_NODE => Some(ExprNode::Block(BlockNode::cast(syntax)?)),
             SyntaxKind::PREFIX_EXPR_NODE => {
                 Some(ExprNode::PrefixExpr(PrefixExprNode::cast(syntax)?))
             }
@@ -238,6 +242,7 @@ impl AstNode for ExprNode {
     fn syntax(&self) -> &SyntaxNode {
         match self {
             ExprNode::Name(it) => it.syntax(),
+            ExprNode::Block(it) => it.syntax(),
             ExprNode::PrefixExpr(it) => it.syntax(),
             ExprNode::BinaryExpr(it) => it.syntax(),
             ExprNode::CallExpr(it) => it.syntax(),
