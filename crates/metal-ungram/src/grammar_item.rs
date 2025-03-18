@@ -163,10 +163,7 @@ pub impl NodeData {
 
     /// Same as [GrammarItem::fn_info], but pluralized.
     fn plural_fn_info(&self, label: Option<&str>) -> GrammarItemInfo {
-        let name = format!(
-            "{}s",
-            node_name(label.unwrap_or(&format!("{}s", &self.name)))
-        );
+        let name = format!("{}s", node_name(label.unwrap_or(&self.name)));
         let ident = call_site_ident(name.to_snake_case());
 
         let doc = format_docstring!(
