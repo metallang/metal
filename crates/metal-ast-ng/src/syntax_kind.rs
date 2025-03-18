@@ -247,7 +247,7 @@ impl From<SyntaxKind> for rowan::SyntaxKind {
 }
 impl SyntaxKind {
     pub fn is_whitespace(&self) -> bool {
-        matches!(self, SyntaxKind::COMMENT_TOKEN | SyntaxKind::WHITESPACE_TOKEN)
+        matches!(self, T![@ comment] | T![@ whitespace] | T![@ unknown])
     }
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided token
@@ -303,6 +303,9 @@ pub macro T {
     $crate ::SyntaxKind::LT2_TOKEN }, [>>] => { $crate ::SyntaxKind::GT2_TOKEN }, [..] =>
     { $crate ::SyntaxKind::DOT2_TOKEN }, [@ number] => { $crate
     ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate ::SyntaxKind::LIT_STR_TOKEN },
+    [@ comment] => { $crate ::SyntaxKind::COMMENT_TOKEN }, [@ whitespace] => { $crate
+    ::SyntaxKind::WHITESPACE_TOKEN }, [@ unknown] => { $crate ::SyntaxKind::UNKNOWN_TOKEN
+    },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
