@@ -41,13 +41,13 @@ ItemKind =
   | TypeAliasItem
 
 AbstractItem = 'abstract' Name '{' body:AbstractBody '}'
-AbstractBody = AbstractFnItem*
+AbstractBody = item:(AbstractFnItem*)
 AbstractFnItem = 'def' Name sig:FnSignature ';'
 
 ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier
 
 EnumItem = 'enum' Name '{' body:EnumBody '}'
-EnumBody = items:(EnumBodyItem*)
+EnumBody = item:(EnumBodyItem*)
 EnumBodyItem = EnumVariant | EnumFn
 EnumVariant = Name data_ty:EnumVariantDataType? ';'
 EnumVariantDataType = ('(' Type ')')
@@ -66,7 +66,7 @@ ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
 StructItem = 'struct' Name '{' body:StructBody '}'
-StructBody = items:(StructBodyItem*)
+StructBody = item:(StructBodyItem*)
 StructBodyItem = StructField | StructFn
 StructField = vis:Visibility Name ty:TypeQualifier ';'
 StructFn = vis:Visibility FnItem
