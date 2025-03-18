@@ -114,6 +114,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                 matches!(
                     self,
                     T![@ident]
+                    T!['{']
                     | T![@number]
                     | T![@string]
                     | T!['(']

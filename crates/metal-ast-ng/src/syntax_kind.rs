@@ -270,8 +270,10 @@ impl SyntaxKind {
         matches!(self, T![+] | T![-] | T![!] | T![~] | T![*])
     }
     pub fn is_expr_start(&self) -> bool {
-        matches!(self, T![@ ident] | T![@ number] | T![@ string] | T!['('] | T![return])
-            || self.is_prefix_op()
+        matches!(
+            self, T![@ ident] T!['{'] | T![@ number] | T![@ string] | T!['('] |
+            T![return]
+        ) || self.is_prefix_op()
     }
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided token
