@@ -8,8 +8,7 @@ mod common;
 mod expr;
 mod item;
 mod parser;
-mod stmt;
 mod type_;
 
-pub use block::parse_block_stmts as parse_root;
+pub use block::parse_block_items as parse_root;
 pub use parser::Parser;
