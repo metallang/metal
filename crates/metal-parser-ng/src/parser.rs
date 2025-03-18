@@ -64,12 +64,18 @@ where
         self.peek().is_none()
     }
 
-    pub fn enter_mode(&mut self, mode: ParserMode) -> ParserMode {
+    pub fn in_mode(&mut self, new_mode: ParserMode, mut f: impl FnMut(&mut Self)) {
         let old_mode = self.mode;
 
-        self.mode = mode;
+        self.mode = new_mode;
 
-        old_mode
+        // when entering a new mode, a token that needs splitting may have already been precomputed
+        // we thus try to split it here
+        self.split_current_token();
+
+        f(self);
+
+        self.mode = old_mode
     }
 
     fn compute_next_token(&mut self) {
@@ -92,28 +98,37 @@ where
             }
         }
 
-        if matches!(self.mode, ParserMode::Type) && new_current_token.kind == T![&&] {
+        self.current_token = Some(new_current_token);
+        self.split_current_token()
+    }
+
+    fn split_current_token(&mut self) {
+        let Some(mut token) = self.current_token.take() else {
+            return;
+        };
+
+        if matches!(self.mode, ParserMode::Type) && token.kind == T![&&] {
             // split && into two &
             let first = Token {
                 kind: T![&],
                 span: Span {
-                    start: new_current_token.span.start,
-                    end: new_current_token.span.end - 1,
+                    start: token.span.start,
+                    end: token.span.end - 1,
                 },
             };
             let second = Token {
                 kind: T![&],
                 span: Span {
-                    start: new_current_token.span.start + 1,
-                    end: new_current_token.span.end,
+                    start: token.span.start + 1,
+                    end: token.span.end,
                 },
             };
 
             self.split_token_buffer = Some(second);
-            new_current_token = first;
+            token = first;
         }
 
-        self.current_token = Some(new_current_token);
+        self.current_token = Some(token);
     }
 
     // green node builder functions
