@@ -713,7 +713,7 @@ impl AstNode for AbstractBodyNode {
 }
 impl AbstractBodyNode {
     /// Find all children nodes of type [AbstractFnItemNode].
-    pub fn abstract_fn_item_nodes(&self) -> impl Iterator<Item = AbstractFnItemNode> {
+    pub fn item_nodes(&self) -> impl Iterator<Item = AbstractFnItemNode> {
         self.syntax.children().filter_map(AbstractFnItemNode::cast)
     }
 }
@@ -803,7 +803,7 @@ impl AstNode for EnumBodyNode {
 }
 impl EnumBodyNode {
     /// Find all children nodes of type [EnumBodyItemNode].
-    pub fn items_nodes(&self) -> impl Iterator<Item = EnumBodyItemNode> {
+    pub fn item_nodes(&self) -> impl Iterator<Item = EnumBodyItemNode> {
         self.syntax.children().filter_map(EnumBodyItemNode::cast)
     }
 }
@@ -1175,7 +1175,7 @@ impl AstNode for StructBodyNode {
 }
 impl StructBodyNode {
     /// Find all children nodes of type [StructBodyItemNode].
-    pub fn items_nodes(&self) -> impl Iterator<Item = StructBodyItemNode> {
+    pub fn item_nodes(&self) -> impl Iterator<Item = StructBodyItemNode> {
         self.syntax.children().filter_map(StructBodyItemNode::cast)
     }
 }
