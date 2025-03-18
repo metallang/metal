@@ -234,6 +234,7 @@ impl Lexer<'_> {
             b"type" => SyntaxKind::TYPE_TOKEN,
             b"if" => SyntaxKind::IF_TOKEN,
             b"else" => SyntaxKind::ELSE_TOKEN,
+            b"defer" => SyntaxKind::DEFER_TOKEN,
             _ => SyntaxKind::LIT_IDENT_TOKEN,
         }
     }

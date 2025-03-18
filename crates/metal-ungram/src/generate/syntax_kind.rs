@@ -120,6 +120,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T!['(']
                     | T![return]
                     | T![if]
+                    | T![defer]
                 )
                 || self.is_prefix_op()
             }

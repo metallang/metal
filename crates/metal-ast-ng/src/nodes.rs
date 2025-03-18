@@ -198,6 +198,8 @@ pub enum ExprNode {
     ReturnExpr(ReturnExprNode),
     /// See [IfExprNode].
     IfExpr(IfExprNode),
+    /// See [DeferExprNode].
+    DeferExpr(DeferExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -213,6 +215,7 @@ impl AstNode for ExprNode {
             SyntaxKind::PAREN_EXPR_NODE => true,
             SyntaxKind::RETURN_EXPR_NODE => true,
             SyntaxKind::IF_EXPR_NODE => true,
+            SyntaxKind::DEFER_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -240,6 +243,9 @@ impl AstNode for ExprNode {
                 Some(ExprNode::ReturnExpr(ReturnExprNode::cast(syntax)?))
             }
             SyntaxKind::IF_EXPR_NODE => Some(ExprNode::IfExpr(IfExprNode::cast(syntax)?)),
+            SyntaxKind::DEFER_EXPR_NODE => {
+                Some(ExprNode::DeferExpr(DeferExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -254,6 +260,7 @@ impl AstNode for ExprNode {
             ExprNode::ParenExpr(it) => it.syntax(),
             ExprNode::ReturnExpr(it) => it.syntax(),
             ExprNode::IfExpr(it) => it.syntax(),
+            ExprNode::DeferExpr(it) => it.syntax(),
         }
     }
 }
@@ -1660,6 +1667,32 @@ impl IfExprNode {
     }
     /// Find a child node of type [IfExprElseClauseNode].
     pub fn else_clause_node(&self) -> Option<IfExprElseClauseNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `DeferExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DeferExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for DeferExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::DEFER_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl DeferExprNode {
+    /// Find a child token of variant [SyntaxKind::DEFER_TOKEN].
+    pub fn defer_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::DEFER_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
         self.syntax.child(0usize)
     }
 }

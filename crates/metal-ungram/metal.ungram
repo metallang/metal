@@ -103,6 +103,7 @@ Expr =
   | ParenExpr
   | ReturnExpr
   | IfExpr
+  | DeferExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -165,3 +166,5 @@ ReturnExpr = 'return' Expr?
 
 IfExpr = 'if' cond:Expr if_branch:Expr else_clause:IfExprElseClause?
 IfExprElseClause = 'else' else_branch:Expr
+
+DeferExpr = 'defer' Expr
