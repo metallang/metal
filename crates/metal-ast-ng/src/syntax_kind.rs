@@ -109,6 +109,8 @@ pub enum SyntaxKind {
     RETURN_EXPR_NODE,
     /// Don't try to remember this! Use [`N![IfExpr]`](N) instead.
     IF_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![DeferExpr]`](N) instead.
+    DEFER_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
@@ -235,6 +237,8 @@ pub enum SyntaxKind {
     IF_TOKEN,
     /// Don't try to remember this! Use [`T![else]`](T) instead.
     ELSE_TOKEN,
+    /// Don't try to remember this! Use [`T![defer]`](T) instead.
+    DEFER_TOKEN,
     /// Represents a multi- or single-line comment.
     COMMENT_TOKEN,
     /// Represents a whitespace token, such as a space or a tab, among others.
@@ -287,6 +291,7 @@ impl SyntaxKind {
             | T!['(']
             | T![return]
             | T![if]
+            | T![defer]
         ) || self.is_prefix_op()
     }
 }
@@ -344,9 +349,10 @@ pub macro T {
     number] => { $crate ::SyntaxKind::LIT_NUM_TOKEN }, [@ string] => { $crate
     ::SyntaxKind::LIT_STR_TOKEN }, [return] => { $crate ::SyntaxKind::RETURN_TOKEN },
     [if] => { $crate ::SyntaxKind::IF_TOKEN }, [else] => { $crate
-    ::SyntaxKind::ELSE_TOKEN }, [@ comment] => { $crate ::SyntaxKind::COMMENT_TOKEN }, [@
-    whitespace] => { $crate ::SyntaxKind::WHITESPACE_TOKEN }, [@ unknown] => { $crate
-    ::SyntaxKind::UNKNOWN_TOKEN },
+    ::SyntaxKind::ELSE_TOKEN }, [defer] => { $crate ::SyntaxKind::DEFER_TOKEN }, [@
+    comment] => { $crate ::SyntaxKind::COMMENT_TOKEN }, [@ whitespace] => { $crate
+    ::SyntaxKind::WHITESPACE_TOKEN }, [@ unknown] => { $crate ::SyntaxKind::UNKNOWN_TOKEN
+    },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
@@ -403,8 +409,9 @@ pub macro N {
     }, [LitExpr] => { $crate ::SyntaxKind::LIT_EXPR_NODE }, [ParenExpr] => { $crate
     ::SyntaxKind::PAREN_EXPR_NODE }, [ReturnExpr] => { $crate
     ::SyntaxKind::RETURN_EXPR_NODE }, [IfExpr] => { $crate ::SyntaxKind::IF_EXPR_NODE },
-    [PrefixExprOp] => { $crate ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => {
-    $crate ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
+    [DeferExpr] => { $crate ::SyntaxKind::DEFER_EXPR_NODE }, [PrefixExprOp] => { $crate
+    ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
+    ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
     ::SyntaxKind::CALL_EXPR_ARGS_NODE }, [IfExprElseClause] => { $crate
     ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE },
 }

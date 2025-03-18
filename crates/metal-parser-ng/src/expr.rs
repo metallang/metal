@@ -66,6 +66,14 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
 
             parser.end_node();
         }
+        T![defer] => {
+            parser.start_node(N![DeferExpr]);
+
+            parser.eat_any();
+            parse_expr(parser);
+
+            parser.end_node();
+        }
         // prefix ops
         op if let Some(bp) = prefix_binding_power_for(op) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);
