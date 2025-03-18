@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast_ng::SyntaxKind;
-use metal_ast_ng::N;
-use metal_ast_ng::T;
+use metal_ast_ng::{SyntaxKind, N, T};
 
 use crate::block::parse_block;
 use crate::common::parse_name;

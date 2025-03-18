@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast_ng::SyntaxKind;
-use metal_ast_ng::SyntaxNode;
-use metal_ast_ng::T;
-use metal_lexer_ng::Span;
-use metal_lexer_ng::Token;
+use metal_ast_ng::{SyntaxKind, SyntaxNode, T};
+use metal_lexer_ng::{Span, Token};
 use rowan::GreenNodeBuilder;
 
 #[derive(Clone, Copy, Debug)]

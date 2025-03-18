@@ -1,13 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast_ng::N;
-use metal_ast_ng::T;
+use metal_ast_ng::{N, T};
 
 use crate::block::parse_block;
-use crate::common::parse_expr_specifier;
-use crate::common::parse_mutability;
-use crate::common::parse_name;
-use crate::common::parse_type_qualifier;
+use crate::common::{parse_expr_specifier, parse_mutability, parse_name, parse_type_qualifier};
 
 pub fn parse_fn_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![FnItem]);

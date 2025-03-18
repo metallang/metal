@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 
+use metal_ast_ng::{SyntaxKind, N, T};
+
 use crate::parser::ParserMode;
 use crate::type_::name::parse_name_type;
 use crate::type_::ref_::parse_ref_type;
-
-use metal_ast_ng::SyntaxKind;
-use metal_ast_ng::N;
-use metal_ast_ng::T;
 
 mod name;
 mod ref_;

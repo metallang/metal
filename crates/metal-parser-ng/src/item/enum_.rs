@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast_ng::N;
-use metal_ast_ng::T;
+use metal_ast_ng::{N, T};
 
-use crate::common::parse_name;
-use crate::common::parse_visibility;
+use crate::common::{parse_name, parse_visibility};
 use crate::item::fn_::parse_fn_item;
 use crate::type_::parse_type;
 
