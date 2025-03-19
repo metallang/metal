@@ -1,29 +1,23 @@
 // SPDX-License-Identifier: MIT
 
-/// A span in a source file.
-pub type Span = core::range::Range<usize>;
+use std::ops::Index;
 
-/// An object with a [Span] attached.
-pub trait Spanned {
-    /// Get the [Span] of this object.
-    fn span(&self) -> &Span;
+#[derive(Debug)]
+pub struct Span {
+    pub start: usize,
+    pub end: usize,
 }
 
-impl<T: Spanned> Spanned for Box<T> {
-    fn span(&self) -> &Span {
-        self.as_ref().span()
+impl Span {
+    pub fn new(start: usize, end: usize) -> Self {
+        Self { start, end }
     }
 }
 
-pub trait MaybeSpanned {
-    fn maybe_span(&self) -> Option<&Span>;
-}
+impl Index<Span> for str {
+    type Output = str;
 
-impl<T: Spanned> MaybeSpanned for Option<T> {
-    fn maybe_span(&self) -> Option<&Span> {
-        match self {
-            Some(spanned) => Some(spanned.span()),
-            None => None,
-        }
+    fn index(&self, span: Span) -> &Self::Output {
+        &self[span.start..span.end]
     }
 }

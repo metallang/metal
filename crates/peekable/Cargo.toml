@@ -1,5 +1,0 @@
-[package]
-name = "peekable"
-version = "0.1.0"
-edition = "2021"
-description = "`std::iter::Peekable` as a trait."

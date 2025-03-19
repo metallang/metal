@@ -1,28 +1,26 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast::{Block, Item};
-use metal_lexer::{span, TokenKind};
+use metal_ast::{N, T};
 
-use crate::{expect, parse_delimited, parse_item, parser_type, Delimiter};
+use crate::parser::parser_type;
+use crate::stmt::parse_stmt;
 
-pub fn parse_block<'src>(parser: parser_type!('src)) -> Block<'src> {
-    let start_span = expect!(parser, TokenKind::OpeningBrace);
+pub fn parse_block(parser: &mut parser_type!()) {
+    parser.start_node(N![Block]);
 
-    let items = parse_block_raw(parser);
+    parser.maybe_eat(T!['{']);
+    parse_block_stmts(parser);
+    parser.maybe_eat(T!['}']);
 
-    let end_span = expect!(parser, TokenKind::ClosingBrace);
-
-    Block {
-        items,
-        span: span!(start_span.start..end_span.end),
-    }
+    parser.end_node();
 }
 
-pub fn parse_block_raw<'src>(parser: parser_type!('src)) -> Vec<Item<'src>> {
-    parse_delimited(
-        parser,
-        Delimiter::Semicolon,
-        [Delimiter::ClosingBrace],
-        &mut parse_item,
-    )
+pub fn parse_block_stmts(parser: &mut parser_type!()) {
+    parser.start_node(N![BlockStmts]);
+
+    while !(parser.peek_is(T!['}']) || parser.is_eof()) {
+        parse_stmt(parser);
+    }
+
+    parser.end_node();
 }

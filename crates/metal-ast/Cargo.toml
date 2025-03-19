@@ -2,7 +2,14 @@
 name = "metal-ast"
 version = "0.1.0"
 edition = "2021"
-description = "The Metal language abstract syntax tree (AST) definition."
 
 [dependencies]
-metal-lexer = { workspace = true }
+rowan = { workspace = true }
+extend = { workspace = true }
+either = { workspace = true }
+
+[build-dependencies]
+metal-ungram = { workspace = true }
+
+[lints]
+workspace = true
