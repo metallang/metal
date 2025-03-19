@@ -26,18 +26,14 @@ where
     L: Iterator<Item = Token>,
 {
     pub fn new(lexer: L, source: &'src str) -> Self {
-        let mut parser = Self {
+        Self {
             builder: GreenNodeBuilder::new(),
             lexer,
             source,
             mode: ParserMode::Normal,
             current_token: None,
             split_token_buffer: None,
-        };
-
-        parser.compute_next_token();
-
-        parser
+        }
     }
 
     #[allow(clippy::should_implement_trait)]

@@ -11,6 +11,8 @@
 //
 // Also, if you use the ungrammar language server, make sure to disable auto-formatting.
 
+Root = BlockStmts
+
 // Blocks
 Block = '{' stmts:BlockStmts '}'
 BlockStmts = Stmt*
