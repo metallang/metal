@@ -2,7 +2,7 @@
 
 use metal_ast::{N, T};
 
-use crate::common::{parse_name, parse_type_qualifier, parse_visibility};
+use crate::common::{parse_expr_specifier, parse_name, parse_type_qualifier, parse_visibility};
 use crate::item::fn_::parse_fn_item;
 
 pub fn parse_struct_item(parser: &mut crate::parser::parser_type!()) {
@@ -48,6 +48,7 @@ pub fn parse_struct_field(parser: &mut crate::parser::parser_type!(), at: rowan:
 
     parse_name(parser);
     parse_type_qualifier(parser);
+    parse_expr_specifier(parser);
     parser.maybe_eat(T![;]);
 
     parser.end_node();

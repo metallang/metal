@@ -1331,6 +1331,10 @@ impl StructFieldNode {
     pub fn ty_node(&self) -> Option<TypeQualNode> {
         self.syntax.child(0usize)
     }
+    /// Find a child node of type [ExprSpecNode].
+    pub fn default_node(&self) -> Option<ExprSpecNode> {
+        self.syntax.child(0usize)
+    }
     /// Find a child token of variant [SyntaxKind::SEMICOLON_TOKEN].
     pub fn semicolon_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::SEMICOLON_TOKEN, 0usize)
