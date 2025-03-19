@@ -2,11 +2,11 @@
 
 use crate::error::Error;
 
-pub struct DevParseCommand {
+pub struct DevLexCommand {
     path: String,
 }
 
-impl tapcli::Command for DevParseCommand {
+impl tapcli::Command for DevLexCommand {
     type Error = Error;
 
     fn parse(parser: &mut tapcli::Parser) -> Result<Self, Self::Error> {
@@ -20,12 +20,9 @@ impl tapcli::Command for DevParseCommand {
     fn run(self) -> Result<Self::Output, Self::Error> {
         let contents = std::fs::read_to_string(self.path).unwrap();
 
-        let lexer = metal_lexer::Lexer::new(&contents).peekable();
-        let mut parser = metal_parser::Parser::new(lexer, &contents);
-
-        metal_parser::parse_root(&mut parser);
-
-        eprintln!("{:#?}", parser.finish());
+        for token in metal_lexer::Lexer::new(&contents) {
+            eprintln!("{token:?}");
+        }
 
         Ok(())
     }

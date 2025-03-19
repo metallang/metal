@@ -1,8 +1,0 @@
-[package]
-name = "metal-codegen-wasm"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-metal-ast = { workspace = true }
-wasm-encoder = { workspace = true }

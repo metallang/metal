@@ -48,7 +48,7 @@ impl StructRepository {
     }
 }
 
-// TODO: move to AST once ast-ng is complete.
+// TODO: move to analyzer eventually.
 pub struct PathBuilder<'a> {
     inner: Vec<Cow<'a, str>>,
 }

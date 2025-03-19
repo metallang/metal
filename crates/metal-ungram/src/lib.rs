@@ -16,9 +16,9 @@ use crate::{
 };
 
 const GRAMMAR: &str = include_str!("../metal.ungram");
-const SYNTAX_KIND: &str = "../metal-ast-ng/src/syntax_kind.rs";
-const TOKENS: &str = "../metal-ast-ng/src/tokens.rs";
-const NODES: &str = "../metal-ast-ng/src/nodes.rs";
+const SYNTAX_KIND: &str = "../metal-ast/src/syntax_kind.rs";
+const TOKENS: &str = "../metal-ast/src/tokens.rs";
+const NODES: &str = "../metal-ast/src/nodes.rs";
 
 mod debug;
 mod engram;

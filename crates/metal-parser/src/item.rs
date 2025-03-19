@@ -1,42 +1,46 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast::{Item, Visibility};
-use metal_lexer::TokenKind;
+use metal_ast::{N, T};
 
-use crate::{
-    parse_const_item, parse_enum_item, parse_expr, parse_fn_item, parse_import_item,
-    parse_struct_item, parse_vis, parser_type,
-};
+use crate::common::parse_visibility;
+use crate::item::abstract_::parse_abstract_item;
+use crate::item::const_::parse_const_item;
+use crate::item::enum_::parse_enum_item;
+use crate::item::fn_::parse_fn_item;
+use crate::item::import::parse_import_item;
+use crate::item::struct_::parse_struct_item;
+use crate::item::type_::parse_type_alias_item;
 
-pub mod const_item;
-pub mod enum_item;
-pub mod fn_item;
-pub mod import;
-pub mod struct_item;
+mod abstract_;
+mod const_;
+mod enum_;
+mod fn_;
+mod import;
+mod struct_;
+mod type_;
 
-pub fn parse_item<'src>(parser: parser_type!('src)) -> Item<'src> {
-    match parser.peek().expect("an item").kind {
-        TokenKind::Const
-        | TokenKind::Enum
-        | TokenKind::Struct
-        | TokenKind::Def
-        | TokenKind::Import
-        | TokenKind::Pub => {
-            let vis = parse_vis(parser);
+pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![Item]);
 
-            parse_item_with_vis(parser, vis)
-        }
-        _ => Item::Expr(parse_expr(parser)),
-    }
+    parse_visibility(parser);
+    parse_item_kind(parser);
+
+    parser.end_node();
 }
 
-pub fn parse_item_with_vis<'src>(parser: parser_type!('src), vis: Visibility) -> Item<'src> {
-    match parser.peek().expect("an item").kind {
-        TokenKind::Const => Item::Const(Box::new(parse_const_item(parser, vis))),
-        TokenKind::Enum => Item::Enum(Box::new(parse_enum_item(parser, vis))),
-        TokenKind::Struct => Item::Struct(Box::new(parse_struct_item(parser, vis))),
-        TokenKind::Def => Item::Fn(Box::new(parse_fn_item(parser, vis))),
-        TokenKind::Import => Item::Import(Box::new(parse_import_item(parser, vis))),
-        _ => panic!("expected an item that's valid with vis quals"),
+pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![ItemKind]);
+
+    match parser.peek().expect("expected an item").kind {
+        T![abstract] => parse_abstract_item(parser),
+        T![const] => parse_const_item(parser),
+        T![def] => parse_fn_item(parser),
+        T![enum] => parse_enum_item(parser),
+        T![import] => parse_import_item(parser),
+        T![struct] => parse_struct_item(parser),
+        T![type] => parse_type_alias_item(parser),
+        other => todo!("{other:#?}"),
     }
+
+    parser.end_node();
 }

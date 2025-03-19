@@ -161,7 +161,7 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
         /// # Example
         ///
         /// ```no_run,
-        /// # use metal_ast_ng::{T, AstToken, BinaryExprOpNode};
+        /// # use metal_ast::{T, AstToken, BinaryExprOpNode};
         /// # fn example(binary_op_node: BinaryExprOpNode) {
         /// if binary_op_node.token().is_some_and(|token| token.syntax().kind() == T![+]) {
         ///     // The binary operator is plus!
@@ -196,7 +196,7 @@ fn generate_n_macro(grammar: &Engram) -> TokenStream {
         /// # Example
         ///
         /// ```no_run,
-        /// # use metal_ast_ng::{N, AstNode, BinaryExprOpNode};
+        /// # use metal_ast::{N, AstNode, BinaryExprOpNode};
         /// # fn example(binary_op_node: BinaryExprOpNode) {
         /// assert!(binary_op_node.syntax().kind() == N![BinaryExprOp]);
         /// # }

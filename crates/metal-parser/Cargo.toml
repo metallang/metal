@@ -2,9 +2,11 @@
 name = "metal-parser"
 version = "0.1.0"
 edition = "2021"
-description = "The Metal language parser."
 
 [dependencies]
-peekable = { workspace = true }
+rowan = { workspace = true }
 metal-lexer = { workspace = true }
 metal-ast = { workspace = true }
+
+[lints]
+workspace = true
