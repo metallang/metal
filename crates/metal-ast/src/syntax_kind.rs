@@ -51,8 +51,8 @@ pub enum SyntaxKind {
     TYPE_ALIAS_ITEM_NODE,
     /// Don't try to remember this! Use [`N![Annotation]`](N) instead.
     ANNOTATION_NODE,
-    /// Don't try to remember this! Use [`N![GenericName]`](N) instead.
-    GENERIC_NAME_NODE,
+    /// Don't try to remember this! Use [`N![GenericParamList]`](N) instead.
+    GENERIC_PARAM_LIST_NODE,
     /// Don't try to remember this! Use [`N![AbstractBody]`](N) instead.
     ABSTRACT_BODY_NODE,
     /// Don't try to remember this! Use [`N![AbstractFnItem]`](N) instead.
@@ -127,8 +127,6 @@ pub enum SyntaxKind {
     CALL_EXPR_ARGS_NODE,
     /// Don't try to remember this! Use [`N![IfExprElseClause]`](N) instead.
     IF_EXPR_ELSE_CLAUSE_NODE,
-    /// Don't try to remember this! Use [`N![GenericParamList]`](N) instead.
-    GENERIC_PARAM_LIST_NODE,
     /// Don't try to remember this! Use [`N![GenericParams]`](N) instead.
     GENERIC_PARAMS_NODE,
     /// Don't try to remember this! Use [`N![GenericParam]`](N) instead.
@@ -401,8 +399,8 @@ pub macro N {
     ::SyntaxKind::IMPORT_ITEM_NODE }, [StructItem] => { $crate
     ::SyntaxKind::STRUCT_ITEM_NODE }, [TypeAliasItem] => { $crate
     ::SyntaxKind::TYPE_ALIAS_ITEM_NODE }, [Annotation] => { $crate
-    ::SyntaxKind::ANNOTATION_NODE }, [GenericName] => { $crate
-    ::SyntaxKind::GENERIC_NAME_NODE }, [AbstractBody] => { $crate
+    ::SyntaxKind::ANNOTATION_NODE }, [GenericParamList] => { $crate
+    ::SyntaxKind::GENERIC_PARAM_LIST_NODE }, [AbstractBody] => { $crate
     ::SyntaxKind::ABSTRACT_BODY_NODE }, [AbstractFnItem] => { $crate
     ::SyntaxKind::ABSTRACT_FN_ITEM_NODE }, [FnSignature] => { $crate
     ::SyntaxKind::FN_SIGNATURE_NODE }, [EnumBody] => { $crate
@@ -435,8 +433,7 @@ pub macro N {
     ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
     ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
     ::SyntaxKind::CALL_EXPR_ARGS_NODE }, [IfExprElseClause] => { $crate
-    ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE }, [GenericParamList] => { $crate
-    ::SyntaxKind::GENERIC_PARAM_LIST_NODE }, [GenericParams] => { $crate
+    ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE }, [GenericParams] => { $crate
     ::SyntaxKind::GENERIC_PARAMS_NODE }, [GenericParam] => { $crate
     ::SyntaxKind::GENERIC_PARAM_NODE },
 }

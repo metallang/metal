@@ -538,8 +538,12 @@ impl AbstractItemNode {
     pub fn abstract_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::ABSTRACT_TOKEN, 0usize)
     }
-    /// Find a child node of type [GenericNameNode].
-    pub fn generic_name_node(&self) -> Option<GenericNameNode> {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [GenericParamListNode].
+    pub fn generics_node(&self) -> Option<GenericParamListNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
@@ -610,8 +614,12 @@ impl EnumItemNode {
     pub fn enum_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::ENUM_TOKEN, 0usize)
     }
-    /// Find a child node of type [GenericNameNode].
-    pub fn generic_name_node(&self) -> Option<GenericNameNode> {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [GenericParamListNode].
+    pub fn generics_node(&self) -> Option<GenericParamListNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
@@ -648,8 +656,12 @@ impl FnItemNode {
     pub fn def_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::DEF_TOKEN, 0usize)
     }
-    /// Find a child node of type [GenericNameNode].
-    pub fn generic_name_node(&self) -> Option<GenericNameNode> {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [GenericParamListNode].
+    pub fn generics_node(&self) -> Option<GenericParamListNode> {
         self.syntax.child(0usize)
     }
     /// Find a child node of type [FnSignatureNode].
@@ -708,8 +720,12 @@ impl StructItemNode {
     pub fn struct_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::STRUCT_TOKEN, 0usize)
     }
-    /// Find a child node of type [GenericNameNode].
-    pub fn generic_name_node(&self) -> Option<GenericNameNode> {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [GenericParamListNode].
+    pub fn generics_node(&self) -> Option<GenericParamListNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
@@ -746,8 +762,12 @@ impl TypeAliasItemNode {
     pub fn type_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::TYPE_TOKEN, 0usize)
     }
-    /// Find a child node of type [GenericNameNode].
-    pub fn generic_name_node(&self) -> Option<GenericNameNode> {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [GenericParamListNode].
+    pub fn generics_node(&self) -> Option<GenericParamListNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::EQ_TOKEN].
@@ -785,14 +805,14 @@ impl AnnotationNode {
         self.syntax.child(0usize)
     }
 }
-/// Represents the `GenericName` node.
+/// Represents the `GenericParamList` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct GenericNameNode {
+pub struct GenericParamListNode {
     syntax: SyntaxNode,
 }
-impl AstNode for GenericNameNode {
+impl AstNode for GenericParamListNode {
     fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::GENERIC_NAME_NODE
+        kind == SyntaxKind::GENERIC_PARAM_LIST_NODE
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -801,14 +821,18 @@ impl AstNode for GenericNameNode {
         &self.syntax
     }
 }
-impl GenericNameNode {
-    /// Find a child node of type [NameNode].
-    pub fn name_node(&self) -> Option<NameNode> {
+impl GenericParamListNode {
+    /// Find a child token of variant [SyntaxKind::L_BRACKET_TOKEN].
+    pub fn l_bracket_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::L_BRACKET_TOKEN, 0usize)
+    }
+    /// Find a child node of type [GenericParamsNode].
+    pub fn generic_params_node(&self) -> Option<GenericParamsNode> {
         self.syntax.child(0usize)
     }
-    /// Find a child node of type [GenericParamListNode].
-    pub fn generics_node(&self) -> Option<GenericParamListNode> {
-        self.syntax.child(0usize)
+    /// Find a child token of variant [SyntaxKind::R_BRACKET_TOKEN].
+    pub fn r_bracket_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::R_BRACKET_TOKEN, 0usize)
     }
 }
 /// Represents the `AbstractBody` node.
@@ -1915,36 +1939,6 @@ impl IfExprElseClauseNode {
     /// Find a child node of type [ExprNode].
     pub fn else_branch_node(&self) -> Option<ExprNode> {
         self.syntax.child(0usize)
-    }
-}
-/// Represents the `GenericParamList` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct GenericParamListNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for GenericParamListNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::GENERIC_PARAM_LIST_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl GenericParamListNode {
-    /// Find a child token of variant [SyntaxKind::L_BRACKET_TOKEN].
-    pub fn l_bracket_token(&self) -> Option<SyntaxToken> {
-        self.syntax.child_token(SyntaxKind::L_BRACKET_TOKEN, 0usize)
-    }
-    /// Find a child node of type [GenericParamsNode].
-    pub fn generic_params_node(&self) -> Option<GenericParamsNode> {
-        self.syntax.child(0usize)
-    }
-    /// Find a child token of variant [SyntaxKind::R_BRACKET_TOKEN].
-    pub fn r_bracket_token(&self) -> Option<SyntaxToken> {
-        self.syntax.child_token(SyntaxKind::R_BRACKET_TOKEN, 0usize)
     }
 }
 /// Represents the `GenericParams` node.

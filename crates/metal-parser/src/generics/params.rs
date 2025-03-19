@@ -4,18 +4,6 @@ use metal_ast::{N, T};
 
 use crate::common::{parse_name, parse_type_qualifier, parse_type_specifier};
 
-pub fn parse_generic_name(parser: &mut crate::parser::parser_type!()) {
-    parser.start_node(N![GenericName]);
-
-    parse_name(parser);
-
-    if parser.peek_is(T!['[']) {
-        parse_generic_param_list(parser);
-    }
-
-    parser.end_node();
-}
-
 pub fn parse_generic_param_list(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![GenericParamList]);
 

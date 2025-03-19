@@ -44,20 +44,20 @@ ItemKind =
 Annotations = Annotation*
 Annotation = '@' Expr
 
-AbstractItem = 'abstract' GenericName '{' body:AbstractBody '}'
+AbstractItem = 'abstract' Name generics:GenericParamList? '{' body:AbstractBody '}'
 AbstractBody = item:(AbstractFnItem*)
 AbstractFnItem = 'def' Name sig:FnSignature ';'
 
 ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier
 
-EnumItem = 'enum' GenericName '{' body:EnumBody '}'
+EnumItem = 'enum' Name generics:GenericParamList? '{' body:EnumBody '}'
 EnumBody = item:(EnumBodyItem*)
 EnumBodyItem = EnumVariant | EnumFn
 EnumVariant = Name data_ty:EnumVariantDataType? ';'
 EnumVariantDataType = ('(' Type ')')
 EnumFn = vis:Visibility FnItem
 
-FnItem = 'def' GenericName sig:FnSignature body:Block
+FnItem = 'def' Name generics:GenericParamList? sig:FnSignature body:Block
 FnSignature = '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
 FnInputs = FnInput (',' FnInput)* ','?
 FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
@@ -69,13 +69,13 @@ ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
-StructItem = 'struct' GenericName '{' body:StructBody '}'
+StructItem = 'struct' Name generics:GenericParamList? '{' body:StructBody '}'
 StructBody = item:(StructBodyItem*)
 StructBodyItem = StructField | StructFn
 StructField = vis:Visibility Name ty:TypeQualifier ';'
 StructFn = vis:Visibility FnItem
 
-TypeAliasItem = 'type' GenericName '=' Type
+TypeAliasItem = 'type' Name generics:GenericParamList? '=' Type
 
 // Type expressions
 
@@ -175,7 +175,6 @@ DeferExpr = 'defer' Expr
 
 // Generics
 
-GenericName = Name generics:GenericParamList?
 GenericParamList = '[' GenericParams? ']'
 GenericParams = GenericParam (',' GenericParam)* ','?
 GenericParam = Name bound:TypeQualifier? default:TypeSpecifier?
