@@ -11,5 +11,19 @@ mod parser;
 mod stmt;
 mod type_;
 
-pub use block::parse_block_stmts as parse_root;
-pub use parser::Parser;
+use metal_ast::N;
+
+use crate::block::parse_block_stmts;
+pub use crate::parser::Parser;
+
+pub fn parse_root(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![Root]);
+
+    // after construction, the parser will return None as the first token
+    // for internal reasons. we therefore skip it here
+    parser.next();
+
+    parse_block_stmts(parser);
+
+    parser.end_node();
+}
