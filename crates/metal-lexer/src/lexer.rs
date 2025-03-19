@@ -65,6 +65,7 @@ impl Iterator for Lexer<'_> {
             b';' => self.bump_token(SyntaxKind::SEMICOLON_TOKEN),
             b',' => self.bump_token(SyntaxKind::COMMA_TOKEN),
             b'~' => self.bump_token(SyntaxKind::TILDE_TOKEN),
+            b'@' => self.bump_token(SyntaxKind::AT_TOKEN),
             b'+' => self.plus_token(),
             b'-' => self.minus_token(),
             b'%' => self.percent_token(),

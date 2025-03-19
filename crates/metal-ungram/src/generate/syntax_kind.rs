@@ -95,7 +95,8 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T![import]
                     | T![struct]
                     | T![type]
-                    | T![pub] // non-items don't have visibility
+                    | T![pub] // non-items can't have visibility
+                    | T![@] // non-items can't have annotations (yet?)
                 )
             }
 

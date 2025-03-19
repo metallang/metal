@@ -384,6 +384,10 @@ impl AstNode for ItemNode {
     }
 }
 impl ItemNode {
+    /// Find a child node of type [AnnotationsNode].
+    pub fn anns_node(&self) -> Option<AnnotationsNode> {
+        self.syntax.child(0usize)
+    }
     /// Find a child node of type [VisNode].
     pub fn vis_node(&self) -> Option<VisNode> {
         self.syntax.child(0usize)
@@ -391,6 +395,28 @@ impl ItemNode {
     /// Find a child node of type [ItemKindNode].
     pub fn kind_node(&self) -> Option<ItemKindNode> {
         self.syntax.child(0usize)
+    }
+}
+/// Represents the `Annotations` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AnnotationsNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for AnnotationsNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::ANNOTATIONS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl AnnotationsNode {
+    /// Find all children nodes of type [AnnotationNode].
+    pub fn annotation_nodes(&self) -> impl Iterator<Item = AnnotationNode> {
+        self.syntax.children().filter_map(AnnotationNode::cast)
     }
 }
 /// Represents the `ItemKind` node.
@@ -704,6 +730,32 @@ impl TypeAliasItemNode {
     }
     /// Find a child node of type [TypeNode].
     pub fn type_node(&self) -> Option<TypeNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `Annotation` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AnnotationNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for AnnotationNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::ANNOTATION_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl AnnotationNode {
+    /// Find a child token of variant [SyntaxKind::AT_TOKEN].
+    pub fn at_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::AT_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
         self.syntax.child(0usize)
     }
 }
