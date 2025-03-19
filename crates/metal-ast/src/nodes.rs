@@ -7,6 +7,50 @@ use crate::{
     AstNode, AstToken, SyntaxKind, SyntaxNode, SyntaxToken, tokens::*,
     utils::SyntaxNodeExt,
 };
+/// Represents the `Root` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct RootNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for RootNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::ROOT_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl RootNode {
+    /// Find a child node of type [BlockStmtsNode].
+    pub fn block_stmts_node(&self) -> Option<BlockStmtsNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `BlockStmts` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct BlockStmtsNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for BlockStmtsNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::BLOCK_STMTS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl BlockStmtsNode {
+    /// Find all children nodes of type [StmtNode].
+    pub fn stmt_nodes(&self) -> impl Iterator<Item = StmtNode> {
+        self.syntax.children().filter_map(StmtNode::cast)
+    }
+}
 /// Represents the `Block` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct BlockNode {
@@ -35,28 +79,6 @@ impl BlockNode {
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
-    }
-}
-/// Represents the `BlockStmts` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct BlockStmtsNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for BlockStmtsNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::BLOCK_STMTS_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl BlockStmtsNode {
-    /// Find all children nodes of type [StmtNode].
-    pub fn stmt_nodes(&self) -> impl Iterator<Item = StmtNode> {
-        self.syntax.children().filter_map(StmtNode::cast)
     }
 }
 /// Represents the `Stmt` node.
