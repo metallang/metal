@@ -5,10 +5,12 @@
 #[repr(u8)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum SyntaxKind {
-    /// Don't try to remember this! Use [`N![Block]`](N) instead.
-    BLOCK_NODE,
+    /// Don't try to remember this! Use [`N![Root]`](N) instead.
+    ROOT_NODE,
     /// Don't try to remember this! Use [`N![BlockStmts]`](N) instead.
     BLOCK_STMTS_NODE,
+    /// Don't try to remember this! Use [`N![Block]`](N) instead.
+    BLOCK_NODE,
     /// Don't try to remember this! Use [`N![Stmt]`](N) instead.
     STMT_NODE,
     /// Don't try to remember this! Use [`N![Name]`](N) instead.
@@ -374,20 +376,20 @@ pub macro T {
 /// # }
 /// ```
 pub macro N {
-    [Block] => { $crate ::SyntaxKind::BLOCK_NODE }, [BlockStmts] => { $crate
-    ::SyntaxKind::BLOCK_STMTS_NODE }, [Stmt] => { $crate ::SyntaxKind::STMT_NODE },
-    [Name] => { $crate ::SyntaxKind::NAME_NODE }, [Visibility] => { $crate
-    ::SyntaxKind::VIS_NODE }, [Mutability] => { $crate ::SyntaxKind::MUTNESS_NODE },
-    [ExprSpecifier] => { $crate ::SyntaxKind::EXPR_SPEC_NODE }, [Expr] => { $crate
-    ::SyntaxKind::EXPR_NODE }, [TypeQualifier] => { $crate ::SyntaxKind::TYPE_QUAL_NODE
-    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [StmtKind] => { $crate
-    ::SyntaxKind::STMT_KIND_NODE }, [Item] => { $crate ::SyntaxKind::ITEM_NODE },
-    [Annotations] => { $crate ::SyntaxKind::ANNOTATIONS_NODE }, [ItemKind] => { $crate
-    ::SyntaxKind::ITEM_KIND_NODE }, [AbstractItem] => { $crate
-    ::SyntaxKind::ABSTRACT_ITEM_NODE }, [ConstItem] => { $crate
-    ::SyntaxKind::CONST_ITEM_NODE }, [EnumItem] => { $crate ::SyntaxKind::ENUM_ITEM_NODE
-    }, [FnItem] => { $crate ::SyntaxKind::FN_ITEM_NODE }, [ImportItem] => { $crate
-    ::SyntaxKind::IMPORT_ITEM_NODE }, [StructItem] => { $crate
+    [Root] => { $crate ::SyntaxKind::ROOT_NODE }, [BlockStmts] => { $crate
+    ::SyntaxKind::BLOCK_STMTS_NODE }, [Block] => { $crate ::SyntaxKind::BLOCK_NODE },
+    [Stmt] => { $crate ::SyntaxKind::STMT_NODE }, [Name] => { $crate
+    ::SyntaxKind::NAME_NODE }, [Visibility] => { $crate ::SyntaxKind::VIS_NODE },
+    [Mutability] => { $crate ::SyntaxKind::MUTNESS_NODE }, [ExprSpecifier] => { $crate
+    ::SyntaxKind::EXPR_SPEC_NODE }, [Expr] => { $crate ::SyntaxKind::EXPR_NODE },
+    [TypeQualifier] => { $crate ::SyntaxKind::TYPE_QUAL_NODE }, [Type] => { $crate
+    ::SyntaxKind::TYPE_NODE }, [StmtKind] => { $crate ::SyntaxKind::STMT_KIND_NODE },
+    [Item] => { $crate ::SyntaxKind::ITEM_NODE }, [Annotations] => { $crate
+    ::SyntaxKind::ANNOTATIONS_NODE }, [ItemKind] => { $crate ::SyntaxKind::ITEM_KIND_NODE
+    }, [AbstractItem] => { $crate ::SyntaxKind::ABSTRACT_ITEM_NODE }, [ConstItem] => {
+    $crate ::SyntaxKind::CONST_ITEM_NODE }, [EnumItem] => { $crate
+    ::SyntaxKind::ENUM_ITEM_NODE }, [FnItem] => { $crate ::SyntaxKind::FN_ITEM_NODE },
+    [ImportItem] => { $crate ::SyntaxKind::IMPORT_ITEM_NODE }, [StructItem] => { $crate
     ::SyntaxKind::STRUCT_ITEM_NODE }, [TypeAliasItem] => { $crate
     ::SyntaxKind::TYPE_ALIAS_ITEM_NODE }, [Annotation] => { $crate
     ::SyntaxKind::ANNOTATION_NODE }, [AbstractBody] => { $crate
