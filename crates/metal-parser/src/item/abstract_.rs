@@ -3,13 +3,14 @@
 use metal_ast::{N, T};
 
 use crate::common::parse_name;
+use crate::generics::params::parse_generic_name;
 use crate::item::fn_::parse_fn_signature;
 
 pub fn parse_abstract_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![AbstractItem]);
 
     parser.maybe_eat(T![abstract]);
-    parse_name(parser);
+    parse_generic_name(parser);
     parser.maybe_eat(T!['{']);
     parse_abstract_body(parser);
     parser.maybe_eat(T!['}']);

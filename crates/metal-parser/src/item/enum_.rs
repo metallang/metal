@@ -3,6 +3,7 @@
 use metal_ast::{N, T};
 
 use crate::common::{parse_name, parse_visibility};
+use crate::generics::params::parse_generic_name;
 use crate::item::fn_::parse_fn_item;
 use crate::type_::parse_type;
 
@@ -11,7 +12,7 @@ pub fn parse_enum_item(parser: &mut crate::parser::parser_type!()) {
 
     parse_visibility(parser);
     parser.maybe_eat(T![enum]);
-    parse_name(parser);
+    parse_generic_name(parser);
     parser.maybe_eat(T!['{']);
     parse_enum_body(parser);
     parser.maybe_eat(T!['}']);

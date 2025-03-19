@@ -25,6 +25,8 @@ pub enum SyntaxKind {
     TYPE_QUAL_NODE,
     /// Don't try to remember this! Use [`N![Type]`](N) instead.
     TYPE_NODE,
+    /// Don't try to remember this! Use [`N![TypeSpecifier]`](N) instead.
+    TYPE_SPECIFIER_NODE,
     /// Don't try to remember this! Use [`N![StmtKind]`](N) instead.
     STMT_KIND_NODE,
     /// Don't try to remember this! Use [`N![Item]`](N) instead.
@@ -49,6 +51,8 @@ pub enum SyntaxKind {
     TYPE_ALIAS_ITEM_NODE,
     /// Don't try to remember this! Use [`N![Annotation]`](N) instead.
     ANNOTATION_NODE,
+    /// Don't try to remember this! Use [`N![GenericName]`](N) instead.
+    GENERIC_NAME_NODE,
     /// Don't try to remember this! Use [`N![AbstractBody]`](N) instead.
     ABSTRACT_BODY_NODE,
     /// Don't try to remember this! Use [`N![AbstractFnItem]`](N) instead.
@@ -123,6 +127,12 @@ pub enum SyntaxKind {
     CALL_EXPR_ARGS_NODE,
     /// Don't try to remember this! Use [`N![IfExprElseClause]`](N) instead.
     IF_EXPR_ELSE_CLAUSE_NODE,
+    /// Don't try to remember this! Use [`N![GenericParamList]`](N) instead.
+    GENERIC_PARAM_LIST_NODE,
+    /// Don't try to remember this! Use [`N![GenericParams]`](N) instead.
+    GENERIC_PARAMS_NODE,
+    /// Don't try to remember this! Use [`N![GenericParam]`](N) instead.
+    GENERIC_PARAM_NODE,
     /// Don't try to remember this! Use [`T!['{']`](T) instead.
     L_BRACE_TOKEN,
     /// Don't try to remember this! Use [`T!['}']`](T) instead.
@@ -380,7 +390,8 @@ pub macro N {
     ::SyntaxKind::VIS_NODE }, [Mutability] => { $crate ::SyntaxKind::MUTNESS_NODE },
     [ExprSpecifier] => { $crate ::SyntaxKind::EXPR_SPEC_NODE }, [Expr] => { $crate
     ::SyntaxKind::EXPR_NODE }, [TypeQualifier] => { $crate ::SyntaxKind::TYPE_QUAL_NODE
-    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [StmtKind] => { $crate
+    }, [Type] => { $crate ::SyntaxKind::TYPE_NODE }, [TypeSpecifier] => { $crate
+    ::SyntaxKind::TYPE_SPECIFIER_NODE }, [StmtKind] => { $crate
     ::SyntaxKind::STMT_KIND_NODE }, [Item] => { $crate ::SyntaxKind::ITEM_NODE },
     [Annotations] => { $crate ::SyntaxKind::ANNOTATIONS_NODE }, [ItemKind] => { $crate
     ::SyntaxKind::ITEM_KIND_NODE }, [AbstractItem] => { $crate
@@ -390,7 +401,8 @@ pub macro N {
     ::SyntaxKind::IMPORT_ITEM_NODE }, [StructItem] => { $crate
     ::SyntaxKind::STRUCT_ITEM_NODE }, [TypeAliasItem] => { $crate
     ::SyntaxKind::TYPE_ALIAS_ITEM_NODE }, [Annotation] => { $crate
-    ::SyntaxKind::ANNOTATION_NODE }, [AbstractBody] => { $crate
+    ::SyntaxKind::ANNOTATION_NODE }, [GenericName] => { $crate
+    ::SyntaxKind::GENERIC_NAME_NODE }, [AbstractBody] => { $crate
     ::SyntaxKind::ABSTRACT_BODY_NODE }, [AbstractFnItem] => { $crate
     ::SyntaxKind::ABSTRACT_FN_ITEM_NODE }, [FnSignature] => { $crate
     ::SyntaxKind::FN_SIGNATURE_NODE }, [EnumBody] => { $crate
@@ -423,5 +435,8 @@ pub macro N {
     ::SyntaxKind::PREFIX_EXPR_OP_NODE }, [BinaryExprOp] => { $crate
     ::SyntaxKind::BINARY_EXPR_OP_NODE }, [CallExprArgs] => { $crate
     ::SyntaxKind::CALL_EXPR_ARGS_NODE }, [IfExprElseClause] => { $crate
-    ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE },
+    ::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE }, [GenericParamList] => { $crate
+    ::SyntaxKind::GENERIC_PARAM_LIST_NODE }, [GenericParams] => { $crate
+    ::SyntaxKind::GENERIC_PARAMS_NODE }, [GenericParam] => { $crate
+    ::SyntaxKind::GENERIC_PARAM_NODE },
 }

@@ -6,6 +6,7 @@
 mod block;
 mod common;
 mod expr;
+mod generics;
 mod item;
 mod parser;
 mod stmt;

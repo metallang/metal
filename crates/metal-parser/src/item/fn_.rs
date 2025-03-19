@@ -4,12 +4,13 @@ use metal_ast::{N, T};
 
 use crate::block::parse_block;
 use crate::common::{parse_expr_specifier, parse_mutability, parse_name, parse_type_qualifier};
+use crate::generics::params::parse_generic_name;
 
 pub fn parse_fn_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![FnItem]);
 
     parser.maybe_eat(T![def]);
-    parse_name(parser);
+    parse_generic_name(parser);
     parse_fn_signature(parser);
     parse_block(parser);
 
