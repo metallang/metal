@@ -8,7 +8,6 @@ thiserror = "2.0.3"
 syn = { version = "2.0.85", features = ["full", "visit-mut"] }
 quote = "1.0.37"
 proc-macro2 = "1.0.89"
-proc-macro-error2 = "2.0.1"
 llvm-sys = { git = "https://github.com/metallang/llvm-sys.rs", branch = "main", features = ["force-static"] }
 ungrammar = "1.16.1"
 rowan = "0.16.1"
