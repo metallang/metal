@@ -3,6 +3,7 @@
 use metal_ast::{N, T};
 
 use crate::common::parse_visibility;
+use crate::expr::parse_expr;
 use crate::item::abstract_::parse_abstract_item;
 use crate::item::const_::parse_const_item;
 use crate::item::enum_::parse_enum_item;
@@ -22,6 +23,7 @@ mod type_;
 pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![Item]);
 
+    parse_annotations(parser);
     parse_visibility(parser);
     parse_item_kind(parser);
 
@@ -41,6 +43,25 @@ pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
         T![type] => parse_type_alias_item(parser),
         other => todo!("{other:#?}"),
     }
+
+    parser.end_node();
+}
+
+pub fn parse_annotations(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![Annotations]);
+
+    while parser.peek_is(T![@]) {
+        parse_annotation(parser);
+    }
+
+    parser.end_node();
+}
+
+pub fn parse_annotation(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![Annotation]);
+
+    parser.maybe_eat(T![@]);
+    parse_expr(parser);
 
     parser.end_node();
 }

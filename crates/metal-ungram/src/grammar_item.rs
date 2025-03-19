@@ -262,6 +262,7 @@ fn grammar_item_name(item: &str) -> &str {
         "<<" => "lt2",
         ">>" => "gt2",
         ".." => "dot2",
+        "@" => "at",
         // nodes
         "Visibility" => "Vis",
         "Mutability" => "Mutness",

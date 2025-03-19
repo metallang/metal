@@ -130,6 +130,22 @@ impl AstToken for SemicolonToken {
         &self.syntax
     }
 }
+/// Represents the `@` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AtToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for AtToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::AT_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `abstract` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AbstractToken {

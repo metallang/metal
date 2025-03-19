@@ -2,7 +2,7 @@
 
 // Some docs:
 // - Optionals are effectively ignored (but that doesn't mean you shouldn't add them)
-// - Don't forget to tweak metal_ast_ungram::grammar_item::grammar_item_name when adding
+// - Don't forget to tweak metal_ungram::grammar_item::grammar_item_name when adding
 //   tokens comprised of symbols
 // - The generator is very simplistic, and does not support most kinds of "nested rules".
 //   For example, you can't do `Abc = A B C*`, but you can do `Abc = A B C_repeated` plus
@@ -28,8 +28,8 @@ Stmt = kind:StmtKind ';'?
 
 StmtKind = Item | Expr
 
-Item = vis:Visibility? kind:ItemKind
-
+// don't forget to update SyntaxKind::is_item_start when changing these
+Item = anns:Annotations? vis:Visibility? kind:ItemKind
 // don't forget to update SyntaxKind::is_item_start when changing this
 ItemKind =
   AbstractItem
@@ -39,6 +39,10 @@ ItemKind =
   | ImportItem
   | StructItem
   | TypeAliasItem
+
+Annotations = Annotation*
+Annotation = '@' Expr
+
 
 AbstractItem = 'abstract' Name '{' body:AbstractBody '}'
 AbstractBody = item:(AbstractFnItem*)
