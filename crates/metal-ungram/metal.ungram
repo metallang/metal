@@ -74,7 +74,7 @@ ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 StructItem = 'struct' Name generics:GenericParamList? '{' body:StructBody '}'
 StructBody = item:(StructBodyItem*)
 StructBodyItem = StructField | StructFn
-StructField = vis:Visibility Name ty:TypeQualifier ';'
+StructField = vis:Visibility Name ty:TypeQualifier default:ExprSpecifier? ';'
 StructFn = vis:Visibility FnItem
 
 TypeAliasItem = 'type' Name generics:GenericParamList? '=' Type
