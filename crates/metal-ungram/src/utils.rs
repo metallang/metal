@@ -19,7 +19,31 @@ pub fn save_generated(tokens: TokenStream, to: &str) -> Result<(), crate::Error>
     .to_string();
 
     let parsed = syn::parse_file(&tokens)?;
-    let formatted = format!("{}{}", LICENSE_PREAMBLE, prettyplease::unparse(&parsed));
+    let mut formatted = format!("{}{}", LICENSE_PREAMBLE, prettyplease::unparse(&parsed));
+
+    // FIXME: somehow, this is the (second after prettyplease getting fixed) cleanest solution to #147
+    if to == super::SYNTAX_KIND {
+        formatted = formatted.replace(" }, [", " },\n    [");
+        formatted = formatted.replace(
+            "] => { $crate\n    ::SyntaxKind::",
+            "] => { $crate ::SyntaxKind::",
+        );
+        formatted = formatted.replace(
+            "] =>\n    { $crate ::SyntaxKind::",
+            "] => { $crate ::SyntaxKind::",
+        );
+        formatted = formatted.replace(
+            "]\n    => { $crate ::SyntaxKind::",
+            "] => { $crate ::SyntaxKind::",
+        );
+        formatted = formatted.replace(
+            "] => {\n    $crate ::SyntaxKind::",
+            "] => { $crate ::SyntaxKind::",
+        );
+        formatted = formatted.replace("\n    },\n    [", " },\n    [");
+        formatted = formatted.replace("    [@ ", "    [@");
+        formatted = formatted.replace("$crate ::", "$crate::");
+    }
 
     std::fs::write(to, formatted)?;
 
