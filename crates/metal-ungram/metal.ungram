@@ -23,6 +23,7 @@ Visibility = 'pub'?
 Mutability = 'mut'?
 ExprSpecifier = '=' Expr
 TypeQualifier = ':' Type
+TypeSpecifier = '=' Type
 
 // Items
 
@@ -45,21 +46,20 @@ ItemKind =
 Annotations = Annotation*
 Annotation = '@' Expr
 
-
-AbstractItem = 'abstract' Name '{' body:AbstractBody '}'
+AbstractItem = 'abstract' Name generics:GenericParamList? '{' body:AbstractBody '}'
 AbstractBody = item:(AbstractFnItem*)
 AbstractFnItem = 'def' Name sig:FnSignature ';'
 
 ConstItem = 'const' Name ty:TypeQualifier? value:ExprSpecifier
 
-EnumItem = 'enum' Name '{' body:EnumBody '}'
+EnumItem = 'enum' Name generics:GenericParamList? '{' body:EnumBody '}'
 EnumBody = item:(EnumBodyItem*)
 EnumBodyItem = EnumVariant | EnumFn
 EnumVariant = Name data_ty:EnumVariantDataType? ';'
 EnumVariantDataType = ('(' Type ')')
 EnumFn = vis:Visibility FnItem
 
-FnItem = 'def' Name sig:FnSignature body:Block
+FnItem = 'def' Name generics:GenericParamList? sig:FnSignature body:Block
 FnSignature = '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
 FnInputs = FnInput (',' FnInput)* ','?
 FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
@@ -71,13 +71,13 @@ ImportSegment = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
-StructItem = 'struct' Name '{' body:StructBody '}'
+StructItem = 'struct' Name generics:GenericParamList? '{' body:StructBody '}'
 StructBody = item:(StructBodyItem*)
 StructBodyItem = StructField | StructFn
 StructField = vis:Visibility Name ty:TypeQualifier default:ExprSpecifier? ';'
 StructFn = vis:Visibility FnItem
 
-TypeAliasItem = 'type' Name '=' Type
+TypeAliasItem = 'type' Name generics:GenericParamList? '=' Type
 
 // Type expressions
 
@@ -174,3 +174,9 @@ IfExpr = 'if' cond:Expr if_branch:Expr else_clause:IfExprElseClause?
 IfExprElseClause = 'else' else_branch:Expr
 
 DeferExpr = 'defer' Expr
+
+// Generics
+
+GenericParamList = '[' GenericParams? ']'
+GenericParams = GenericParam (',' GenericParam)* ','?
+GenericParam = Name bound:TypeQualifier? default:TypeSpecifier?

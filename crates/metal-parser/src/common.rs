@@ -39,6 +39,16 @@ pub fn parse_type_qualifier(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
+pub fn parse_type_specifier(parser: &mut crate::parser::parser_type!()) {
+    parser.start_node(N![TypeSpecifier]);
+
+    if parser.maybe_eat(T![=]) {
+        parse_type(parser);
+    }
+
+    parser.end_node();
+}
+
 pub fn parse_expr_specifier(parser: &mut crate::parser::parser_type!()) {
     parser.start_node(N![ExprSpecifier]);
 
