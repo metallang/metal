@@ -140,6 +140,32 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
                 parser.end_node();
                 parser.end_node();
             }
+            T!['{'] => {
+                parser.start_node_at(N![Expr], checkpoint);
+                parser.start_node_at(N![StructExpr], checkpoint);
+
+                // the struct name/path expr is now here
+
+                parser.eat_any(); // guaranteed to be an l_brace
+
+                parser.start_node(N![StructExprFields]);
+                while !(parser.peek_is(T!['}']) || parser.is_eof()) {
+                    parser.start_node(N![StructExprField]);
+
+                    parse_name(parser);
+                    parse_expr_specifier(parser);
+
+                    parser.end_node();
+
+                    parser.maybe_eat(T![;]);
+                }
+                parser.end_node();
+
+                parser.maybe_eat(T!['}']);
+
+                parser.end_node();
+                parser.end_node();
+            }
             _ => unreachable!(),
         }
     }
@@ -222,7 +248,7 @@ fn infix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
 fn postfix_binding_power_for(op: SyntaxKind) -> Option<BindingPower> {
     Some(
         match op {
-            T!['('] => (27, Assoc::Inapplicable),
+            T!['('] | T!['{'] => (27, Assoc::Inapplicable),
             _ => return None,
         }
         .into(),
