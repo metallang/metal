@@ -121,6 +121,8 @@ pub enum SyntaxKind {
     IF_EXPR_NODE,
     /// Don't try to remember this! Use [`N![DeferExpr]`](N) instead.
     DEFER_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![StructExpr]`](N) instead.
+    STRUCT_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
@@ -129,6 +131,10 @@ pub enum SyntaxKind {
     CALL_EXPR_ARGS_NODE,
     /// Don't try to remember this! Use [`N![IfExprElseClause]`](N) instead.
     IF_EXPR_ELSE_CLAUSE_NODE,
+    /// Don't try to remember this! Use [`N![StructExprFields]`](N) instead.
+    STRUCT_EXPR_FIELDS_NODE,
+    /// Don't try to remember this! Use [`N![StructExprField]`](N) instead.
+    STRUCT_EXPR_FIELD_NODE,
     /// Don't try to remember this! Use [`N![GenericParams]`](N) instead.
     GENERIC_PARAMS_NODE,
     /// Don't try to remember this! Use [`N![GenericParam]`](N) instead.
@@ -466,10 +472,13 @@ pub macro N {
     [ReturnExpr] => { $crate::SyntaxKind::RETURN_EXPR_NODE },
     [IfExpr] => { $crate::SyntaxKind::IF_EXPR_NODE },
     [DeferExpr] => { $crate::SyntaxKind::DEFER_EXPR_NODE },
+    [StructExpr] => { $crate::SyntaxKind::STRUCT_EXPR_NODE },
     [PrefixExprOp] => { $crate::SyntaxKind::PREFIX_EXPR_OP_NODE },
     [BinaryExprOp] => { $crate::SyntaxKind::BINARY_EXPR_OP_NODE },
     [CallExprArgs] => { $crate::SyntaxKind::CALL_EXPR_ARGS_NODE },
     [IfExprElseClause] => { $crate::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE },
+    [StructExprFields] => { $crate::SyntaxKind::STRUCT_EXPR_FIELDS_NODE },
+    [StructExprField] => { $crate::SyntaxKind::STRUCT_EXPR_FIELD_NODE },
     [GenericParams] => { $crate::SyntaxKind::GENERIC_PARAMS_NODE },
     [GenericParam] => { $crate::SyntaxKind::GENERIC_PARAM_NODE },
 }

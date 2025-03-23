@@ -3,7 +3,7 @@
 use metal_ast::{SyntaxKind, N, T};
 
 use crate::block::parse_block;
-use crate::common::parse_name;
+use crate::common::{parse_expr_specifier, parse_name};
 
 pub fn parse_expr(parser: &mut crate::parser::parser_type!()) {
     parse_expr_with_binding_power(parser, BindingPower::ZERO);

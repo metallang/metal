@@ -176,8 +176,8 @@ IfExprElseClause = 'else' else_branch:Expr
 
 DeferExpr = 'defer' Expr
 
-StructExpr = struct_name:Expr '{' StructExprFields '}'
-StructExprFields = StructExprField (';' StructExprField)* ','?
+StructExpr = struct_name:Expr '{' fields:StructExprFields '}'
+StructExprFields = StructExprField (';' StructExprField)* ';'?
 StructExprField = Name value:ExprSpecifier?
 
 // Generics
