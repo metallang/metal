@@ -3,7 +3,22 @@
 use metal_ast::{SyntaxKind, N, T};
 
 use crate::block::parse_block;
-use crate::common::{parse_expr_specifier, parse_name};
+use crate::common::parse_name;
+use crate::expr::call::parse_call_expr;
+use crate::expr::defer::parse_defer_expr;
+use crate::expr::if_::parse_if_expr;
+use crate::expr::lit::parse_lit_expr;
+use crate::expr::paren::parse_paren_expr;
+use crate::expr::return_::parse_return_expr;
+use crate::expr::struct_::parse_struct_expr;
+
+pub mod call;
+pub mod defer;
+pub mod if_;
+pub mod lit;
+pub mod paren;
+pub mod return_;
+pub mod struct_;
 
 pub fn parse_expr(parser: &mut crate::parser::parser_type!()) {
     parse_expr_with_binding_power(parser, BindingPower::ZERO);
@@ -18,62 +33,12 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
 
     match parser.peek().unwrap().kind {
         T![@ident] => parse_name(parser),
-        T![@number] | T![@string] => {
-            parser.start_node(N![LitExpr]);
-            parser.eat_any();
-            parser.end_node();
-        }
-        T!['('] => {
-            parser.start_node(N![ParenExpr]);
-
-            parser.eat_any();
-            parse_expr(parser);
-            parser.maybe_eat(T![')']);
-
-            parser.end_node();
-        }
+        T![@number] | T![@string] => parse_lit_expr(parser),
+        T!['('] => parse_paren_expr(parser),
         T!['{'] => parse_block(parser),
-        T![return] => {
-            parser.start_node(N![ReturnExpr]);
-
-            parser.eat_any();
-
-            if parser
-                .peek()
-                .is_some_and(|token| token.kind.is_expr_start())
-            {
-                parse_expr(parser);
-            }
-
-            parser.end_node();
-        }
-        T![if] => {
-            parser.start_node(N![IfExpr]);
-
-            parser.eat_any();
-
-            parse_expr(parser); // condition
-            parse_expr(parser); // 'true' branch
-
-            if parser.peek_is(T![else]) {
-                parser.start_node(N![IfExprElseClause]);
-
-                parser.eat_any();
-                parse_expr(parser); // 'false' branch
-
-                parser.end_node();
-            }
-
-            parser.end_node();
-        }
-        T![defer] => {
-            parser.start_node(N![DeferExpr]);
-
-            parser.eat_any();
-            parse_expr(parser);
-
-            parser.end_node();
-        }
+        T![return] => parse_return_expr(parser),
+        T![if] => parse_if_expr(parser),
+        T![defer] => parse_defer_expr(parser),
         // prefix ops
         op if let Some(bp) = prefix_binding_power_for(op) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);
@@ -120,52 +85,8 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::parser_type!(), min
         && (bp.l_value() >= min_bp.l_value())
     {
         match parser.peek().unwrap().kind {
-            T!['('] => {
-                parser.start_node_at(N![Expr], checkpoint);
-                parser.start_node_at(N![CallExpr], checkpoint);
-
-                // the callee is now here
-
-                parser.eat_any(); // guaranteed to be an l_paren
-
-                parser.start_node(N![CallExprArgs]);
-                while !(parser.peek_is(T![')']) || parser.is_eof()) {
-                    parse_expr(parser);
-                    parser.maybe_eat(T![,]);
-                }
-                parser.end_node();
-
-                parser.maybe_eat(T![')']);
-
-                parser.end_node();
-                parser.end_node();
-            }
-            T!['{'] => {
-                parser.start_node_at(N![Expr], checkpoint);
-                parser.start_node_at(N![StructExpr], checkpoint);
-
-                // the struct name/path expr is now here
-
-                parser.eat_any(); // guaranteed to be an l_brace
-
-                parser.start_node(N![StructExprFields]);
-                while !(parser.peek_is(T!['}']) || parser.is_eof()) {
-                    parser.start_node(N![StructExprField]);
-
-                    parse_name(parser);
-                    parse_expr_specifier(parser);
-
-                    parser.end_node();
-
-                    parser.maybe_eat(T![;]);
-                }
-                parser.end_node();
-
-                parser.maybe_eat(T!['}']);
-
-                parser.end_node();
-                parser.end_node();
-            }
+            T!['('] => parse_call_expr(parser, checkpoint),
+            T!['{'] => parse_struct_expr(parser, checkpoint),
             _ => unreachable!(),
         }
     }
