@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{N, T};
 
 pub fn parse_lit_expr(parser: &mut crate::parser::parser_type!()) {
