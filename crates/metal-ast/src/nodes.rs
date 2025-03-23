@@ -222,6 +222,8 @@ pub enum ExprNode {
     IfExpr(IfExprNode),
     /// See [DeferExprNode].
     DeferExpr(DeferExprNode),
+    /// See [StructExprNode].
+    StructExpr(StructExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -238,6 +240,7 @@ impl AstNode for ExprNode {
             SyntaxKind::RETURN_EXPR_NODE => true,
             SyntaxKind::IF_EXPR_NODE => true,
             SyntaxKind::DEFER_EXPR_NODE => true,
+            SyntaxKind::STRUCT_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -268,6 +271,9 @@ impl AstNode for ExprNode {
             SyntaxKind::DEFER_EXPR_NODE => {
                 Some(ExprNode::DeferExpr(DeferExprNode::cast(syntax)?))
             }
+            SyntaxKind::STRUCT_EXPR_NODE => {
+                Some(ExprNode::StructExpr(StructExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -283,6 +289,7 @@ impl AstNode for ExprNode {
             ExprNode::ReturnExpr(it) => it.syntax(),
             ExprNode::IfExpr(it) => it.syntax(),
             ExprNode::DeferExpr(it) => it.syntax(),
+            ExprNode::StructExpr(it) => it.syntax(),
         }
     }
 }
@@ -1850,6 +1857,40 @@ impl DeferExprNode {
         self.syntax.child(0usize)
     }
 }
+/// Represents the `StructExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StructExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for StructExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STRUCT_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl StructExprNode {
+    /// Find a child node of type [ExprNode].
+    pub fn struct_name_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::L_BRACE_TOKEN].
+    pub fn l_brace_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::L_BRACE_TOKEN, 0usize)
+    }
+    /// Find a child node of type [StructExprFieldsNode].
+    pub fn fields_node(&self) -> Option<StructExprFieldsNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
+    pub fn r_brace_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
+    }
+}
 /// Represents the `PrefixExprOp` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PrefixExprOpNode {
@@ -1964,6 +2005,73 @@ impl IfExprElseClauseNode {
     }
     /// Find a child node of type [ExprNode].
     pub fn else_branch_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `StructExprFields` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StructExprFieldsNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for StructExprFieldsNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STRUCT_EXPR_FIELDS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl StructExprFieldsNode {
+    /// Returns an iterator over the children nodes of this node.
+    pub fn children(&self) -> impl Iterator<Item = StructExprFieldNode> {
+        self.children_with_delimiters()
+            .filter_map(|either| match either {
+                Either::Left(node) => Some(node),
+                Either::Right(_) => None,
+            })
+    }
+    /// Returns an iterator over the children nodes and token of this node.
+    pub fn children_with_delimiters(
+        &self,
+    ) -> impl Iterator<Item = Either<StructExprFieldNode, SemicolonToken>> {
+        self.syntax
+            .children_with_tokens()
+            .filter_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(node) => {
+                    StructExprFieldNode::cast(node).map(Either::Left)
+                }
+                NodeOrToken::Token(token) => {
+                    SemicolonToken::cast(token).map(Either::Right)
+                }
+            })
+    }
+}
+/// Represents the `StructExprField` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StructExprFieldNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for StructExprFieldNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::STRUCT_EXPR_FIELD_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl StructExprFieldNode {
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [ExprSpecNode].
+    pub fn value_node(&self) -> Option<ExprSpecNode> {
         self.syntax.child(0usize)
     }
 }

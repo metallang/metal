@@ -110,6 +110,7 @@ Expr =
   | ReturnExpr
   | IfExpr
   | DeferExpr
+  | StructExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -174,6 +175,10 @@ IfExpr = 'if' cond:Expr if_branch:Expr else_clause:IfExprElseClause?
 IfExprElseClause = 'else' else_branch:Expr
 
 DeferExpr = 'defer' Expr
+
+StructExpr = struct_name:Expr '{' fields:StructExprFields '}'
+StructExprFields = StructExprField (';' StructExprField)* ';'?
+StructExprField = Name value:ExprSpecifier?
 
 // Generics
 
