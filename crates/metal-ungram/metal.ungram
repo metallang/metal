@@ -86,9 +86,7 @@ Type =
   | RefType
   | BinaryType
 
-NameType = Name generics:NameTypeGenerics?
-NameTypeGenerics = '[' generics:NameTypeGenericsInner ']'
-NameTypeGenericsInner = Type (',' Type)* ','?
+NameType = Name generics:GenericArgList?
 
 RefType = '&' mutness:Mutability Type
 
@@ -181,6 +179,9 @@ StructExprFields = StructExprField (';' StructExprField)* ';'?
 StructExprField = Name value:ExprSpecifier?
 
 // Generics
+
+GenericArgList = '[' generics:GenericArgs ']'
+GenericArgs = Type (',' Type)* ','?
 
 GenericParamList = '[' GenericParams? ']'
 GenericParams = GenericParam (',' GenericParam)* ','?

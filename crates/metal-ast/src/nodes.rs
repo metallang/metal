@@ -1470,8 +1470,8 @@ impl NameTypeNode {
     pub fn name_node(&self) -> Option<NameNode> {
         self.syntax.child(0usize)
     }
-    /// Find a child node of type [NameTypeGenericsNode].
-    pub fn generics_node(&self) -> Option<NameTypeGenericsNode> {
+    /// Find a child node of type [GenericArgListNode].
+    pub fn generics_node(&self) -> Option<GenericArgListNode> {
         self.syntax.child(0usize)
     }
 }
@@ -1535,14 +1535,14 @@ impl BinaryTypeNode {
         self.syntax.child(1usize)
     }
 }
-/// Represents the `NameTypeGenerics` node.
+/// Represents the `GenericArgList` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NameTypeGenericsNode {
+pub struct GenericArgListNode {
     syntax: SyntaxNode,
 }
-impl AstNode for NameTypeGenericsNode {
+impl AstNode for GenericArgListNode {
     fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::NAME_TYPE_GENERICS_NODE
+        kind == SyntaxKind::GENERIC_ARG_LIST_NODE
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -1551,55 +1551,18 @@ impl AstNode for NameTypeGenericsNode {
         &self.syntax
     }
 }
-impl NameTypeGenericsNode {
+impl GenericArgListNode {
     /// Find a child token of variant [SyntaxKind::L_BRACKET_TOKEN].
     pub fn l_bracket_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::L_BRACKET_TOKEN, 0usize)
     }
-    /// Find a child node of type [NameTypeGenericsInnerNode].
-    pub fn generics_node(&self) -> Option<NameTypeGenericsInnerNode> {
+    /// Find a child node of type [GenericArgsNode].
+    pub fn generics_node(&self) -> Option<GenericArgsNode> {
         self.syntax.child(0usize)
     }
     /// Find a child token of variant [SyntaxKind::R_BRACKET_TOKEN].
     pub fn r_bracket_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::R_BRACKET_TOKEN, 0usize)
-    }
-}
-/// Represents the `NameTypeGenericsInner` node.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NameTypeGenericsInnerNode {
-    syntax: SyntaxNode,
-}
-impl AstNode for NameTypeGenericsInnerNode {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-impl NameTypeGenericsInnerNode {
-    /// Returns an iterator over the children nodes of this node.
-    pub fn children(&self) -> impl Iterator<Item = TypeNode> {
-        self.children_with_delimiters()
-            .filter_map(|either| match either {
-                Either::Left(node) => Some(node),
-                Either::Right(_) => None,
-            })
-    }
-    /// Returns an iterator over the children nodes and token of this node.
-    pub fn children_with_delimiters(
-        &self,
-    ) -> impl Iterator<Item = Either<TypeNode, CommaToken>> {
-        self.syntax
-            .children_with_tokens()
-            .filter_map(|node_or_token| match node_or_token {
-                NodeOrToken::Node(node) => TypeNode::cast(node).map(Either::Left),
-                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
-            })
     }
 }
 /// Represents the `BinaryTypeOp` node.
@@ -2073,6 +2036,43 @@ impl StructExprFieldNode {
     /// Find a child node of type [ExprSpecNode].
     pub fn value_node(&self) -> Option<ExprSpecNode> {
         self.syntax.child(0usize)
+    }
+}
+/// Represents the `GenericArgs` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct GenericArgsNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for GenericArgsNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::GENERIC_ARGS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl GenericArgsNode {
+    /// Returns an iterator over the children nodes of this node.
+    pub fn children(&self) -> impl Iterator<Item = TypeNode> {
+        self.children_with_delimiters()
+            .filter_map(|either| match either {
+                Either::Left(node) => Some(node),
+                Either::Right(_) => None,
+            })
+    }
+    /// Returns an iterator over the children nodes and token of this node.
+    pub fn children_with_delimiters(
+        &self,
+    ) -> impl Iterator<Item = Either<TypeNode, CommaToken>> {
+        self.syntax
+            .children_with_tokens()
+            .filter_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(node) => TypeNode::cast(node).map(Either::Left),
+                NodeOrToken::Token(token) => CommaToken::cast(token).map(Either::Right),
+            })
     }
 }
 /// Represents the `GenericParams` node.
