@@ -99,10 +99,8 @@ pub enum SyntaxKind {
     REF_TYPE_NODE,
     /// Don't try to remember this! Use [`N![BinaryType]`](N) instead.
     BINARY_TYPE_NODE,
-    /// Don't try to remember this! Use [`N![NameTypeGenerics]`](N) instead.
-    NAME_TYPE_GENERICS_NODE,
-    /// Don't try to remember this! Use [`N![NameTypeGenericsInner]`](N) instead.
-    NAME_TYPE_GENERICS_INNER_NODE,
+    /// Don't try to remember this! Use [`N![GenericArgList]`](N) instead.
+    GENERIC_ARG_LIST_NODE,
     /// Don't try to remember this! Use [`N![BinaryTypeOp]`](N) instead.
     BINARY_TYPE_OP_NODE,
     /// Don't try to remember this! Use [`N![PrefixExpr]`](N) instead.
@@ -135,6 +133,8 @@ pub enum SyntaxKind {
     STRUCT_EXPR_FIELDS_NODE,
     /// Don't try to remember this! Use [`N![StructExprField]`](N) instead.
     STRUCT_EXPR_FIELD_NODE,
+    /// Don't try to remember this! Use [`N![GenericArgs]`](N) instead.
+    GENERIC_ARGS_NODE,
     /// Don't try to remember this! Use [`N![GenericParams]`](N) instead.
     GENERIC_PARAMS_NODE,
     /// Don't try to remember this! Use [`N![GenericParam]`](N) instead.
@@ -179,10 +179,6 @@ pub enum SyntaxKind {
     STRUCT_TOKEN,
     /// Don't try to remember this! Use [`T![type]`](T) instead.
     TYPE_TOKEN,
-    /// Don't try to remember this! Use [`T!['[']`](T) instead.
-    L_BRACKET_TOKEN,
-    /// Don't try to remember this! Use [`T![']']`](T) instead.
-    R_BRACKET_TOKEN,
     /// Don't try to remember this! Use [`T![&]`](T) instead.
     AMP_TOKEN,
     /// Don't try to remember this! Use [`T![+]`](T) instead.
@@ -261,6 +257,10 @@ pub enum SyntaxKind {
     ELSE_TOKEN,
     /// Don't try to remember this! Use [`T![defer]`](T) instead.
     DEFER_TOKEN,
+    /// Don't try to remember this! Use [`T!['[']`](T) instead.
+    L_BRACKET_TOKEN,
+    /// Don't try to remember this! Use [`T![']']`](T) instead.
+    R_BRACKET_TOKEN,
     /// Represents a multi- or single-line comment.
     COMMENT_TOKEN,
     /// Represents a whitespace token, such as a space or a tab, among others.
@@ -356,8 +356,6 @@ pub macro T {
     [.] => { $crate::SyntaxKind::DOT_TOKEN },
     [struct] => { $crate::SyntaxKind::STRUCT_TOKEN },
     [type] => { $crate::SyntaxKind::TYPE_TOKEN },
-    ['['] => { $crate::SyntaxKind::L_BRACKET_TOKEN },
-    [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [&] => { $crate::SyntaxKind::AMP_TOKEN },
     [+] => { $crate::SyntaxKind::PLUS_TOKEN },
     [-] => { $crate::SyntaxKind::MINUS_TOKEN },
@@ -391,16 +389,18 @@ pub macro T {
     [<<] => { $crate::SyntaxKind::LT2_TOKEN },
     [>>] => { $crate::SyntaxKind::GT2_TOKEN },
     [..] => { $crate::SyntaxKind::DOT2_TOKEN },
-    [@number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
+    [@
+    number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
     [@string] => { $crate::SyntaxKind::LIT_STR_TOKEN },
     [return] => { $crate::SyntaxKind::RETURN_TOKEN },
     [if] => { $crate::SyntaxKind::IF_TOKEN },
     [else] => { $crate::SyntaxKind::ELSE_TOKEN },
     [defer] => { $crate::SyntaxKind::DEFER_TOKEN },
+    ['['] => { $crate::SyntaxKind::L_BRACKET_TOKEN },
+    [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
     [@whitespace] => { $crate::SyntaxKind::WHITESPACE_TOKEN },
-    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN
-    },
+    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
@@ -461,8 +461,7 @@ pub macro N {
     [NameType] => { $crate::SyntaxKind::NAME_TYPE_NODE },
     [RefType] => { $crate::SyntaxKind::REF_TYPE_NODE },
     [BinaryType] => { $crate::SyntaxKind::BINARY_TYPE_NODE },
-    [NameTypeGenerics] => { $crate::SyntaxKind::NAME_TYPE_GENERICS_NODE },
-    [NameTypeGenericsInner] => { $crate::SyntaxKind::NAME_TYPE_GENERICS_INNER_NODE },
+    [GenericArgList] => { $crate::SyntaxKind::GENERIC_ARG_LIST_NODE },
     [BinaryTypeOp] => { $crate::SyntaxKind::BINARY_TYPE_OP_NODE },
     [PrefixExpr] => { $crate::SyntaxKind::PREFIX_EXPR_NODE },
     [BinaryExpr] => { $crate::SyntaxKind::BINARY_EXPR_NODE },
@@ -479,6 +478,7 @@ pub macro N {
     [IfExprElseClause] => { $crate::SyntaxKind::IF_EXPR_ELSE_CLAUSE_NODE },
     [StructExprFields] => { $crate::SyntaxKind::STRUCT_EXPR_FIELDS_NODE },
     [StructExprField] => { $crate::SyntaxKind::STRUCT_EXPR_FIELD_NODE },
+    [GenericArgs] => { $crate::SyntaxKind::GENERIC_ARGS_NODE },
     [GenericParams] => { $crate::SyntaxKind::GENERIC_PARAMS_NODE },
     [GenericParam] => { $crate::SyntaxKind::GENERIC_PARAM_NODE },
 }
