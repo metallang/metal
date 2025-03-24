@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use metal_ast::{N, T};
 
 use crate::type_::parse_type;
