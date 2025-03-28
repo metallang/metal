@@ -6,7 +6,7 @@ use crate::common::parse_name;
 use crate::generics::utils::parse_name_generics;
 use crate::item::fn_::parse_fn_signature;
 
-pub fn parse_abstract_item(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_abstract_item(parser: &mut crate::parser::Parser) {
     parser.start_node(N![AbstractItem]);
 
     parser.maybe_eat(T![abstract]);
@@ -18,17 +18,17 @@ pub fn parse_abstract_item(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_abstract_body(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_abstract_body(parser: &mut crate::parser::Parser) {
     parser.start_node(N![AbstractBody]);
 
-    while !(parser.peek_is(T!['}']) || parser.is_eof()) {
+    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
         parse_abstract_fn_item(parser);
     }
 
     parser.end_node();
 }
 
-pub fn parse_abstract_fn_item(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_abstract_fn_item(parser: &mut crate::parser::Parser) {
     parser.start_node(N![AbstractFnItem]);
 
     parser.maybe_eat(T![def]);

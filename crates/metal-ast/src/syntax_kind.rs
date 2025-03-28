@@ -301,7 +301,7 @@ impl SyntaxKind {
             | T![@]
         )
     }
-    pub fn is_prefix_op(&self) -> bool {
+    pub fn is_prefix_expr_op(&self) -> bool {
         matches!(self, T![+] | T![-] | T![!] | T![~] | T![*])
     }
     pub fn is_expr_start(&self) -> bool {
@@ -315,7 +315,10 @@ impl SyntaxKind {
             | T![return]
             | T![if]
             | T![defer]
-        ) || self.is_prefix_op()
+        ) || self.is_prefix_expr_op()
+    }
+    pub fn is_binary_type_op(&self) -> bool {
+        matches!(self, T![&])
     }
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided token

@@ -4,7 +4,7 @@ use metal_ast::{N, T};
 
 use crate::type_::parse_type;
 
-pub fn parse_generic_arg_list(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_generic_arg_list(parser: &mut crate::parser::Parser) {
     parser.start_node(N![GenericArgList]);
 
     parser.maybe_eat(T!['[']);
@@ -14,10 +14,10 @@ pub fn parse_generic_arg_list(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_generic_args(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_generic_args(parser: &mut crate::parser::Parser) {
     parser.start_node(N![GenericArgs]);
 
-    while !(parser.peek_is(T![']']) || parser.is_eof()) {
+    while !(parser.peek_is(0, T![']']) || parser.is_eof()) {
         parse_type(parser);
         parser.maybe_eat(T![,]);
     }

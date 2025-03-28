@@ -5,7 +5,7 @@ use metal_ast::{N, T};
 use crate::expr::parse_expr;
 use crate::type_::parse_type;
 
-pub fn parse_name(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_name(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Name]);
 
     parser.maybe_eat(T![@ident]);
@@ -13,7 +13,7 @@ pub fn parse_name(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_visibility(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_visibility(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Visibility]);
 
     parser.maybe_eat(T![pub]);
@@ -21,7 +21,7 @@ pub fn parse_visibility(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_mutability(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_mutability(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Mutability]);
 
     parser.maybe_eat(T![mut]);
@@ -29,7 +29,7 @@ pub fn parse_mutability(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_type_qualifier(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_type_qualifier(parser: &mut crate::parser::Parser) {
     parser.start_node(N![TypeQualifier]);
 
     if parser.maybe_eat(T![:]) {
@@ -39,7 +39,7 @@ pub fn parse_type_qualifier(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_type_specifier(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_type_specifier(parser: &mut crate::parser::Parser) {
     parser.start_node(N![TypeSpecifier]);
 
     if parser.maybe_eat(T![=]) {
@@ -49,7 +49,7 @@ pub fn parse_type_specifier(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_expr_specifier(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_expr_specifier(parser: &mut crate::parser::Parser) {
     parser.start_node(N![ExprSpecifier]);
 
     if parser.maybe_eat(T![=]) {

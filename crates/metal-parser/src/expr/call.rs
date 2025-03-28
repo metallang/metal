@@ -4,7 +4,7 @@ use metal_ast::{N, T};
 
 use crate::expr::parse_expr;
 
-pub fn parse_call_expr(parser: &mut crate::parser::parser_type!(), checkpoint: rowan::Checkpoint) {
+pub fn parse_call_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Checkpoint) {
     parser.start_node_at(N![Expr], checkpoint);
     parser.start_node_at(N![CallExpr], checkpoint);
 
@@ -18,10 +18,10 @@ pub fn parse_call_expr(parser: &mut crate::parser::parser_type!(), checkpoint: r
     parser.end_node();
 }
 
-pub fn parse_call_expr_args(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_call_expr_args(parser: &mut crate::parser::Parser) {
     parser.start_node(N![CallExprArgs]);
 
-    while !(parser.peek_is(T![')']) || parser.is_eof()) {
+    while !(parser.peek_is(0, T![')']) || parser.is_eof()) {
         parse_expr(parser);
         parser.maybe_eat(T![,]);
     }

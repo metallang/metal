@@ -1,127 +1,97 @@
 // SPDX-License-Identifier: MIT
 
-use metal_ast::{SyntaxKind, SyntaxNode, T};
-use metal_lexer::{Span, Token};
+use std::collections::VecDeque;
+
+use metal_ast::{SyntaxKind, SyntaxNode};
+use metal_lexer::Token;
 use rowan::GreenNodeBuilder;
 
-#[derive(Clone, Copy, Debug)]
-pub enum ParserMode {
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ParsingContext {
     /// The default parsing mode.
     Normal,
-    /// Indicates that a type is being parsed.
-    Type,
+    /// Indicates that the condition of an if expression is being parsed.
+    IfExprCond,
 }
 
-pub struct Parser<'src, L> {
+pub struct Parser<'src> {
     builder: GreenNodeBuilder<'static>,
-    lexer: L,
+    tokens: VecDeque<Token>,
     source: &'src str,
-    mode: ParserMode,
-    current_token: Option<Token>,
-    split_token_buffer: Option<Token>,
+    cx: ParsingContext,
 }
 
-impl<'src, L> Parser<'src, L>
-where
-    L: Iterator<Item = Token>,
-{
-    pub fn new(lexer: L, source: &'src str) -> Self {
+impl<'src> Parser<'src> {
+    pub fn new(tokens: VecDeque<Token>, source: &'src str) -> Self {
         Self {
             builder: GreenNodeBuilder::new(),
-            lexer,
+            tokens,
             source,
-            mode: ParserMode::Normal,
-            current_token: None,
-            split_token_buffer: None,
+            cx: ParsingContext::Normal,
         }
     }
 
     #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> Option<Token> {
-        let next = self.current_token.take();
+        loop {
+            let token = self.tokens.pop_front()?;
 
-        self.compute_next_token();
+            if token.kind.is_whitespace() {
+                self.token(token);
+                continue;
+            }
 
-        next
+            return Some(token);
+        }
     }
 
-    pub fn peek(&mut self) -> Option<&Token> {
-        self.current_token.as_ref()
+    pub fn peek(&self, n: usize) -> Option<&Token> {
+        self.tokens.get(self.peek_impl(n)?)
     }
 
-    pub fn peek_is(&mut self, kind: SyntaxKind) -> bool {
-        self.peek().is_some_and(|t| t.kind == kind)
+    pub fn peek_mut(&mut self, n: usize) -> Option<&mut Token> {
+        self.tokens.get_mut(self.peek_impl(n)?)
+    }
+
+    fn peek_impl(&self, n: usize) -> Option<usize> {
+        let mut cursor = 0;
+        let mut non_ws_tokens_seen = 0;
+
+        loop {
+            let token = self.tokens.get(cursor)?;
+
+            if !token.kind.is_whitespace() {
+                non_ws_tokens_seen += 1;
+            }
+
+            if non_ws_tokens_seen > n {
+                break Some(cursor);
+            }
+
+            cursor += 1;
+        }
+    }
+
+    pub fn peek_is(&mut self, n: usize, kind: SyntaxKind) -> bool {
+        self.peek(n).is_some_and(|t| t.kind == kind)
     }
 
     pub fn is_eof(&mut self) -> bool {
-        self.peek().is_none()
+        self.peek(0).is_none()
     }
 
-    pub fn in_mode(&mut self, new_mode: ParserMode, mut f: impl FnMut(&mut Self)) {
-        let old_mode = self.mode;
+    pub fn in_cx(&mut self, new_cx: ParsingContext, mut f: impl FnMut(&mut Self)) {
+        let old_cx = self.cx.clone(); // cheap
 
-        self.mode = new_mode;
-
-        // when entering a new mode, a token that needs splitting may have already been precomputed
-        // we thus try to split it here
-        self.split_current_token();
+        self.cx = new_cx;
 
         f(self);
 
-        self.mode = old_mode
+        self.cx = old_cx;
     }
 
-    fn compute_next_token(&mut self) {
-        if self.split_token_buffer.is_some() {
-            self.current_token = self.split_token_buffer.take();
-            return;
-        }
-
-        let Some(mut new_current_token) = self.lexer.next() else {
-            return;
-        };
-
-        // skip whitespace tokens
-        while new_current_token.kind.is_whitespace() {
-            self.token(new_current_token.kind, new_current_token.span);
-
-            match self.lexer.next() {
-                Some(t) => new_current_token = t,
-                None => return,
-            }
-        }
-
-        self.current_token = Some(new_current_token);
-        self.split_current_token()
-    }
-
-    fn split_current_token(&mut self) {
-        let Some(mut token) = self.current_token.take() else {
-            return;
-        };
-
-        if matches!(self.mode, ParserMode::Type) && token.kind == T![&&] {
-            // split && into two &
-            let first = Token {
-                kind: T![&],
-                span: Span {
-                    start: token.span.start,
-                    end: token.span.end - 1,
-                },
-            };
-            let second = Token {
-                kind: T![&],
-                span: Span {
-                    start: token.span.start + 1,
-                    end: token.span.end,
-                },
-            };
-
-            self.split_token_buffer = Some(second);
-            token = first;
-        }
-
-        self.current_token = Some(token);
+    pub fn is_in_cx(&self, cx: ParsingContext) -> bool {
+        self.cx == cx
     }
 
     // green node builder functions
@@ -152,15 +122,13 @@ where
 
     pub fn eat_any(&mut self) {
         if let Some(token) = self.next() {
-            self.token(token.kind, token.span);
+            self.token(token);
         }
     }
 
     pub fn maybe_eat(&mut self, kind: SyntaxKind) -> bool {
-        if self.peek_is(kind) {
-            let span = self.next().unwrap().span;
-
-            self.token(kind, span);
+        if self.peek(0).is_some_and(|token| token.kind == kind) {
+            self.eat_any();
 
             true
         } else {
@@ -168,11 +136,8 @@ where
         }
     }
 
-    fn token(&mut self, kind: SyntaxKind, span: Span) {
-        self.builder.token(kind.into(), &self.source[span]);
+    fn token(&mut self, token: Token) {
+        self.builder
+            .token(token.kind.into(), &self.source[token.span]);
     }
-}
-
-pub macro parser_type() {
-    $crate::parser::Parser<impl ::std::iter::Iterator<Item = ::metal_lexer::Token>>
 }
