@@ -20,8 +20,8 @@ impl tapcli::Command for DevParseCommand {
     fn run(self) -> Result<Self::Output, Self::Error> {
         let contents = std::fs::read_to_string(self.path).unwrap();
 
-        let lexer = metal_lexer::Lexer::new(&contents).peekable();
-        let mut parser = metal_parser::Parser::new(lexer, &contents);
+        let tokens = metal_lexer::Lexer::new(&contents).collect();
+        let mut parser = metal_parser::Parser::new(tokens, &contents);
 
         metal_parser::parse_root(&mut parser);
 

@@ -2,17 +2,17 @@
 
 use metal_ast::{N, T};
 
-use crate::expr::parse_expr;
+use crate::{expr::parse_expr, parser::ParsingContext};
 
-pub fn parse_if_expr(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_if_expr(parser: &mut crate::parser::Parser) {
     parser.start_node(N![IfExpr]);
 
     parser.maybe_eat(T![if]);
 
-    parse_expr(parser); // condition
+    parser.in_cx(ParsingContext::IfExprCond, |parser| parse_expr(parser)); // condition
     parse_expr(parser); // 'true' branch
 
-    if parser.peek_is(T![else]) {
+    if parser.peek_is(0, T![else]) {
         parser.start_node(N![IfExprElseClause]);
 
         parser.eat_any();

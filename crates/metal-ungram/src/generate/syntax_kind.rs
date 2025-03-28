@@ -100,7 +100,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                 )
             }
 
-            pub fn is_prefix_op(&self) -> bool {
+            pub fn is_prefix_expr_op(&self) -> bool {
                 matches!(
                     self,
                     T![+]
@@ -123,7 +123,11 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T![if]
                     | T![defer]
                 )
-                || self.is_prefix_op()
+                || self.is_prefix_expr_op()
+            }
+
+            pub fn is_binary_type_op(&self) -> bool {
+                matches!(self, T![&])
             }
         }
     }

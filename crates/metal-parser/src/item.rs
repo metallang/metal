@@ -20,7 +20,7 @@ mod import;
 mod struct_;
 mod type_;
 
-pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_item(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Item]);
 
     parse_annotations(parser);
@@ -30,10 +30,10 @@ pub fn parse_item(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_item_kind(parser: &mut crate::parser::Parser) {
     parser.start_node(N![ItemKind]);
 
-    match parser.peek().expect("expected an item").kind {
+    match parser.peek(0).expect("expected an item").kind {
         T![abstract] => parse_abstract_item(parser),
         T![const] => parse_const_item(parser),
         T![def] => parse_fn_item(parser),
@@ -47,17 +47,17 @@ pub fn parse_item_kind(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_annotations(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_annotations(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Annotations]);
 
-    while parser.peek_is(T![@]) {
+    while parser.peek_is(0, T![@]) {
         parse_annotation(parser);
     }
 
     parser.end_node();
 }
 
-pub fn parse_annotation(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_annotation(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Annotation]);
 
     parser.maybe_eat(T![@]);

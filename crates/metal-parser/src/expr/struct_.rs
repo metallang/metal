@@ -4,10 +4,7 @@ use metal_ast::{N, T};
 
 use crate::common::{parse_expr_specifier, parse_name};
 
-pub fn parse_struct_expr(
-    parser: &mut crate::parser::parser_type!(),
-    checkpoint: rowan::Checkpoint,
-) {
+pub fn parse_struct_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Checkpoint) {
     parser.start_node_at(N![Expr], checkpoint);
     parser.start_node_at(N![StructExpr], checkpoint);
 
@@ -21,10 +18,10 @@ pub fn parse_struct_expr(
     parser.end_node();
 }
 
-pub fn parse_struct_expr_fields(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_struct_expr_fields(parser: &mut crate::parser::Parser) {
     parser.start_node(N![StructExprFields]);
 
-    while !(parser.peek_is(T!['}']) || parser.is_eof()) {
+    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
         parse_struct_expr_field(parser);
         parser.maybe_eat(T![;]);
     }
@@ -32,7 +29,7 @@ pub fn parse_struct_expr_fields(parser: &mut crate::parser::parser_type!()) {
     parser.end_node();
 }
 
-pub fn parse_struct_expr_field(parser: &mut crate::parser::parser_type!()) {
+pub fn parse_struct_expr_field(parser: &mut crate::parser::Parser) {
     parser.start_node(N![StructExprField]);
 
     parse_name(parser);
