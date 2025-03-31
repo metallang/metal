@@ -90,6 +90,7 @@ impl<'src> Parser<'src> {
         self.cx = old_cx;
     }
 
+    #[track_caller]
     pub fn is_in_cx(&self, cx: ParsingContext) -> bool {
         self.cx == cx
     }

@@ -92,7 +92,12 @@ impl Lexer<'_> {
 
             if self.peek(0).is_some_and(|b| b == &b'\\') {
                 self.bump();
+                self.bump();
                 continue;
+            }
+
+            if self.is_eof() {
+                break;
             }
 
             self.bump();
@@ -131,6 +136,7 @@ impl Lexer<'_> {
             b"if" => T![if],
             b"else" => T![else],
             b"defer" => T![defer],
+            b"let" => T![let],
             _ => T![@ident],
         }
     }
@@ -168,6 +174,10 @@ impl Lexer<'_> {
                     break;
                 }
 
+                if self.is_eof() {
+                    break;
+                }
+
                 self.bump();
             }
 
@@ -175,6 +185,10 @@ impl Lexer<'_> {
         } else {
             T![/]
         }
+    }
+
+    fn is_eof(&self) -> bool {
+        self.peek(0).is_none()
     }
 }
 
