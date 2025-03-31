@@ -11,22 +11,22 @@ use crate::common::parse_name;
 use crate::expr::call::parse_call_expr;
 use crate::expr::defer::parse_defer_expr;
 use crate::expr::if_::parse_if_expr;
+use crate::expr::let_::parse_let_expr;
 use crate::expr::lit::parse_lit_expr;
 use crate::expr::paren::parse_paren_expr;
 use crate::expr::return_::parse_return_expr;
 use crate::expr::struct_::parse_struct_expr;
-use crate::expr::let_::parse_let_expr;
 use crate::parser::ParsingContext;
 
 mod bp;
 pub mod call;
 pub mod defer;
 pub mod if_;
+pub mod let_;
 pub mod lit;
 pub mod paren;
 pub mod return_;
 pub mod struct_;
-pub mod let_;
 
 pub fn parse_expr(parser: &mut crate::parser::Parser) {
     parse_expr_with_binding_power(parser, BindingPower::ZERO)
