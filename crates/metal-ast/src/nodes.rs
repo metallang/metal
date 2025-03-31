@@ -224,6 +224,8 @@ pub enum ExprNode {
     DeferExpr(DeferExprNode),
     /// See [StructExprNode].
     StructExpr(StructExprNode),
+    /// See [LetExprNode].
+    LetExpr(LetExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -241,6 +243,7 @@ impl AstNode for ExprNode {
             SyntaxKind::IF_EXPR_NODE => true,
             SyntaxKind::DEFER_EXPR_NODE => true,
             SyntaxKind::STRUCT_EXPR_NODE => true,
+            SyntaxKind::LET_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -274,6 +277,9 @@ impl AstNode for ExprNode {
             SyntaxKind::STRUCT_EXPR_NODE => {
                 Some(ExprNode::StructExpr(StructExprNode::cast(syntax)?))
             }
+            SyntaxKind::LET_EXPR_NODE => {
+                Some(ExprNode::LetExpr(LetExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -290,6 +296,7 @@ impl AstNode for ExprNode {
             ExprNode::IfExpr(it) => it.syntax(),
             ExprNode::DeferExpr(it) => it.syntax(),
             ExprNode::StructExpr(it) => it.syntax(),
+            ExprNode::LetExpr(it) => it.syntax(),
         }
     }
 }
@@ -1852,6 +1859,40 @@ impl StructExprNode {
     /// Find a child token of variant [SyntaxKind::R_BRACE_TOKEN].
     pub fn r_brace_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
+    }
+}
+/// Represents the `LetExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LetExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for LetExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::LET_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl LetExprNode {
+    /// Find a child token of variant [SyntaxKind::LET_TOKEN].
+    pub fn let_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::LET_TOKEN, 0usize)
+    }
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [TypeQualNode].
+    pub fn ty_node(&self) -> Option<TypeQualNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [ExprSpecNode].
+    pub fn value_node(&self) -> Option<ExprSpecNode> {
+        self.syntax.child(0usize)
     }
 }
 /// Represents the `PrefixExprOp` node.

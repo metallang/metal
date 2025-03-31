@@ -121,6 +121,8 @@ pub enum SyntaxKind {
     DEFER_EXPR_NODE,
     /// Don't try to remember this! Use [`N![StructExpr]`](N) instead.
     STRUCT_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![LetExpr]`](N) instead.
+    LET_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
@@ -257,6 +259,8 @@ pub enum SyntaxKind {
     ELSE_TOKEN,
     /// Don't try to remember this! Use [`T![defer]`](T) instead.
     DEFER_TOKEN,
+    /// Don't try to remember this! Use [`T![let]`](T) instead.
+    LET_TOKEN,
     /// Don't try to remember this! Use [`T!['[']`](T) instead.
     L_BRACKET_TOKEN,
     /// Don't try to remember this! Use [`T![']']`](T) instead.
@@ -315,6 +319,7 @@ impl SyntaxKind {
             | T![return]
             | T![if]
             | T![defer]
+            | T![let]
         ) || self.is_prefix_expr_op()
     }
     pub fn is_binary_type_op(&self) -> bool {
@@ -399,11 +404,13 @@ pub macro T {
     [if] => { $crate::SyntaxKind::IF_TOKEN },
     [else] => { $crate::SyntaxKind::ELSE_TOKEN },
     [defer] => { $crate::SyntaxKind::DEFER_TOKEN },
+    [let] => { $crate::SyntaxKind::LET_TOKEN },
     ['['] => { $crate::SyntaxKind::L_BRACKET_TOKEN },
     [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
     [@whitespace] => { $crate::SyntaxKind::WHITESPACE_TOKEN },
-    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN },
+    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN
+    },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
@@ -475,6 +482,7 @@ pub macro N {
     [IfExpr] => { $crate::SyntaxKind::IF_EXPR_NODE },
     [DeferExpr] => { $crate::SyntaxKind::DEFER_EXPR_NODE },
     [StructExpr] => { $crate::SyntaxKind::STRUCT_EXPR_NODE },
+    [LetExpr] => { $crate::SyntaxKind::LET_EXPR_NODE },
     [PrefixExprOp] => { $crate::SyntaxKind::PREFIX_EXPR_OP_NODE },
     [BinaryExprOp] => { $crate::SyntaxKind::BINARY_EXPR_OP_NODE },
     [CallExprArgs] => { $crate::SyntaxKind::CALL_EXPR_ARGS_NODE },
