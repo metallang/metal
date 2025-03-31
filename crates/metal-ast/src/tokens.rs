@@ -946,6 +946,22 @@ impl AstToken for DeferToken {
         &self.syntax
     }
 }
+/// Represents the `let` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LetToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for LetToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::LET_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `[` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct LBracketToken {

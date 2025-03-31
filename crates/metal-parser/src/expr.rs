@@ -15,6 +15,7 @@ use crate::expr::lit::parse_lit_expr;
 use crate::expr::paren::parse_paren_expr;
 use crate::expr::return_::parse_return_expr;
 use crate::expr::struct_::parse_struct_expr;
+use crate::expr::let_::parse_let_expr;
 use crate::parser::ParsingContext;
 
 mod bp;
@@ -25,6 +26,7 @@ pub mod lit;
 pub mod paren;
 pub mod return_;
 pub mod struct_;
+pub mod let_;
 
 pub fn parse_expr(parser: &mut crate::parser::Parser) {
     parse_expr_with_binding_power(parser, BindingPower::ZERO)
@@ -45,6 +47,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
         T![return] => parse_return_expr(parser),
         T![if] => parse_if_expr(parser),
         T![defer] => parse_defer_expr(parser),
+        T![let] => parse_let_expr(parser),
         // prefix ops
         op if let Some(bp) = prefix_binding_power_for(op) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);

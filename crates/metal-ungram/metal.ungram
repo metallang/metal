@@ -109,6 +109,7 @@ Expr =
   | IfExpr
   | DeferExpr
   | StructExpr
+  | LetExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -177,6 +178,8 @@ DeferExpr = 'defer' Expr
 StructExpr = struct_name:Expr '{' fields:StructExprFields '}'
 StructExprFields = StructExprField (';' StructExprField)* ';'?
 StructExprField = Name value:ExprSpecifier?
+
+LetExpr = 'let' Name ty:TypeQualifier? value:ExprSpecifier
 
 // Generics
 
