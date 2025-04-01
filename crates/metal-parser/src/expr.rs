@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-use bp::{
-    infix_binding_power_for, postfix_binding_power_for, prefix_binding_power_for, BindingPower,
-};
 use metal_ast::{SyntaxKind, N, T};
 use metal_lexer::{Span, Token};
 
 use crate::block::parse_block;
 use crate::common::parse_name;
+use crate::expr::bp::{binding_power_for, BindingPower, Flavor};
 use crate::expr::call::parse_call_expr;
 use crate::expr::defer::parse_defer_expr;
 use crate::expr::if_::parse_if_expr;
@@ -49,7 +47,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
         T![defer] => parse_defer_expr(parser),
         T![let] => parse_let_expr(parser),
         // prefix ops
-        op if let Some(bp) = prefix_binding_power_for(op) => {
+        op if let Some(bp) = binding_power_for(op, Flavor::Prefix) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);
 
             // for prettiness we use _at again so that the prefix op node comes before the expr node
@@ -72,7 +70,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
 
         let Some(Some(bp)) = parser
             .peek(0)
-            .map(|token| infix_binding_power_for(token.kind))
+            .map(|token| binding_power_for(token.kind, Flavor::Infix))
         else {
             break;
         };
@@ -99,7 +97,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
     // postfix ops
     while let Some(Some(bp)) = parser
         .peek(0)
-        .map(|token| postfix_binding_power_for(token.kind))
+        .map(|token| binding_power_for(token.kind, Flavor::Postfix))
         && (bp.l_value() >= min_bp.l_value())
     {
         match parser.peek(0).unwrap().kind {
@@ -158,6 +156,7 @@ fn merge_op_tokens(parser: &mut crate::parser::Parser) {
         arm!(< < _) => merge::<2>(parser, T![<<]),
         arm!(> > _) => merge::<2>(parser, T![>>]),
         arm!(. . _) => merge::<2>(parser, T![..]),
+        arm!(| > _) => merge::<2>(parser, T![|>]),
         _ => {}
     }
 }

@@ -31,6 +31,7 @@ metal-linter = { path = "crates/metal-linter" }
 metal-lsp = { path = "crates/metal-lsp" }
 metal-parser = { path = "crates/metal-parser" }
 metal-mir = { path = "crates/metal-mir" }
+metal-proc-macros = { path = "crates/metal-proc-macros" }
 metal-ungram = { path = "crates/metal-ungram" }
 metallic = { path = "crates/metallic" }
 debug-to-display = { path = "crates/debug-to-display" }
