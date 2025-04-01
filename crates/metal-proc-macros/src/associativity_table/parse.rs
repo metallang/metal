@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use proc_macro2::{Delimiter, TokenStream, TokenTree};
 
 use super::types::{Table, TableEntry, TableEntryAssociativity, TableEntryFlavor};
