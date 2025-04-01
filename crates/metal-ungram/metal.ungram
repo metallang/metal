@@ -4,7 +4,7 @@
 // - Optionals are effectively ignored (but that doesn't mean you shouldn't add them)
 // - Don't forget to tweak metal_ungram::grammar_item::grammar_item_name when adding
 //   tokens comprised of symbols
-// - Don't forget to tweak metal_lexer::Lexer::idetn_token when adding new tokens comprised
+// - Don't forget to tweak metal_lexer::Lexer::ident_token when adding new tokens comprised
 //   of ident-like characters
 // - The generator is very simplistic, and does not support most kinds of "nested rules".
 //   For example, you can't do `Abc = A B C*`, but you can do `Abc = A B C_repeated` plus
@@ -161,6 +161,7 @@ BinaryExprOp =
   | '..'
     // special
   | '.' // member access
+  | '|>' // value piping
 
 CallExpr = callee:Expr '(' args:CallExprArgs? ')'
 CallExprArgs = Expr (',' Expr)* ','?
