@@ -247,8 +247,6 @@ pub enum SyntaxKind {
     GT2_TOKEN,
     /// Don't try to remember this! Use [`T![..]`](T) instead.
     DOT2_TOKEN,
-    /// Don't try to remember this! Use [`T![|>]`](T) instead.
-    PIPE_GT_TOKEN,
     /// Don't try to remember this! Use [`T![@number]`](T) instead.
     LIT_NUM_TOKEN,
     /// Don't try to remember this! Use [`T![@string]`](T) instead.
@@ -399,8 +397,8 @@ pub macro T {
     [<<] => { $crate::SyntaxKind::LT2_TOKEN },
     [>>] => { $crate::SyntaxKind::GT2_TOKEN },
     [..] => { $crate::SyntaxKind::DOT2_TOKEN },
-    [|>] => { $crate::SyntaxKind::PIPE_GT_TOKEN },
-    [@number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
+    [@
+    number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
     [@string] => { $crate::SyntaxKind::LIT_STR_TOKEN },
     [return] => { $crate::SyntaxKind::RETURN_TOKEN },
     [if] => { $crate::SyntaxKind::IF_TOKEN },
@@ -411,7 +409,8 @@ pub macro T {
     [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
     [@whitespace] => { $crate::SyntaxKind::WHITESPACE_TOKEN },
-    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN },
+    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN
+    },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.

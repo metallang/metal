@@ -156,7 +156,6 @@ fn merge_op_tokens(parser: &mut crate::parser::Parser) {
         arm!(< < _) => merge::<2>(parser, T![<<]),
         arm!(> > _) => merge::<2>(parser, T![>>]),
         arm!(. . _) => merge::<2>(parser, T![..]),
-        arm!(| > _) => merge::<2>(parser, T![|>]),
         _ => {}
     }
 }

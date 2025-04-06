@@ -850,22 +850,6 @@ impl AstToken for Dot2Token {
         &self.syntax
     }
 }
-/// Represents the `|>` token.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct PipeGtToken {
-    syntax: SyntaxToken,
-}
-impl AstToken for PipeGtToken {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::PIPE_GT_TOKEN
-    }
-    fn cast(syntax: SyntaxToken) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
-    }
-    fn syntax(&self) -> &SyntaxToken {
-        &self.syntax
-    }
-}
 /// Represents the `@number` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct LitNumToken {
@@ -1174,8 +1158,6 @@ pub enum BinaryExprOpToken {
     Dot2(Dot2Token),
     /// See [DotToken].
     Dot(DotToken),
-    /// See [PipeGtToken].
-    PipeGt(PipeGtToken),
 }
 impl AstToken for BinaryExprOpToken {
     #[allow(clippy::match_like_matches_macro)]
@@ -1215,7 +1197,6 @@ impl AstToken for BinaryExprOpToken {
             SyntaxKind::GT2_TOKEN => true,
             SyntaxKind::DOT2_TOKEN => true,
             SyntaxKind::DOT_TOKEN => true,
-            SyntaxKind::PIPE_GT_TOKEN => true,
             _ => false,
         }
     }
@@ -1315,9 +1296,6 @@ impl AstToken for BinaryExprOpToken {
             SyntaxKind::DOT_TOKEN => {
                 Some(BinaryExprOpToken::Dot(DotToken::cast(syntax)?))
             }
-            SyntaxKind::PIPE_GT_TOKEN => {
-                Some(BinaryExprOpToken::PipeGt(PipeGtToken::cast(syntax)?))
-            }
             _ => None,
         }
     }
@@ -1356,7 +1334,6 @@ impl AstToken for BinaryExprOpToken {
             BinaryExprOpToken::Gt2(it) => it.syntax(),
             BinaryExprOpToken::Dot2(it) => it.syntax(),
             BinaryExprOpToken::Dot(it) => it.syntax(),
-            BinaryExprOpToken::PipeGt(it) => it.syntax(),
         }
     }
 }
