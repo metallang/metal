@@ -87,5 +87,6 @@ metal_proc_macros::associativity_table! {
     [+] | [-] | [!] | [~] | [*] prefix other
     // -
     ['('] | ['{'] postfix other
+    [|>] infix left
     [.] infix left
 }
