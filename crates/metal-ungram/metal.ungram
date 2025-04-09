@@ -3,9 +3,11 @@
 // Some docs:
 // - Optionals are effectively ignored (but that doesn't mean you shouldn't add them)
 // 
-// - Don't forget to tweak metal_ungram::grammar_item::grammar_item_name,
-//   metal_parser::expr::merge_op_tokens and the precedence table when
-//   adding tokens comprised of symbols
+// - Don't forget to tweak metal_ungram::grammar_item::grammar_item_name when when adding
+//   tokens comprised of symbols
+//
+// - Don't forget to tweak metal_parser::expr::merge_op_tokens and the precedence table
+//   when adding prefix/infix/postfix operators
 // 
 // - Don't forget to tweak metal_lexer::Lexer::ident_token when adding new tokens comprised
 //   of ident-like characters
