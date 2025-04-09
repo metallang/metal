@@ -226,6 +226,8 @@ pub enum ExprNode {
     StructExpr(StructExprNode),
     /// See [LetExprNode].
     LetExpr(LetExprNode),
+    /// See [FnItemNode].
+    FnItem(FnItemNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -244,6 +246,7 @@ impl AstNode for ExprNode {
             SyntaxKind::DEFER_EXPR_NODE => true,
             SyntaxKind::STRUCT_EXPR_NODE => true,
             SyntaxKind::LET_EXPR_NODE => true,
+            SyntaxKind::FN_ITEM_NODE => true,
             _ => false,
         }
     }
@@ -280,6 +283,7 @@ impl AstNode for ExprNode {
             SyntaxKind::LET_EXPR_NODE => {
                 Some(ExprNode::LetExpr(LetExprNode::cast(syntax)?))
             }
+            SyntaxKind::FN_ITEM_NODE => Some(ExprNode::FnItem(FnItemNode::cast(syntax)?)),
             _ => None,
         }
     }
@@ -297,6 +301,7 @@ impl AstNode for ExprNode {
             ExprNode::DeferExpr(it) => it.syntax(),
             ExprNode::StructExpr(it) => it.syntax(),
             ExprNode::LetExpr(it) => it.syntax(),
+            ExprNode::FnItem(it) => it.syntax(),
         }
     }
 }
@@ -1160,8 +1165,8 @@ impl AstNode for FnInputNode {
     }
 }
 impl FnInputNode {
-    /// Find a child node of type [MutnessNode].
-    pub fn mutness_node(&self) -> Option<MutnessNode> {
+    /// Find a child node of type [FnInputModifiersNode].
+    pub fn mods_node(&self) -> Option<FnInputModifiersNode> {
         self.syntax.child(0usize)
     }
     /// Find a child node of type [NameNode].
@@ -1175,6 +1180,132 @@ impl FnInputNode {
     /// Find a child node of type [ExprSpecNode].
     pub fn default_node(&self) -> Option<ExprSpecNode> {
         self.syntax.child(0usize)
+    }
+}
+/// Represents the `FnInputModifiers` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FnInputModifiersNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for FnInputModifiersNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FN_INPUT_MODIFIERS_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl FnInputModifiersNode {
+    /// Find all children nodes of type [FnInputModifierNode].
+    pub fn fn_input_modifier_nodes(&self) -> impl Iterator<Item = FnInputModifierNode> {
+        self.syntax.children().filter_map(FnInputModifierNode::cast)
+    }
+}
+/// Represents the `FnInputModifier` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum FnInputModifierNode {
+    /// See [MutnessNode].
+    Mutness(MutnessNode),
+    /// See [FnInputModifierCaptureNode].
+    FnInputModifierCapture(FnInputModifierCaptureNode),
+}
+impl AstNode for FnInputModifierNode {
+    #[allow(clippy::match_like_matches_macro)]
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn can_cast(kind: SyntaxKind) -> bool {
+        match kind {
+            SyntaxKind::MUTNESS_NODE => true,
+            SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_NODE => true,
+            _ => false,
+        }
+    }
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        match syntax.kind() {
+            SyntaxKind::MUTNESS_NODE => {
+                Some(FnInputModifierNode::Mutness(MutnessNode::cast(syntax)?))
+            }
+            SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_NODE => {
+                Some(
+                    FnInputModifierNode::FnInputModifierCapture(
+                        FnInputModifierCaptureNode::cast(syntax)?,
+                    ),
+                )
+            }
+            _ => None,
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        match self {
+            FnInputModifierNode::Mutness(it) => it.syntax(),
+            FnInputModifierNode::FnInputModifierCapture(it) => it.syntax(),
+        }
+    }
+}
+/// Represents the `FnInputModifierCapture` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FnInputModifierCaptureNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for FnInputModifierCaptureNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl FnInputModifierCaptureNode {
+    /// Find a child token of variant [SyntaxKind::CAPTURE_TOKEN].
+    pub fn capture_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::CAPTURE_TOKEN, 0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::L_PAREN_TOKEN].
+    pub fn l_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::L_PAREN_TOKEN, 0usize)
+    }
+    /// Find a child node of type [FnInputModifierCaptureKindNode].
+    pub fn fn_input_modifier_capture_kind_node(
+        &self,
+    ) -> Option<FnInputModifierCaptureKindNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::R_PAREN_TOKEN].
+    pub fn r_paren_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::R_PAREN_TOKEN, 0usize)
+    }
+}
+/// Represents the `FnInputModifierCaptureKind` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FnInputModifierCaptureKindNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for FnInputModifierCaptureKindNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_KIND_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl FnInputModifierCaptureKindNode {
+    /// Returns the inner token associated with this node.
+    pub fn token(&self) -> Option<FnInputModifierCaptureKindToken> {
+        self.syntax
+            .children_with_tokens()
+            .find_map(|node_or_token| match node_or_token {
+                NodeOrToken::Node(_) => None,
+                NodeOrToken::Token(token) => FnInputModifierCaptureKindToken::cast(token),
+            })
     }
 }
 /// Represents the `ImportTree` node.

@@ -137,6 +137,9 @@ impl Lexer<'_> {
             b"else" => T![else],
             b"defer" => T![defer],
             b"let" => T![let],
+            b"capture" => T![capture],
+            b"ref" => T![ref],
+            b"owned" => T![owned],
             _ => T![@ident],
         }
     }

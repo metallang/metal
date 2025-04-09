@@ -15,7 +15,7 @@ use crate::item::type_::parse_type_alias_item;
 mod abstract_;
 mod const_;
 mod enum_;
-mod fn_;
+pub mod fn_; // TODO: make all other modules pub as well
 mod import;
 mod struct_;
 mod type_;

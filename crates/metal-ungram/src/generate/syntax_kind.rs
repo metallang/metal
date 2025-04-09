@@ -123,6 +123,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T![if]
                     | T![defer]
                     | T![let]
+                    | T![def]
                 )
                 || self.is_prefix_expr_op()
             }
