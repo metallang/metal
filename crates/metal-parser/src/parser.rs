@@ -41,16 +41,16 @@ impl<'src> Parser<'src> {
                 continue;
             }
 
-            return Some(dbg!(token));
+            return Some(token);
         }
     }
 
     pub fn peek(&self, n: usize) -> Option<&Token> {
-        dbg!(self.tokens.get(self.peek_impl(n)?))
+        self.tokens.get(self.peek_impl(n)?)
     }
 
     pub fn peek_mut(&mut self, n: usize) -> Option<&mut Token> {
-        dbg!(self.tokens.get_mut(self.peek_impl(n)?))
+        self.tokens.get_mut(self.peek_impl(n)?)
     }
 
     fn peek_impl(&self, n: usize) -> Option<usize> {
