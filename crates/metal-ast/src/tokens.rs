@@ -258,6 +258,54 @@ impl AstToken for CommaToken {
         &self.syntax
     }
 }
+/// Represents the `capture` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CaptureToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for CaptureToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::CAPTURE_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `ref` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct RefToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for RefToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::REF_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `owned` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct OwnedToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for OwnedToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::OWNED_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `import` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ImportToken {
@@ -1008,6 +1056,50 @@ impl AstToken for RBracketToken {
     }
     fn syntax(&self) -> &SyntaxToken {
         &self.syntax
+    }
+}
+/// Represents the `FnInputModifierCaptureKind` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum FnInputModifierCaptureKindToken {
+    /// See [RefToken].
+    Ref(RefToken),
+    /// See [MutToken].
+    Mut(MutToken),
+    /// See [OwnedToken].
+    Owned(OwnedToken),
+}
+impl AstToken for FnInputModifierCaptureKindToken {
+    #[allow(clippy::match_like_matches_macro)]
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn can_cast(kind: SyntaxKind) -> bool {
+        match kind {
+            SyntaxKind::REF_TOKEN => true,
+            SyntaxKind::MUT_TOKEN => true,
+            SyntaxKind::OWNED_TOKEN => true,
+            _ => false,
+        }
+    }
+    #[allow(clippy::wildcard_enum_match_arm)]
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        match syntax.kind() {
+            SyntaxKind::REF_TOKEN => {
+                Some(FnInputModifierCaptureKindToken::Ref(RefToken::cast(syntax)?))
+            }
+            SyntaxKind::MUT_TOKEN => {
+                Some(FnInputModifierCaptureKindToken::Mut(MutToken::cast(syntax)?))
+            }
+            SyntaxKind::OWNED_TOKEN => {
+                Some(FnInputModifierCaptureKindToken::Owned(OwnedToken::cast(syntax)?))
+            }
+            _ => None,
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        match self {
+            FnInputModifierCaptureKindToken::Ref(it) => it.syntax(),
+            FnInputModifierCaptureKindToken::Mut(it) => it.syntax(),
+            FnInputModifierCaptureKindToken::Owned(it) => it.syntax(),
+        }
     }
 }
 /// Represents the `LitExpr` token.

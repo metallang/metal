@@ -14,6 +14,7 @@ use crate::expr::lit::parse_lit_expr;
 use crate::expr::paren::parse_paren_expr;
 use crate::expr::return_::parse_return_expr;
 use crate::expr::struct_::parse_struct_expr;
+use crate::item::fn_::parse_fn_item;
 use crate::parser::ParsingContext;
 
 mod bp;
@@ -46,6 +47,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
         T![if] => parse_if_expr(parser),
         T![defer] => parse_defer_expr(parser),
         T![let] => parse_let_expr(parser),
+        T![def] => parse_fn_item(parser),
         // prefix ops
         op if let Some(bp) = binding_power_for(op, Flavor::Prefix) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);

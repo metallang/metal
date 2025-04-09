@@ -68,7 +68,13 @@ EnumFn = vis:Visibility FnItem
 FnItem = 'def' Name generics:GenericParamList? sig:FnSignature body:Block
 FnSignature = '(' inputs:FnInputs? ')' return_ty:TypeQualifier?
 FnInputs = FnInput (',' FnInput)* ','?
-FnInput = mutness:Mutability Name ty:TypeQualifier? default:ExprSpecifier?
+FnInput = mods:FnInputModifiers Name ty:TypeQualifier? default:ExprSpecifier?
+FnInputModifiers = FnInputModifier*
+FnInputModifier =
+  Mutability
+  | FnInputModifierCapture
+FnInputModifierCapture = 'capture' '(' FnInputModifierCaptureKind ')'
+FnInputModifierCaptureKind = 'ref' | 'mut' | 'owned'
 
 ImportItem = 'import' tree:ImportTree
 ImportTree = ImportLeaf | ImportBranch
@@ -116,6 +122,7 @@ Expr =
   | DeferExpr
   | StructExpr
   | LetExpr
+  | FnItem
 
 PrefixExpr = op:PrefixExprOp Expr
 
