@@ -64,53 +64,54 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
 
     parser.end_node();
 
-    // binary ops
     loop {
         merge_op_tokens(parser);
 
-        let Some(Some(bp)) = parser
+        // postfix ops
+        if let Some(Some(bp)) = parser
+            .peek(0)
+            .map(|token| binding_power_for(token.kind, Flavor::Postfix))
+            && (bp.l_value() >= min_bp.l_value())
+        {
+            match parser.peek(0).unwrap().kind {
+                T!['('] => parse_call_expr(parser, checkpoint),
+                T!['{'] => {
+                    if !parser.is_in_cx(ParsingContext::IfExprCond) {
+                        parse_struct_expr(parser, checkpoint);
+                    } else {
+                        break;
+                    }
+                }
+                _ => unreachable!(),
+            }
+
+            continue;
+        }
+
+        // binary ops
+        if let Some(Some(bp)) = parser
             .peek(0)
             .map(|token| binding_power_for(token.kind, Flavor::Infix))
-        else {
-            break;
-        };
+            && (bp.l_value() >= min_bp.l_value())
+        {
+            parser.start_node_at(N![Expr], checkpoint);
+            parser.start_node_at(N![BinaryExpr], checkpoint);
 
-        if bp.l_value() < min_bp.l_value() {
-            break;
+            // the lhs is now here
+
+            parser.start_node(N![BinaryExprOp]);
+            parser.eat_any();
+            parser.end_node();
+
+            parse_expr_with_binding_power(parser, bp.as_r_value()); // rhs
+
+            parser.end_node();
+            parser.end_node();
+
+            continue;
         }
 
-        parser.start_node_at(N![Expr], checkpoint);
-        parser.start_node_at(N![BinaryExpr], checkpoint);
-
-        // the lhs is now here
-
-        parser.start_node(N![BinaryExprOp]);
-        parser.eat_any();
-        parser.end_node();
-
-        parse_expr_with_binding_power(parser, bp.as_r_value()); // rhs
-
-        parser.end_node();
-        parser.end_node();
-    }
-
-    // postfix ops
-    while let Some(Some(bp)) = parser
-        .peek(0)
-        .map(|token| binding_power_for(token.kind, Flavor::Postfix))
-        && (bp.l_value() >= min_bp.l_value())
-    {
-        match parser.peek(0).unwrap().kind {
-            T!['('] => parse_call_expr(parser, checkpoint),
-            T!['{'] => {
-                if !parser.is_in_cx(ParsingContext::IfExprCond) {
-                    parse_struct_expr(parser, checkpoint);
-                } else {
-                    break;
-                }
-            }
-            _ => unreachable!(),
-        }
+        break;
     }
 }
 
