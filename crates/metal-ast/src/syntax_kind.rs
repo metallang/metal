@@ -75,6 +75,14 @@ pub enum SyntaxKind {
     FN_INPUTS_NODE,
     /// Don't try to remember this! Use [`N![FnInput]`](N) instead.
     FN_INPUT_NODE,
+    /// Don't try to remember this! Use [`N![FnInputModifiers]`](N) instead.
+    FN_INPUT_MODIFIERS_NODE,
+    /// Don't try to remember this! Use [`N![FnInputModifier]`](N) instead.
+    FN_INPUT_MODIFIER_NODE,
+    /// Don't try to remember this! Use [`N![FnInputModifierCapture]`](N) instead.
+    FN_INPUT_MODIFIER_CAPTURE_NODE,
+    /// Don't try to remember this! Use [`N![FnInputModifierCaptureKind]`](N) instead.
+    FN_INPUT_MODIFIER_CAPTURE_KIND_NODE,
     /// Don't try to remember this! Use [`N![ImportTree]`](N) instead.
     IMPORT_TREE_NODE,
     /// Don't try to remember this! Use [`N![ImportLeaf]`](N) instead.
@@ -173,6 +181,12 @@ pub enum SyntaxKind {
     R_PAREN_TOKEN,
     /// Don't try to remember this! Use [`T![,]`](T) instead.
     COMMA_TOKEN,
+    /// Don't try to remember this! Use [`T![capture]`](T) instead.
+    CAPTURE_TOKEN,
+    /// Don't try to remember this! Use [`T![ref]`](T) instead.
+    REF_TOKEN,
+    /// Don't try to remember this! Use [`T![owned]`](T) instead.
+    OWNED_TOKEN,
     /// Don't try to remember this! Use [`T![import]`](T) instead.
     IMPORT_TOKEN,
     /// Don't try to remember this! Use [`T![.]`](T) instead.
@@ -247,6 +261,8 @@ pub enum SyntaxKind {
     GT2_TOKEN,
     /// Don't try to remember this! Use [`T![..]`](T) instead.
     DOT2_TOKEN,
+    /// Don't try to remember this! Use [`T![|>]`](T) instead.
+    PIPE_GT_TOKEN,
     /// Don't try to remember this! Use [`T![@number]`](T) instead.
     LIT_NUM_TOKEN,
     /// Don't try to remember this! Use [`T![@string]`](T) instead.
@@ -320,6 +336,7 @@ impl SyntaxKind {
             | T![if]
             | T![defer]
             | T![let]
+            | T![def]
         ) || self.is_prefix_expr_op()
     }
     pub fn is_binary_type_op(&self) -> bool {
@@ -360,6 +377,9 @@ pub macro T {
     ['('] => { $crate::SyntaxKind::L_PAREN_TOKEN },
     [')'] => { $crate::SyntaxKind::R_PAREN_TOKEN },
     [,] => { $crate::SyntaxKind::COMMA_TOKEN },
+    [capture] => { $crate::SyntaxKind::CAPTURE_TOKEN },
+    [ref] => { $crate::SyntaxKind::REF_TOKEN },
+    [owned] => { $crate::SyntaxKind::OWNED_TOKEN },
     [import] => { $crate::SyntaxKind::IMPORT_TOKEN },
     [.] => { $crate::SyntaxKind::DOT_TOKEN },
     [struct] => { $crate::SyntaxKind::STRUCT_TOKEN },
@@ -397,8 +417,8 @@ pub macro T {
     [<<] => { $crate::SyntaxKind::LT2_TOKEN },
     [>>] => { $crate::SyntaxKind::GT2_TOKEN },
     [..] => { $crate::SyntaxKind::DOT2_TOKEN },
-    [@
-    number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
+    [|>] => { $crate::SyntaxKind::PIPE_GT_TOKEN },
+    [@number] => { $crate::SyntaxKind::LIT_NUM_TOKEN },
     [@string] => { $crate::SyntaxKind::LIT_STR_TOKEN },
     [return] => { $crate::SyntaxKind::RETURN_TOKEN },
     [if] => { $crate::SyntaxKind::IF_TOKEN },
@@ -459,6 +479,10 @@ pub macro N {
     [EnumVariantDataType] => { $crate::SyntaxKind::ENUM_VARIANT_DATA_TYPE_NODE },
     [FnInputs] => { $crate::SyntaxKind::FN_INPUTS_NODE },
     [FnInput] => { $crate::SyntaxKind::FN_INPUT_NODE },
+    [FnInputModifiers] => { $crate::SyntaxKind::FN_INPUT_MODIFIERS_NODE },
+    [FnInputModifier] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_NODE },
+    [FnInputModifierCapture] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_NODE },
+    [FnInputModifierCaptureKind] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_KIND_NODE },
     [ImportTree] => { $crate::SyntaxKind::IMPORT_TREE_NODE },
     [ImportLeaf] => { $crate::SyntaxKind::IMPORT_LEAF_NODE },
     [ImportBranch] => { $crate::SyntaxKind::IMPORT_BRANCH_NODE },

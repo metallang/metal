@@ -14,6 +14,15 @@ pub fn paste_table(table: Table) -> TokenStream {
     });
 
     quote! {
+        const _: () = {
+            const path: &'static [u8] = module_path!().as_bytes();
+
+            match path {
+                b"metal_parser::expr::bp" => (),
+                _ => panic!("associativity table must be used in the `metal_parser::expr::bp` module"),
+            }
+        };
+
         pub fn binding_power_for(op: SyntaxKind, flavor: Flavor) -> Option<BindingPower> {
             let bp = match op {
                 #(#arms),*,

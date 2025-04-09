@@ -51,6 +51,7 @@ impl From<(u16, Assoc)> for BindingPower {
     }
 }
 
+// TODO: enforce that the same tokens can't be used for both prefix and postfix ops
 metal_proc_macros::associativity_table! {
     [=]
     | [+=]
@@ -87,5 +88,6 @@ metal_proc_macros::associativity_table! {
     [+] | [-] | [!] | [~] | [*] prefix other
     // -
     ['('] | ['{'] postfix other
+    [|>] infix left
     [.] infix left
 }
