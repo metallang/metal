@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /// A set of restrictions to impose on the [crate::parser::Parser].
 #[derive(Clone, Debug)]
 pub struct Restrictions(RestrictionFlags);
