@@ -8,6 +8,7 @@ rowan = { workspace = true }
 metal-lexer = { workspace = true }
 metal-ast = { workspace = true }
 metal-proc-macros = { workspace = true }
+bitflags = { workspace = true }
 
 [lints]
 workspace = true

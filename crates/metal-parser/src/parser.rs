@@ -6,19 +6,13 @@ use metal_ast::{SyntaxKind, SyntaxNode};
 use metal_lexer::Token;
 use rowan::GreenNodeBuilder;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ParsingContext {
-    /// The default parsing mode.
-    Normal,
-    /// Indicates that the condition of an if expression is being parsed.
-    IfExprCond,
-}
+use crate::restrictions::Restrictions;
 
 pub struct Parser<'src> {
     builder: GreenNodeBuilder<'static>,
     tokens: VecDeque<Token>,
     source: &'src str,
-    cx: ParsingContext,
+    restrictions: Restrictions,
 }
 
 impl<'src> Parser<'src> {
@@ -27,7 +21,7 @@ impl<'src> Parser<'src> {
             builder: GreenNodeBuilder::new(),
             tokens,
             source,
-            cx: ParsingContext::Normal,
+            restrictions: Restrictions::new(),
         }
     }
 
@@ -80,19 +74,24 @@ impl<'src> Parser<'src> {
         self.peek(0).is_none()
     }
 
-    pub fn in_cx(&mut self, new_cx: ParsingContext, mut f: impl FnMut(&mut Self)) {
-        let old_cx = self.cx.clone(); // cheap
+    // restrictions api
 
-        self.cx = new_cx;
+    pub fn restrictions(&self) -> &Restrictions {
+        &self.restrictions
+    }
+
+    pub fn restrictions_mut(&mut self) -> &mut Restrictions {
+        &mut self.restrictions
+    }
+
+    /// Restores the restrictions to the state they were in before the given
+    /// parsing function was called.
+    pub fn with_restrictions(&mut self, mut f: impl FnMut(&mut Self)) {
+        let restrictions = self.restrictions.clone(); // cheap
 
         f(self);
 
-        self.cx = old_cx;
-    }
-
-    #[track_caller]
-    pub fn is_in_cx(&self, cx: ParsingContext) -> bool {
-        self.cx == cx
+        self.restrictions = restrictions;
     }
 
     // green node builder functions

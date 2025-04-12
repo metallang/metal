@@ -1026,6 +1026,86 @@ impl AstToken for LetToken {
         &self.syntax
     }
 }
+/// Represents the `while` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct WhileToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for WhileToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::WHILE_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `for` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ForToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for ForToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FOR_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `in` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct InToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for InToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::IN_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `loop` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LoopToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for LoopToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::LOOP_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+/// Represents the `break` token.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct BreakToken {
+    syntax: SyntaxToken,
+}
+impl AstToken for BreakToken {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::BREAK_TOKEN
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
 /// Represents the `[` token.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct LBracketToken {

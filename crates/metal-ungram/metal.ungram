@@ -125,6 +125,10 @@ Expr =
   | StructExpr
   | LetExpr
   | FnItem
+  | WhileExpr
+  | ForExpr
+  | LoopExpr
+  | BreakExpr
 
 PrefixExpr = op:PrefixExprOp Expr
 
@@ -196,6 +200,14 @@ StructExprFields = StructExprField (';' StructExprField)* ';'?
 StructExprField = Name value:ExprSpecifier?
 
 LetExpr = 'let' Name ty:TypeQualifier? value:ExprSpecifier
+
+WhileExpr = 'while' Expr Block
+
+ForExpr = 'for' Name 'in' Expr Block
+
+LoopExpr = 'loop' Block
+
+BreakExpr = 'break' Expr?
 
 // Generics
 

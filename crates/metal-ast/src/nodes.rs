@@ -228,6 +228,14 @@ pub enum ExprNode {
     LetExpr(LetExprNode),
     /// See [FnItemNode].
     FnItem(FnItemNode),
+    /// See [WhileExprNode].
+    WhileExpr(WhileExprNode),
+    /// See [ForExprNode].
+    ForExpr(ForExprNode),
+    /// See [LoopExprNode].
+    LoopExpr(LoopExprNode),
+    /// See [BreakExprNode].
+    BreakExpr(BreakExprNode),
 }
 impl AstNode for ExprNode {
     #[allow(clippy::match_like_matches_macro)]
@@ -247,6 +255,10 @@ impl AstNode for ExprNode {
             SyntaxKind::STRUCT_EXPR_NODE => true,
             SyntaxKind::LET_EXPR_NODE => true,
             SyntaxKind::FN_ITEM_NODE => true,
+            SyntaxKind::WHILE_EXPR_NODE => true,
+            SyntaxKind::FOR_EXPR_NODE => true,
+            SyntaxKind::LOOP_EXPR_NODE => true,
+            SyntaxKind::BREAK_EXPR_NODE => true,
             _ => false,
         }
     }
@@ -284,6 +296,18 @@ impl AstNode for ExprNode {
                 Some(ExprNode::LetExpr(LetExprNode::cast(syntax)?))
             }
             SyntaxKind::FN_ITEM_NODE => Some(ExprNode::FnItem(FnItemNode::cast(syntax)?)),
+            SyntaxKind::WHILE_EXPR_NODE => {
+                Some(ExprNode::WhileExpr(WhileExprNode::cast(syntax)?))
+            }
+            SyntaxKind::FOR_EXPR_NODE => {
+                Some(ExprNode::ForExpr(ForExprNode::cast(syntax)?))
+            }
+            SyntaxKind::LOOP_EXPR_NODE => {
+                Some(ExprNode::LoopExpr(LoopExprNode::cast(syntax)?))
+            }
+            SyntaxKind::BREAK_EXPR_NODE => {
+                Some(ExprNode::BreakExpr(BreakExprNode::cast(syntax)?))
+            }
             _ => None,
         }
     }
@@ -302,6 +326,10 @@ impl AstNode for ExprNode {
             ExprNode::StructExpr(it) => it.syntax(),
             ExprNode::LetExpr(it) => it.syntax(),
             ExprNode::FnItem(it) => it.syntax(),
+            ExprNode::WhileExpr(it) => it.syntax(),
+            ExprNode::ForExpr(it) => it.syntax(),
+            ExprNode::LoopExpr(it) => it.syntax(),
+            ExprNode::BreakExpr(it) => it.syntax(),
         }
     }
 }
@@ -2023,6 +2051,126 @@ impl LetExprNode {
     }
     /// Find a child node of type [ExprSpecNode].
     pub fn value_node(&self) -> Option<ExprSpecNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `WhileExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct WhileExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for WhileExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::WHILE_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl WhileExprNode {
+    /// Find a child token of variant [SyntaxKind::WHILE_TOKEN].
+    pub fn while_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::WHILE_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [BlockNode].
+    pub fn block_node(&self) -> Option<BlockNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `ForExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ForExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for ForExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::FOR_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ForExprNode {
+    /// Find a child token of variant [SyntaxKind::FOR_TOKEN].
+    pub fn for_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::FOR_TOKEN, 0usize)
+    }
+    /// Find a child node of type [NameNode].
+    pub fn name_node(&self) -> Option<NameNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child token of variant [SyntaxKind::IN_TOKEN].
+    pub fn in_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::IN_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
+        self.syntax.child(0usize)
+    }
+    /// Find a child node of type [BlockNode].
+    pub fn block_node(&self) -> Option<BlockNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `LoopExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LoopExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for LoopExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::LOOP_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl LoopExprNode {
+    /// Find a child token of variant [SyntaxKind::LOOP_TOKEN].
+    pub fn loop_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::LOOP_TOKEN, 0usize)
+    }
+    /// Find a child node of type [BlockNode].
+    pub fn block_node(&self) -> Option<BlockNode> {
+        self.syntax.child(0usize)
+    }
+}
+/// Represents the `BreakExpr` node.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct BreakExprNode {
+    syntax: SyntaxNode,
+}
+impl AstNode for BreakExprNode {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        kind == SyntaxKind::BREAK_EXPR_NODE
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl BreakExprNode {
+    /// Find a child token of variant [SyntaxKind::BREAK_TOKEN].
+    pub fn break_token(&self) -> Option<SyntaxToken> {
+        self.syntax.child_token(SyntaxKind::BREAK_TOKEN, 0usize)
+    }
+    /// Find a child node of type [ExprNode].
+    pub fn expr_node(&self) -> Option<ExprNode> {
         self.syntax.child(0usize)
     }
 }
