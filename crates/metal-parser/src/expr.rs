@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 
+use break_::parse_break_expr;
+use for_::parse_for_expr;
+use loop_::parse_loop_expr;
 use metal_ast::{SyntaxKind, N, T};
 use metal_lexer::{Span, Token};
+use while_::parse_while_expr;
 
 use crate::block::parse_block;
 use crate::common::parse_name;
@@ -15,17 +19,21 @@ use crate::expr::paren::parse_paren_expr;
 use crate::expr::return_::parse_return_expr;
 use crate::expr::struct_::parse_struct_expr;
 use crate::item::fn_::parse_fn_item;
-use crate::parser::ParsingContext;
+use crate::restrictions::RestrictionFlags;
 
 mod bp;
+pub mod break_;
 pub mod call;
 pub mod defer;
+pub mod for_;
 pub mod if_;
 pub mod let_;
 pub mod lit;
+pub mod loop_;
 pub mod paren;
 pub mod return_;
 pub mod struct_;
+pub mod while_;
 
 pub fn parse_expr(parser: &mut crate::parser::Parser) {
     parse_expr_with_binding_power(parser, BindingPower::ZERO)
@@ -48,6 +56,10 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
         T![defer] => parse_defer_expr(parser),
         T![let] => parse_let_expr(parser),
         T![def] => parse_fn_item(parser),
+        T![while] => parse_while_expr(parser),
+        T![for] => parse_for_expr(parser),
+        T![loop] => parse_loop_expr(parser),
+        T![break] => parse_break_expr(parser),
         // prefix ops
         op if let Some(bp) = binding_power_for(op, Flavor::Prefix) => {
             parser.start_node_at(N![PrefixExpr], checkpoint);
@@ -78,11 +90,14 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
             match parser.peek(0).unwrap().kind {
                 T!['('] => parse_call_expr(parser, checkpoint),
                 T!['{'] => {
-                    if !parser.is_in_cx(ParsingContext::IfExprCond) {
-                        parse_struct_expr(parser, checkpoint);
-                    } else {
+                    if parser
+                        .restrictions()
+                        .include(RestrictionFlags::NO_STRUCT_EXPR)
+                    {
                         break;
                     }
+
+                    parse_struct_expr(parser, checkpoint);
                 }
                 _ => unreachable!(),
             }

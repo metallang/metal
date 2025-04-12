@@ -140,6 +140,11 @@ impl Lexer<'_> {
             b"capture" => T![capture],
             b"ref" => T![ref],
             b"owned" => T![owned],
+            b"while" => T![while],
+            b"for" => T![for],
+            b"loop" => T![loop],
+            b"break" => T![break],
+            b"in" => T![in],
             _ => T![@ident],
         }
     }

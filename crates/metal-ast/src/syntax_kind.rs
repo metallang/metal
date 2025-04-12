@@ -131,6 +131,14 @@ pub enum SyntaxKind {
     STRUCT_EXPR_NODE,
     /// Don't try to remember this! Use [`N![LetExpr]`](N) instead.
     LET_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![WhileExpr]`](N) instead.
+    WHILE_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![ForExpr]`](N) instead.
+    FOR_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![LoopExpr]`](N) instead.
+    LOOP_EXPR_NODE,
+    /// Don't try to remember this! Use [`N![BreakExpr]`](N) instead.
+    BREAK_EXPR_NODE,
     /// Don't try to remember this! Use [`N![PrefixExprOp]`](N) instead.
     PREFIX_EXPR_OP_NODE,
     /// Don't try to remember this! Use [`N![BinaryExprOp]`](N) instead.
@@ -277,6 +285,16 @@ pub enum SyntaxKind {
     DEFER_TOKEN,
     /// Don't try to remember this! Use [`T![let]`](T) instead.
     LET_TOKEN,
+    /// Don't try to remember this! Use [`T![while]`](T) instead.
+    WHILE_TOKEN,
+    /// Don't try to remember this! Use [`T![for]`](T) instead.
+    FOR_TOKEN,
+    /// Don't try to remember this! Use [`T![in]`](T) instead.
+    IN_TOKEN,
+    /// Don't try to remember this! Use [`T![loop]`](T) instead.
+    LOOP_TOKEN,
+    /// Don't try to remember this! Use [`T![break]`](T) instead.
+    BREAK_TOKEN,
     /// Don't try to remember this! Use [`T!['[']`](T) instead.
     L_BRACKET_TOKEN,
     /// Don't try to remember this! Use [`T![']']`](T) instead.
@@ -337,6 +355,10 @@ impl SyntaxKind {
             | T![defer]
             | T![let]
             | T![def]
+            | T![while]
+            | T![for]
+            | T![loop]
+            | T![break]
         ) || self.is_prefix_expr_op()
     }
     pub fn is_binary_type_op(&self) -> bool {
@@ -425,6 +447,11 @@ pub macro T {
     [else] => { $crate::SyntaxKind::ELSE_TOKEN },
     [defer] => { $crate::SyntaxKind::DEFER_TOKEN },
     [let] => { $crate::SyntaxKind::LET_TOKEN },
+    [while] => { $crate::SyntaxKind::WHILE_TOKEN },
+    [for] => { $crate::SyntaxKind::FOR_TOKEN },
+    [in] => { $crate::SyntaxKind::IN_TOKEN },
+    [loop] => { $crate::SyntaxKind::LOOP_TOKEN },
+    [break] => { $crate::SyntaxKind::BREAK_TOKEN },
     ['['] => { $crate::SyntaxKind::L_BRACKET_TOKEN },
     [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
@@ -507,6 +534,10 @@ pub macro N {
     [DeferExpr] => { $crate::SyntaxKind::DEFER_EXPR_NODE },
     [StructExpr] => { $crate::SyntaxKind::STRUCT_EXPR_NODE },
     [LetExpr] => { $crate::SyntaxKind::LET_EXPR_NODE },
+    [WhileExpr] => { $crate::SyntaxKind::WHILE_EXPR_NODE },
+    [ForExpr] => { $crate::SyntaxKind::FOR_EXPR_NODE },
+    [LoopExpr] => { $crate::SyntaxKind::LOOP_EXPR_NODE },
+    [BreakExpr] => { $crate::SyntaxKind::BREAK_EXPR_NODE },
     [PrefixExprOp] => { $crate::SyntaxKind::PREFIX_EXPR_OP_NODE },
     [BinaryExprOp] => { $crate::SyntaxKind::BINARY_EXPR_OP_NODE },
     [CallExprArgs] => { $crate::SyntaxKind::CALL_EXPR_ARGS_NODE },

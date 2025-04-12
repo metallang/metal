@@ -124,6 +124,10 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
                     | T![defer]
                     | T![let]
                     | T![def]
+                    | T![while]
+                    | T![for]
+                    | T![loop]
+                    | T![break]
                 )
                 || self.is_prefix_expr_op()
             }

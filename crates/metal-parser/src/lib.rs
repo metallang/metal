@@ -9,18 +9,17 @@ mod expr;
 mod generics;
 mod item;
 mod parser;
+mod restrictions;
 mod stmt;
 mod type_;
 
-use metal_ast::N;
-
-use crate::block::parse_block_stmts;
 pub use crate::parser::Parser;
+pub use crate::restrictions::*;
 
 pub fn parse_root(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![Root]);
+    parser.start_node(metal_ast::N![Root]);
 
-    parse_block_stmts(parser);
+    crate::block::parse_block_stmts(parser);
 
     parser.end_node();
 }
