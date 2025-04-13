@@ -12,13 +12,13 @@ use crate::item::import::parse_import_item;
 use crate::item::struct_::parse_struct_item;
 use crate::item::type_::parse_type_alias_item;
 
-mod abstract_;
-mod const_;
-mod enum_;
-pub mod fn_; // TODO: make all other modules pub as well
-mod import;
-mod struct_;
-mod type_;
+pub mod abstract_;
+pub mod const_;
+pub mod enum_;
+pub mod fn_;
+pub mod import;
+pub mod struct_;
+pub mod type_;
 
 pub fn parse_item(parser: &mut crate::parser::Parser) {
     parser.start_node(N![Item]);

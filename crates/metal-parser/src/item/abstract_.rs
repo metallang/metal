@@ -21,7 +21,7 @@ pub fn parse_abstract_item(parser: &mut crate::parser::Parser) {
 pub fn parse_abstract_body(parser: &mut crate::parser::Parser) {
     parser.start_node(N![AbstractBody]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_abstract_fn_item(parser);
     }
 

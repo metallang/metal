@@ -82,8 +82,6 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
         }
 
         impl AstNode for #item_name {
-            #[allow(clippy::match_like_matches_macro)]
-            #[allow(clippy::wildcard_enum_match_arm)]
             fn can_cast(kind: SyntaxKind) -> bool {
                 match kind {
                     #can_cast_arms
@@ -91,7 +89,6 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
                 }
             }
 
-            #[allow(clippy::wildcard_enum_match_arm)]
             fn cast(syntax: SyntaxNode) -> Option<Self> {
                 match syntax.kind() {
                     #cast_arms

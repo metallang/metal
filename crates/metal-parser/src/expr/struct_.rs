@@ -21,7 +21,7 @@ pub fn parse_struct_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::
 pub fn parse_struct_expr_fields(parser: &mut crate::parser::Parser) {
     parser.start_node(N![StructExprFields]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_struct_expr_field(parser);
         parser.maybe_eat(T![;]);
     }

@@ -23,7 +23,7 @@ pub fn parse_enum_item(parser: &mut crate::parser::Parser) {
 pub fn parse_enum_body(parser: &mut crate::parser::Parser) {
     parser.start_node(N![EnumBody]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_enum_body_item(parser);
     }
 

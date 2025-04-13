@@ -81,7 +81,7 @@ fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
         }
 
         impl SyntaxKind {
-            pub fn is_whitespace(&self) -> bool {
+            pub fn is_trivia(&self) -> bool {
                 matches!(self, T![@comment] | T![@whitespace] | T![@unknown])
             }
 

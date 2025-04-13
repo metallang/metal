@@ -27,34 +27,35 @@ impl<'src> Parser<'src> {
 
     #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> Option<Token> {
-        loop {
-            let token = self.tokens.pop_front()?;
+        let mut next_non_trivia_token = self.nth_non_trivia(0)?;
 
-            if token.kind.is_whitespace() {
-                self.token(token);
-                continue;
-            }
+        while next_non_trivia_token > 0 {
+            let trivia_token = self.tokens.pop_front()?;
 
-            return Some(token);
+            self.token(trivia_token);
+
+            next_non_trivia_token -= 1;
         }
+
+        self.tokens.pop_front()
     }
 
     pub fn peek(&self, n: usize) -> Option<&Token> {
-        self.tokens.get(self.peek_impl(n)?)
+        self.tokens.get(self.nth_non_trivia(n)?)
     }
 
     pub fn peek_mut(&mut self, n: usize) -> Option<&mut Token> {
-        self.tokens.get_mut(self.peek_impl(n)?)
+        self.tokens.get_mut(self.nth_non_trivia(n)?)
     }
 
-    fn peek_impl(&self, n: usize) -> Option<usize> {
+    fn nth_non_trivia(&self, n: usize) -> Option<usize> {
         let mut cursor = 0;
         let mut non_ws_tokens_seen = 0;
 
         loop {
             let token = self.tokens.get(cursor)?;
 
-            if !token.kind.is_whitespace() {
+            if !token.kind.is_trivia() {
                 non_ws_tokens_seen += 1;
             }
 
@@ -74,6 +75,10 @@ impl<'src> Parser<'src> {
         self.peek(0).is_none()
     }
 
+    pub fn is_not_at_eof_or(&mut self, kind: SyntaxKind) -> bool {
+        !(self.peek_is(0, kind) || self.is_eof())
+    }
+
     // restrictions api
 
     pub fn restrictions(&self) -> &Restrictions {
@@ -84,8 +89,8 @@ impl<'src> Parser<'src> {
         &mut self.restrictions
     }
 
-    /// Restores the restrictions to the state they were in before the given
-    /// parsing function was called.
+    /// Calls the given parser function and then restores the restrictions to the
+    /// state they were in before the call.
     pub fn with_restrictions(&mut self, mut f: impl FnMut(&mut Self)) {
         let restrictions = self.restrictions.clone(); // cheap
 
