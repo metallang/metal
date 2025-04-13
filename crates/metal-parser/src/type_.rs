@@ -5,8 +5,8 @@ use metal_ast::{N, T};
 use crate::type_::name::parse_name_type;
 use crate::type_::ref_::parse_ref_type;
 
-mod name;
-mod ref_;
+pub mod name;
+pub mod ref_;
 
 pub fn parse_type(parser: &mut crate::parser::Parser) {
     let at = parser.checkpoint();
