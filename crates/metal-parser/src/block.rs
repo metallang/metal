@@ -17,7 +17,7 @@ pub fn parse_block(parser: &mut crate::parser::Parser) {
 pub fn parse_block_stmts(parser: &mut crate::parser::Parser) {
     parser.start_node(N![BlockStmts]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_stmt(parser);
     }
 

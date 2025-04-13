@@ -32,7 +32,7 @@ pub fn parse_fn_signature(parser: &mut crate::parser::Parser) {
 pub fn parse_fn_inputs(parser: &mut crate::parser::Parser) {
     parser.start_node(N![FnInputs]);
 
-    while !(parser.peek_is(0, T![')']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T![')']) {
         parse_fn_input(parser);
         parser.maybe_eat(T![,]);
     }
@@ -54,7 +54,7 @@ pub fn parse_fn_input(parser: &mut crate::parser::Parser) {
 pub fn parse_fn_input_modifiers(parser: &mut crate::parser::Parser) {
     parser.start_node(N![FnInputModifiers]);
 
-    while !(parser.peek_is(0, T![@ident]) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T![@ident]) {
         parse_fn_input_modifier(parser);
     }
 

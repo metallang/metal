@@ -21,7 +21,7 @@ pub fn parse_struct_item(parser: &mut crate::parser::Parser) {
 pub fn parse_struct_body(parser: &mut crate::parser::Parser) {
     parser.start_node(N![StructBody]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_struct_body_item(parser);
     }
 
@@ -58,6 +58,7 @@ pub fn parse_struct_field(parser: &mut crate::parser::Parser, at: rowan::Checkpo
 pub fn parse_struct_fn(parser: &mut crate::parser::Parser, at: rowan::Checkpoint) {
     parser.start_node_at(N![StructFn], at);
 
+    // FIXME: visibility is missing
     parse_fn_item(parser);
 
     parser.end_node();

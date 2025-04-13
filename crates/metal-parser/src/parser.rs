@@ -75,6 +75,10 @@ impl<'src> Parser<'src> {
         self.peek(0).is_none()
     }
 
+    pub fn is_not_at_eof_or(&mut self, kind: SyntaxKind) -> bool {
+        !(self.peek_is(0, kind) || self.is_eof())
+    }
+
     // restrictions api
 
     pub fn restrictions(&self) -> &Restrictions {
@@ -85,6 +89,7 @@ impl<'src> Parser<'src> {
         &mut self.restrictions
     }
 
+    // FIXME: better docs
     /// Restores the restrictions to the state they were in before the given
     /// parsing function was called.
     pub fn with_restrictions(&mut self, mut f: impl FnMut(&mut Self)) {

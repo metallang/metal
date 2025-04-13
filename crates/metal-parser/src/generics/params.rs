@@ -17,7 +17,7 @@ pub fn parse_generic_param_list(parser: &mut crate::parser::Parser) {
 pub fn parse_generic_params(parser: &mut crate::parser::Parser) {
     parser.start_node(N![GenericParams]);
 
-    while !(parser.peek_is(0, T![']']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T![']']) {
         parse_generic_param(parser);
         parser.maybe_eat(T![,]);
     }

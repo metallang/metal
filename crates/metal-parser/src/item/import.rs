@@ -60,7 +60,7 @@ pub fn parse_import_branch(parser: &mut crate::parser::Parser) {
 pub fn parse_import_branch_subtrees(parser: &mut crate::parser::Parser) {
     parser.start_node(N![ImportBranchSubtrees]);
 
-    while !(parser.peek_is(0, T!['}']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T!['}']) {
         parse_import_tree(parser);
         parser.maybe_eat(T![,]);
     }

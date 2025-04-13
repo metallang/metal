@@ -21,7 +21,7 @@ pub fn parse_call_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Ch
 pub fn parse_call_expr_args(parser: &mut crate::parser::Parser) {
     parser.start_node(N![CallExprArgs]);
 
-    while !(parser.peek_is(0, T![')']) || parser.is_eof()) {
+    while parser.is_not_at_eof_or(T![')']) {
         parse_expr(parser);
         parser.maybe_eat(T![,]);
     }
