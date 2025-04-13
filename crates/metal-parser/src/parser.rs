@@ -89,9 +89,8 @@ impl<'src> Parser<'src> {
         &mut self.restrictions
     }
 
-    // FIXME: better docs
-    /// Restores the restrictions to the state they were in before the given
-    /// parsing function was called.
+    /// Calls the given parser function and then restores the restrictions to the
+    /// state they were in before the call.
     pub fn with_restrictions(&mut self, mut f: impl FnMut(&mut Self)) {
         let restrictions = self.restrictions.clone(); // cheap
 
