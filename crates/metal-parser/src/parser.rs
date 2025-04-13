@@ -27,10 +27,11 @@ impl<'src> Parser<'src> {
 
     #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> Option<Token> {
+        // TODO: re-use .peek_impl here
         loop {
             let token = self.tokens.pop_front()?;
 
-            if token.kind.is_whitespace() {
+            if token.kind.is_trivia() {
                 self.token(token);
                 continue;
             }
@@ -54,7 +55,7 @@ impl<'src> Parser<'src> {
         loop {
             let token = self.tokens.get(cursor)?;
 
-            if !token.kind.is_whitespace() {
+            if !token.kind.is_trivia() {
                 non_ws_tokens_seen += 1;
             }
 

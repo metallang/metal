@@ -322,7 +322,7 @@ impl From<SyntaxKind> for rowan::SyntaxKind {
     }
 }
 impl SyntaxKind {
-    pub fn is_whitespace(&self) -> bool {
+    pub fn is_trivia(&self) -> bool {
         matches!(self, T![@ comment] | T![@ whitespace] | T![@ unknown])
     }
     pub fn is_item_start(&self) -> bool {
