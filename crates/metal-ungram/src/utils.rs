@@ -43,6 +43,7 @@ pub fn save_generated(tokens: TokenStream, to: &str) -> Result<(), crate::Error>
         formatted = formatted.replace("\n    },\n    [", " },\n    [");
         formatted = formatted.replace("    [@ ", "    [@");
         formatted = formatted.replace("$crate ::", "$crate::");
+        formatted = formatted.replace("\n    },", " },");
     }
 
     std::fs::write(to, formatted)?;

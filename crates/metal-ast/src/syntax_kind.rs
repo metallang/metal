@@ -456,8 +456,7 @@ pub macro T {
     [']'] => { $crate::SyntaxKind::R_BRACKET_TOKEN },
     [@comment] => { $crate::SyntaxKind::COMMENT_TOKEN },
     [@whitespace] => { $crate::SyntaxKind::WHITESPACE_TOKEN },
-    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN
-    },
+    [@unknown] => { $crate::SyntaxKind::UNKNOWN_TOKEN },
 }
 /// Returns the [SyntaxKind] variant corresponding to the provided node
 /// as written in the grammar.
