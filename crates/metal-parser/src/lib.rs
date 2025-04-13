@@ -21,5 +21,8 @@ pub fn parse_root(parser: &mut crate::parser::Parser) {
 
     crate::block::parse_block_stmts(parser);
 
+    // collect trivia at the end of the file
+    parser.next();
+
     parser.end_node();
 }
