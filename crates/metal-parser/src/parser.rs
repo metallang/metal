@@ -40,6 +40,10 @@ impl<'src> Parser<'src> {
         self.tokens.pop_front()
     }
 
+    pub fn next_raw(&mut self) -> Option<Token> {
+        self.tokens.pop_front()
+    }
+
     pub fn peek(&self, n: usize) -> Option<&Token> {
         self.tokens.get(self.nth_non_trivia(n)?)
     }
@@ -141,7 +145,7 @@ impl<'src> Parser<'src> {
         }
     }
 
-    fn token(&mut self, token: Token) {
+    pub fn token(&mut self, token: Token) {
         self.builder
             .token(token.kind.into(), &self.source[token.span]);
     }
