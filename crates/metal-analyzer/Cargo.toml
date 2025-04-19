@@ -8,7 +8,9 @@ description = "The Metal AST Analyzer."
 salsa = { workspace = true }
 bincode = { workspace = true }
 metal-mir = { workspace = true }
+metal-ast = { workspace = true }
 thiserror = { workspace = true }
+map-macro = { workspace = true }
 
 [lints]
 workspace = true

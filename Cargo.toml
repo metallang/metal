@@ -21,6 +21,7 @@ salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8ea
 semver = "1"
 bincode = "1"
 bitflags = "2.9.0"
+map-macro = "0.3.0"
 
 cart = { path = "crates/cart" }
 metal-analyzer = { path = "crates/metal-analyzer" }
