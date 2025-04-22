@@ -21,22 +21,14 @@ pub enum SyntaxKind {
     MUTNESS_NODE,
     /// Don't try to remember this! Use [`N![ExprSpecifier]`](N) instead.
     EXPR_SPEC_NODE,
-    /// Don't try to remember this! Use [`N![Expr]`](N) instead.
-    EXPR_NODE,
     /// Don't try to remember this! Use [`N![TypeQualifier]`](N) instead.
     TYPE_QUAL_NODE,
-    /// Don't try to remember this! Use [`N![Type]`](N) instead.
-    TYPE_NODE,
     /// Don't try to remember this! Use [`N![TypeSpecifier]`](N) instead.
     TYPE_SPECIFIER_NODE,
-    /// Don't try to remember this! Use [`N![StmtKind]`](N) instead.
-    STMT_KIND_NODE,
     /// Don't try to remember this! Use [`N![Item]`](N) instead.
     ITEM_NODE,
     /// Don't try to remember this! Use [`N![Annotations]`](N) instead.
     ANNOTATIONS_NODE,
-    /// Don't try to remember this! Use [`N![ItemKind]`](N) instead.
-    ITEM_KIND_NODE,
     /// Don't try to remember this! Use [`N![AbstractItem]`](N) instead.
     ABSTRACT_ITEM_NODE,
     /// Don't try to remember this! Use [`N![ConstItem]`](N) instead.
@@ -63,8 +55,6 @@ pub enum SyntaxKind {
     FN_SIGNATURE_NODE,
     /// Don't try to remember this! Use [`N![EnumBody]`](N) instead.
     ENUM_BODY_NODE,
-    /// Don't try to remember this! Use [`N![EnumBodyItem]`](N) instead.
-    ENUM_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![EnumVariant]`](N) instead.
     ENUM_VARIANT_NODE,
     /// Don't try to remember this! Use [`N![EnumFn]`](N) instead.
@@ -77,14 +67,10 @@ pub enum SyntaxKind {
     FN_INPUT_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifiers]`](N) instead.
     FN_INPUT_MODIFIERS_NODE,
-    /// Don't try to remember this! Use [`N![FnInputModifier]`](N) instead.
-    FN_INPUT_MODIFIER_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifierCapture]`](N) instead.
     FN_INPUT_MODIFIER_CAPTURE_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifierCaptureKind]`](N) instead.
     FN_INPUT_MODIFIER_CAPTURE_KIND_NODE,
-    /// Don't try to remember this! Use [`N![ImportTree]`](N) instead.
-    IMPORT_TREE_NODE,
     /// Don't try to remember this! Use [`N![ImportLeaf]`](N) instead.
     IMPORT_LEAF_NODE,
     /// Don't try to remember this! Use [`N![ImportBranch]`](N) instead.
@@ -95,8 +81,6 @@ pub enum SyntaxKind {
     IMPORT_BRANCH_SUBTREES_NODE,
     /// Don't try to remember this! Use [`N![StructBody]`](N) instead.
     STRUCT_BODY_NODE,
-    /// Don't try to remember this! Use [`N![StructBodyItem]`](N) instead.
-    STRUCT_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![StructField]`](N) instead.
     STRUCT_FIELD_NODE,
     /// Don't try to remember this! Use [`N![StructFn]`](N) instead.
