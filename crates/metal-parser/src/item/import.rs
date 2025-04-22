@@ -15,15 +15,11 @@ pub fn parse_import_item(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_import_tree(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![ImportTree]);
-
     match parser.peek(0).expect("expected an import tree").kind {
         T![@ident] => parse_import_leaf(parser),
         T!['{'] => parse_import_branch(parser),
         _ => todo!(),
     }
-
-    parser.end_node();
 }
 
 pub fn parse_import_leaf(parser: &mut crate::parser::Parser) {

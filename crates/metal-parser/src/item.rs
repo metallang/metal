@@ -31,8 +31,6 @@ pub fn parse_item(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_item_kind(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![ItemKind]);
-
     match parser.peek(0).expect("expected an item").kind {
         T![abstract] => parse_abstract_item(parser),
         T![const] => parse_const_item(parser),
@@ -43,8 +41,6 @@ pub fn parse_item_kind(parser: &mut crate::parser::Parser) {
         T![type] => parse_type_alias_item(parser),
         other => todo!("{other:#?}"),
     }
-
-    parser.end_node();
 }
 
 pub fn parse_annotations(parser: &mut crate::parser::Parser) {

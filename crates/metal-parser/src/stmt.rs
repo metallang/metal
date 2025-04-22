@@ -15,8 +15,6 @@ pub fn parse_stmt(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_stmt_kind(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![StmtKind]);
-
     // IMPORTANT: Check for items first, as otherwise `def hello() {}`
     // will get parsed as a lambda function expression instead of an item
     if parser
@@ -27,6 +25,4 @@ pub fn parse_stmt_kind(parser: &mut crate::parser::Parser) {
     } else {
         parse_expr(parser);
     }
-
-    parser.end_node();
 }

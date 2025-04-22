@@ -2,7 +2,7 @@
 
 use std::collections::VecDeque;
 
-use metal_ast::{SyntaxKind, SyntaxNode};
+use metal_ast::{AstNode, RootNode, SyntaxKind, SyntaxNode};
 use metal_lexer::Token;
 use rowan::GreenNodeBuilder;
 
@@ -122,11 +122,12 @@ impl<'src> Parser<'src> {
     }
 
     #[allow(clippy::let_and_return)]
-    pub fn finish(self) -> SyntaxNode {
+    pub fn finish(self) -> RootNode {
         let green = self.builder.finish();
         let syntax = SyntaxNode::new_root(green);
+        let ast = RootNode::cast(syntax);
 
-        syntax
+        ast.unwrap_or_else(|| panic!("expected the root node to be a RootNode"))
     }
 
     pub fn eat_any(&mut self) {

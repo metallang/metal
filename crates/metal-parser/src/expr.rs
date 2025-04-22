@@ -44,8 +44,6 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
     let checkpoint = parser.checkpoint();
 
     // main expression
-    parser.start_node(N![Expr]);
-
     match parser.peek(0).unwrap().kind {
         T![@ident] => parse_name(parser),
         T![@number] | T![@string] => parse_lit_expr(parser),
@@ -65,9 +63,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
             parser.start_node_at(N![PrefixExpr], checkpoint);
 
             // for prettiness we use _at again so that the prefix op node comes before the expr node
-            parser.start_node_at(N![PrefixExprOp], checkpoint);
             parser.eat_any();
-            parser.end_node();
 
             parse_expr_with_binding_power(parser, bp); // rhs
 
@@ -76,11 +72,7 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
         other => todo!("{other:#?}"),
     }
 
-    parser.end_node();
-
     loop {
-        merge_op_tokens(parser);
-
         // postfix ops
         if let Some(Some(bp)) = parser
             .peek(0)
@@ -105,24 +97,22 @@ fn parse_expr_with_binding_power(parser: &mut crate::parser::Parser, min_bp: Bin
             continue;
         }
 
+        merge_op_tokens(parser);
+
         // binary ops
         if let Some(Some(bp)) = parser
             .peek(0)
             .map(|token| binding_power_for(token.kind, Flavor::Infix))
             && (bp.l_value() >= min_bp.l_value())
         {
-            parser.start_node_at(N![Expr], checkpoint);
             parser.start_node_at(N![BinaryExpr], checkpoint);
 
             // the lhs is now here
 
-            parser.start_node(N![BinaryExprOp]);
             parser.eat_any();
-            parser.end_node();
 
             parse_expr_with_binding_power(parser, bp.as_r_value()); // rhs
 
-            parser.end_node();
             parser.end_node();
 
             continue;
