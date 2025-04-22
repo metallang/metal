@@ -7,7 +7,7 @@ use ungrammar::{NodeData, Rule};
 use crate::{
     engram::Engram,
     generate::nodes::node_struct::generate_node_struct,
-    grammar_item::{GrammarItem, GrammarItemInfo, RuleExt},
+    grammar_item::{GrammarItem, GrammarItemInfo},
 };
 
 /// Finds and generates enums of nodes for nodes that are an alteration of nodes (the terminology is unfortunate),
@@ -17,7 +17,7 @@ pub fn generate_node_enums(grammar: &Engram, node: &NodeData) -> TokenStream {
         unreachable!()
     };
 
-    if node.rule.is_alt_of_nodes() {
+    if alt_rules.iter().all(|rule| matches!(rule, Rule::Node(_))) {
         generate_node_enum(grammar, alt_rules.as_slice(), node)
     } else if alt_rules.iter().all(|rule| matches!(rule, Rule::Token(_))) {
         generate_node_struct(grammar, node)
