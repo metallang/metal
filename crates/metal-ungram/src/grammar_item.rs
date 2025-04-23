@@ -195,6 +195,14 @@ pub impl Rule {
             _ => None,
         }
     }
+
+    /// Returns `true` if this rule is an alternation of nodes.
+    fn is_alt_of_nodes(&self) -> bool {
+        match self {
+            Rule::Alt(rules) => rules.iter().all(|rule| matches!(rule, Rule::Node(_))),
+            _ => false,
+        }
+    }
 }
 
 /// Appends `"_token"` to the end of the result of [grammar_item_name].

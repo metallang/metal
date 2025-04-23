@@ -5,7 +5,6 @@ use metal_ast::{N, T};
 use crate::expr::parse_expr;
 
 pub fn parse_call_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Checkpoint) {
-    parser.start_node_at(N![Expr], checkpoint);
     parser.start_node_at(N![CallExpr], checkpoint);
 
     // the callee is now here
@@ -14,7 +13,6 @@ pub fn parse_call_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Ch
     parse_call_expr_args(parser);
     parser.maybe_eat(T![')']);
 
-    parser.end_node();
     parser.end_node();
 }
 

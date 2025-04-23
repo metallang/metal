@@ -29,8 +29,6 @@ pub fn parse_struct_body(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_struct_body_item(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![StructBodyItem]);
-
     let at = parser.checkpoint();
 
     parse_visibility(parser);
@@ -40,8 +38,6 @@ pub fn parse_struct_body_item(parser: &mut crate::parser::Parser) {
         T![def] => parse_struct_fn(parser, at),
         other => todo!("{other:#?}"),
     }
-
-    parser.end_node();
 }
 
 pub fn parse_struct_field(parser: &mut crate::parser::Parser, at: rowan::Checkpoint) {

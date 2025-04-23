@@ -21,22 +21,14 @@ pub enum SyntaxKind {
     MUTNESS_NODE,
     /// Don't try to remember this! Use [`N![ExprSpecifier]`](N) instead.
     EXPR_SPEC_NODE,
-    /// Don't try to remember this! Use [`N![Expr]`](N) instead.
-    EXPR_NODE,
     /// Don't try to remember this! Use [`N![TypeQualifier]`](N) instead.
     TYPE_QUAL_NODE,
-    /// Don't try to remember this! Use [`N![Type]`](N) instead.
-    TYPE_NODE,
     /// Don't try to remember this! Use [`N![TypeSpecifier]`](N) instead.
     TYPE_SPECIFIER_NODE,
-    /// Don't try to remember this! Use [`N![StmtKind]`](N) instead.
-    STMT_KIND_NODE,
     /// Don't try to remember this! Use [`N![Item]`](N) instead.
     ITEM_NODE,
     /// Don't try to remember this! Use [`N![Annotations]`](N) instead.
     ANNOTATIONS_NODE,
-    /// Don't try to remember this! Use [`N![ItemKind]`](N) instead.
-    ITEM_KIND_NODE,
     /// Don't try to remember this! Use [`N![AbstractItem]`](N) instead.
     ABSTRACT_ITEM_NODE,
     /// Don't try to remember this! Use [`N![ConstItem]`](N) instead.
@@ -63,8 +55,6 @@ pub enum SyntaxKind {
     FN_SIGNATURE_NODE,
     /// Don't try to remember this! Use [`N![EnumBody]`](N) instead.
     ENUM_BODY_NODE,
-    /// Don't try to remember this! Use [`N![EnumBodyItem]`](N) instead.
-    ENUM_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![EnumVariant]`](N) instead.
     ENUM_VARIANT_NODE,
     /// Don't try to remember this! Use [`N![EnumFn]`](N) instead.
@@ -77,14 +67,10 @@ pub enum SyntaxKind {
     FN_INPUT_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifiers]`](N) instead.
     FN_INPUT_MODIFIERS_NODE,
-    /// Don't try to remember this! Use [`N![FnInputModifier]`](N) instead.
-    FN_INPUT_MODIFIER_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifierCapture]`](N) instead.
     FN_INPUT_MODIFIER_CAPTURE_NODE,
     /// Don't try to remember this! Use [`N![FnInputModifierCaptureKind]`](N) instead.
     FN_INPUT_MODIFIER_CAPTURE_KIND_NODE,
-    /// Don't try to remember this! Use [`N![ImportTree]`](N) instead.
-    IMPORT_TREE_NODE,
     /// Don't try to remember this! Use [`N![ImportLeaf]`](N) instead.
     IMPORT_LEAF_NODE,
     /// Don't try to remember this! Use [`N![ImportBranch]`](N) instead.
@@ -95,8 +81,6 @@ pub enum SyntaxKind {
     IMPORT_BRANCH_SUBTREES_NODE,
     /// Don't try to remember this! Use [`N![StructBody]`](N) instead.
     STRUCT_BODY_NODE,
-    /// Don't try to remember this! Use [`N![StructBodyItem]`](N) instead.
-    STRUCT_BODY_ITEM_NODE,
     /// Don't try to remember this! Use [`N![StructField]`](N) instead.
     STRUCT_FIELD_NODE,
     /// Don't try to remember this! Use [`N![StructFn]`](N) instead.
@@ -478,14 +462,10 @@ pub macro N {
     [Visibility] => { $crate::SyntaxKind::VIS_NODE },
     [Mutability] => { $crate::SyntaxKind::MUTNESS_NODE },
     [ExprSpecifier] => { $crate::SyntaxKind::EXPR_SPEC_NODE },
-    [Expr] => { $crate::SyntaxKind::EXPR_NODE },
     [TypeQualifier] => { $crate::SyntaxKind::TYPE_QUAL_NODE },
-    [Type] => { $crate::SyntaxKind::TYPE_NODE },
     [TypeSpecifier] => { $crate::SyntaxKind::TYPE_SPECIFIER_NODE },
-    [StmtKind] => { $crate::SyntaxKind::STMT_KIND_NODE },
     [Item] => { $crate::SyntaxKind::ITEM_NODE },
     [Annotations] => { $crate::SyntaxKind::ANNOTATIONS_NODE },
-    [ItemKind] => { $crate::SyntaxKind::ITEM_KIND_NODE },
     [AbstractItem] => { $crate::SyntaxKind::ABSTRACT_ITEM_NODE },
     [ConstItem] => { $crate::SyntaxKind::CONST_ITEM_NODE },
     [EnumItem] => { $crate::SyntaxKind::ENUM_ITEM_NODE },
@@ -499,23 +479,19 @@ pub macro N {
     [AbstractFnItem] => { $crate::SyntaxKind::ABSTRACT_FN_ITEM_NODE },
     [FnSignature] => { $crate::SyntaxKind::FN_SIGNATURE_NODE },
     [EnumBody] => { $crate::SyntaxKind::ENUM_BODY_NODE },
-    [EnumBodyItem] => { $crate::SyntaxKind::ENUM_BODY_ITEM_NODE },
     [EnumVariant] => { $crate::SyntaxKind::ENUM_VARIANT_NODE },
     [EnumFn] => { $crate::SyntaxKind::ENUM_FN_NODE },
     [EnumVariantDataType] => { $crate::SyntaxKind::ENUM_VARIANT_DATA_TYPE_NODE },
     [FnInputs] => { $crate::SyntaxKind::FN_INPUTS_NODE },
     [FnInput] => { $crate::SyntaxKind::FN_INPUT_NODE },
     [FnInputModifiers] => { $crate::SyntaxKind::FN_INPUT_MODIFIERS_NODE },
-    [FnInputModifier] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_NODE },
     [FnInputModifierCapture] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_NODE },
     [FnInputModifierCaptureKind] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_KIND_NODE },
-    [ImportTree] => { $crate::SyntaxKind::IMPORT_TREE_NODE },
     [ImportLeaf] => { $crate::SyntaxKind::IMPORT_LEAF_NODE },
     [ImportBranch] => { $crate::SyntaxKind::IMPORT_BRANCH_NODE },
     [ImportSegment] => { $crate::SyntaxKind::IMPORT_SEGMENT_NODE },
     [ImportBranchSubtrees] => { $crate::SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE },
     [StructBody] => { $crate::SyntaxKind::STRUCT_BODY_NODE },
-    [StructBodyItem] => { $crate::SyntaxKind::STRUCT_BODY_ITEM_NODE },
     [StructField] => { $crate::SyntaxKind::STRUCT_FIELD_NODE },
     [StructFn] => { $crate::SyntaxKind::STRUCT_FN_NODE },
     [NameType] => { $crate::SyntaxKind::NAME_TYPE_NODE },

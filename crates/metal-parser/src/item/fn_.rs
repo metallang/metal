@@ -62,15 +62,11 @@ pub fn parse_fn_input_modifiers(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_fn_input_modifier(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![FnInputModifier]);
-
     match parser.peek(0).unwrap().kind {
         T![mut] => parse_mutability(parser),
         T![capture] => parse_fn_input_modifier_capture(parser),
         other => todo!("{other:#?}"),
     };
-
-    parser.end_node();
 }
 
 pub fn parse_fn_input_modifier_capture(parser: &mut crate::parser::Parser) {

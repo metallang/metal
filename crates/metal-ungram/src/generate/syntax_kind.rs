@@ -4,7 +4,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 
 use crate::engram::Engram;
-use crate::grammar_item::{GrammarItem, GrammarItemInfo, PAREN_TOKENS};
+use crate::grammar_item::{GrammarItem, GrammarItemInfo, RuleExt, PAREN_TOKENS};
 
 /// Generates the `syntax_kind.rs` file.
 pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
@@ -22,6 +22,11 @@ pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
 /// Generates the `SyntaxKind` enum.
 fn generate_syntax_kind(grammar: &Engram) -> TokenStream {
     let node_variants = grammar.nodes().map(|node| {
+        // physically prevent node alteration nodes from being constructed
+        if node.rule.is_alt_of_nodes() {
+            return quote! {};
+        }
+
         let GrammarItemInfo {
             ident: syntax_kind_name,
             doc: syntax_kind_doc,
@@ -191,6 +196,11 @@ fn generate_t_macro(grammar: &Engram) -> TokenStream {
 /// Generates the `N!` macro.
 fn generate_n_macro(grammar: &Engram) -> TokenStream {
     let arms = grammar.nodes().map(|node| {
+        // physically prevent node alteration nodes from being constructed
+        if node.rule.is_alt_of_nodes() {
+            return quote! {};
+        }
+
         let node_name: TokenStream = node.name.as_str().parse().unwrap();
 
         let syntax_kind_name = node.syntax_kind_info().ident;

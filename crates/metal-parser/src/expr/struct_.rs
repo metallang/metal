@@ -5,7 +5,6 @@ use metal_ast::{N, T};
 use crate::common::{parse_expr_specifier, parse_name};
 
 pub fn parse_struct_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::Checkpoint) {
-    parser.start_node_at(N![Expr], checkpoint);
     parser.start_node_at(N![StructExpr], checkpoint);
 
     // the struct name/path expr is now here
@@ -14,7 +13,6 @@ pub fn parse_struct_expr(parser: &mut crate::parser::Parser, checkpoint: rowan::
     parse_struct_expr_fields(parser);
     parser.maybe_eat(T!['}']);
 
-    parser.end_node();
     parser.end_node();
 }
 

@@ -31,15 +31,11 @@ pub fn parse_enum_body(parser: &mut crate::parser::Parser) {
 }
 
 pub fn parse_enum_body_item(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![EnumBodyItem]);
-
     match parser.peek(0).expect("expected an enum body item").kind {
         T![@ident] => parse_enum_variant(parser),
         T![pub] | T![def] => parse_enum_fn(parser),
         _ => todo!(),
     }
-
-    parser.end_node();
 }
 
 pub fn parse_enum_variant(parser: &mut crate::parser::Parser) {
