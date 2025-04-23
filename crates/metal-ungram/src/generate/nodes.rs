@@ -25,6 +25,7 @@ pub fn generate_nodes_file(grammar: &Engram) -> TokenStream {
     quote! {
         #![allow(clippy::match_like_matches_macro)]
         #![allow(clippy::wildcard_enum_match_arm)]
+        #![allow(clippy::nonminimal_bool)]
 
         use either::Either;
         use rowan::NodeOrToken;

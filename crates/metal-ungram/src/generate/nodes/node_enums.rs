@@ -7,7 +7,7 @@ use ungrammar::{NodeData, Rule};
 use crate::{
     engram::Engram,
     generate::nodes::node_struct::generate_node_struct,
-    grammar_item::{GrammarItem, GrammarItemInfo},
+    grammar_item::{GrammarItem, GrammarItemInfo, RuleExt},
 };
 
 /// Finds and generates enums of nodes for nodes that are an alteration of nodes (the terminology is unfortunate),
@@ -17,7 +17,7 @@ pub fn generate_node_enums(grammar: &Engram, node: &NodeData) -> TokenStream {
         unreachable!()
     };
 
-    if alt_rules.iter().all(|rule| matches!(rule, Rule::Node(_))) {
+    if node.rule.is_alt_of_nodes() {
         generate_node_enum(grammar, alt_rules.as_slice(), node)
     } else if alt_rules.iter().all(|rule| matches!(rule, Rule::Token(_))) {
         generate_node_struct(grammar, node)
@@ -49,17 +49,18 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
                     doc: variant_doc,
                 } = node.variant_info();
                 let data_name = node.item_info().ident;
-                let syntax_kind_name = node.syntax_kind_info().ident;
 
                 let enum_variant = quote! {
                     #[doc = #variant_doc]
                     #variant_name(#data_name),
                 };
                 let can_cast_arm = quote! {
-                    SyntaxKind::#syntax_kind_name => true,
+                    #data_name::can_cast(kind) ||
                 };
                 let cast_arm = quote! {
-                    SyntaxKind::#syntax_kind_name => Some(#item_name::#variant_name(#data_name::cast(syntax)?)),
+                    if #data_name::can_cast(syntax.kind()) {
+                        return Some(#item_name::#variant_name(#data_name::cast(syntax)?));
+                    }
                 };
                 let syntax_arm = quote! {
                     #item_name::#variant_name(it) => it.syntax(),
@@ -74,6 +75,26 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
         }
     }
 
+    /*
+
+    fn can_cast(kind: SyntaxKind) -> bool {
+        ItemNode::can_cast(kind) || ExprNode::can_cast(kind)
+    }
+
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if ItemNode::can_cast(syntax.kind()) {
+            return Some(StmtKindNode::Item(ItemNode::cast(syntax)?));
+        }
+
+        if ExprNode::can_cast(syntax.kind()) {
+            return Some(StmtKindNode::Expr(ExprNode::cast(syntax)?));
+        }
+
+        None
+    }
+
+    */
+
     quote! {
         #[doc = #item_doc]
         #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -83,17 +104,13 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
 
         impl AstNode for #item_name {
             fn can_cast(kind: SyntaxKind) -> bool {
-                match kind {
-                    #can_cast_arms
-                    _ => false,
-                }
+                #can_cast_arms false
             }
 
             fn cast(syntax: SyntaxNode) -> Option<Self> {
-                match syntax.kind() {
-                    #cast_arms
-                    _ => None,
-                }
+                #cast_arms
+
+                None
             }
 
             fn syntax(&self) -> &SyntaxNode {
