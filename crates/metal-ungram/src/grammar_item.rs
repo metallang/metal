@@ -196,7 +196,7 @@ pub impl Rule {
         }
     }
 
-    /// Returns `true` if the rule is an alternation of nodes.
+    /// Returns `true` if this rule is an alternation of nodes.
     fn is_alt_of_nodes(&self) -> bool {
         match self {
             Rule::Alt(rules) => rules.iter().all(|rule| matches!(rule, Rule::Node(_))),

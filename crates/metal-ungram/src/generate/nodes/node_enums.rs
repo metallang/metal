@@ -75,26 +75,6 @@ fn generate_node_enum(grammar: &Engram, rules: &[Rule], node: &NodeData) -> Toke
         }
     }
 
-    /*
-
-    fn can_cast(kind: SyntaxKind) -> bool {
-        ItemNode::can_cast(kind) || ExprNode::can_cast(kind)
-    }
-
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if ItemNode::can_cast(syntax.kind()) {
-            return Some(StmtKindNode::Item(ItemNode::cast(syntax)?));
-        }
-
-        if ExprNode::can_cast(syntax.kind()) {
-            return Some(StmtKindNode::Expr(ExprNode::cast(syntax)?));
-        }
-
-        None
-    }
-
-    */
-
     quote! {
         #[doc = #item_doc]
         #[derive(Debug, Clone, PartialEq, Eq, Hash)]
