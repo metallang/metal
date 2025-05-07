@@ -1,10 +1,10 @@
 use crate::{dom::BreakIf, Dom, DomNode, DomNodeKind, RenderIf};
 
 const INDENT: &str = "    ";
-const COLUMN_LIMIT: usize = 20;
+const COLUMN_LIMIT: usize = 10;
 
-#[derive(PartialEq, Eq, Hash)]
-struct NodeId(usize);
+#[derive(PartialEq, Eq, Hash, Clone)]
+pub(crate) struct NodeId(usize);
 
 #[allow(non_camel_case_types)]
 #[derive(Default, Debug)]
@@ -23,9 +23,7 @@ struct NodeLayoutInfo {
 
 #[derive(Default)]
 pub struct LayoutState {
-    nodes: std::collections::HashMap<NodeId, NodeLayoutInfo>,
-    column: usize,
-    last_group: Option<NodeId>,
+    pub(crate) nodes: std::collections::HashMap<NodeId, NodeLayoutInfo>,
 }
 
 impl NodeLayoutInfo {
@@ -38,7 +36,7 @@ impl NodeLayoutInfo {
 }
 
 #[extend::ext]
-impl DomNode<'_> {
+pub impl DomNode<'_> {
     fn id(&self) -> NodeId {
         NodeId(self.children.as_ptr() as usize)
     }
@@ -80,52 +78,52 @@ impl LayoutState {
 
     pub fn compute_should_breaks(&mut self, dom: &Dom) {
         for child in dom.children() {
-            self.compute_should_break(&child);
+            self.compute_should_break(&child, 0, None);
         }
     }
 
-    fn compute_should_break(&mut self, node: &DomNode<'_>) {
-        let cached_node = self.nodes.get_mut(&node.id()).unwrap_or_else(|| {
+    fn compute_should_break(
+        &mut self,
+        node: &DomNode<'_>,
+        column: usize,
+        last_group: Option<NodeId>,
+    ) {
+        let layout_info = self.nodes.get_mut(&node.id()).unwrap_or_else(|| {
             panic!("expected every node to be cached before entering second layout pass")
         });
 
         match node.break_if() {
             BreakIf::ExceedsColumnLimit => {
-                cached_node.should_break = if self.column + cached_node.flat_width > COLUMN_LIMIT {
+                layout_info.should_break = if column + layout_info.flat_width > COLUMN_LIMIT {
                     tribool::yes
                 } else {
                     tribool::no
                 };
             }
             BreakIf::Never => {
-                cached_node.should_break = tribool::no;
+                layout_info.should_break = tribool::no;
             }
         }
 
-        let mut old_last_group = None;
-        let mut old_column = None;
-
-        if matches!(node.kind(), DomNodeKind::Group) {
-            old_last_group = Some(self.last_group.replace(node.id()));
-        }
-
-        if matches!(cached_node.should_break, tribool::yes)
-            && matches!(node.kind(), DomNodeKind::Indent)
+        let new_column = if matches!(node.kind(), DomNodeKind::Indent)
+            && last_group
+                .as_ref()
+                .and_then(|group| self.nodes.get(group))
+                .is_some_and(|group| matches!(group.should_break, tribool::yes))
         {
-            let new_column = self.column + INDENT.len();
-            old_column = Some(std::mem::replace(&mut self.column, new_column));
-        }
+            column + INDENT.len()
+        } else {
+            column
+        };
+
+        let new_last_group = if matches!(node.kind(), DomNodeKind::Group) {
+            Some(node.id())
+        } else {
+            last_group
+        };
 
         for child in node.children() {
-            self.compute_should_break(&child);
-        }
-
-        if let Some(old_last_group) = old_last_group {
-            self.last_group = old_last_group;
-        }
-
-        if let Some(old_column) = old_column {
-            self.column = old_column;
+            self.compute_should_break(&child, new_column, new_last_group.clone() /* cheap */);
         }
     }
 
