@@ -75,8 +75,8 @@ pub enum SyntaxKind {
     IMPORT_LEAF_NODE,
     /// Don't try to remember this! Use [`N![ImportBranch]`](N) instead.
     IMPORT_BRANCH_NODE,
-    /// Don't try to remember this! Use [`N![ImportSegment]`](N) instead.
-    IMPORT_SEGMENT_NODE,
+    /// Don't try to remember this! Use [`N![ImportLeafRest]`](N) instead.
+    IMPORT_LEAF_REST_NODE,
     /// Don't try to remember this! Use [`N![ImportBranchSubtrees]`](N) instead.
     IMPORT_BRANCH_SUBTREES_NODE,
     /// Don't try to remember this! Use [`N![StructBody]`](N) instead.
@@ -489,7 +489,7 @@ pub macro N {
     [FnInputModifierCaptureKind] => { $crate::SyntaxKind::FN_INPUT_MODIFIER_CAPTURE_KIND_NODE },
     [ImportLeaf] => { $crate::SyntaxKind::IMPORT_LEAF_NODE },
     [ImportBranch] => { $crate::SyntaxKind::IMPORT_BRANCH_NODE },
-    [ImportSegment] => { $crate::SyntaxKind::IMPORT_SEGMENT_NODE },
+    [ImportLeafRest] => { $crate::SyntaxKind::IMPORT_LEAF_REST_NODE },
     [ImportBranchSubtrees] => { $crate::SyntaxKind::IMPORT_BRANCH_SUBTREES_NODE },
     [StructBody] => { $crate::SyntaxKind::STRUCT_BODY_NODE },
     [StructField] => { $crate::SyntaxKind::STRUCT_FIELD_NODE },

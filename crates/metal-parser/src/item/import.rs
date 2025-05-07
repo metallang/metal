@@ -28,14 +28,14 @@ pub fn parse_import_leaf(parser: &mut crate::parser::Parser) {
     parse_name(parser);
 
     if parser.peek_is(0, T![.]) {
-        parse_import_segment(parser);
+        parse_import_leaf_rest(parser);
     }
 
     parser.end_node();
 }
 
-pub fn parse_import_segment(parser: &mut crate::parser::Parser) {
-    parser.start_node(N![ImportSegment]);
+pub fn parse_import_leaf_rest(parser: &mut crate::parser::Parser) {
+    parser.start_node(N![ImportLeafRest]);
 
     parser.maybe_eat(T![.]);
     parse_import_tree(parser);

@@ -80,8 +80,8 @@ FnInputModifierCaptureKind = 'ref' | 'mut' | 'owned'
 
 ImportItem = 'import' tree:ImportTree
 ImportTree = ImportLeaf | ImportBranch
-ImportLeaf = segment:Name rest:ImportSegment?
-ImportSegment = '.' subtree:ImportTree
+ImportLeaf = segment:Name rest:ImportLeafRest?
+ImportLeafRest = '.' subtree:ImportTree
 ImportBranch = '{' subtrees:ImportBranchSubtrees? '}'
 ImportBranchSubtrees = ImportTree (',' ImportTree)* ','?
 
