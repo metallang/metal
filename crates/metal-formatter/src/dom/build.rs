@@ -1,17 +1,90 @@
-use super::BreakIf;
 use crate::{
-    dom::{BareDomNode, Dom, DomNodeKind, RenderIf},
+    dom::{BreakIf, Dom, DomNode, DomNodeKind, RenderIf},
     Result,
 };
 
-pub struct DomNodeEdit<'dom> {
-    dom: &'dom mut Dom,
-    node_idx: usize,
+pub struct DomBuilder {
+    dom: Dom,
 }
 
-impl<'dom> DomNodeEdit<'dom> {
-    pub(crate) fn node_mut(&mut self) -> &mut BareDomNode {
-        &mut self.dom.nodes[self.node_idx]
+impl DomBuilder {
+    pub fn new() -> Self {
+        Self {
+            dom: Dom { nodes: vec![] },
+        }
+    }
+
+    fn new_node(&mut self, kind: DomNodeKind) -> DomNodeBuilder<'_> {
+        let node = DomNode::new(kind);
+
+        self.dom.nodes.push(node);
+
+        // safety: just pushed a node
+        unsafe { DomNodeBuilder::from_last_dom_node(self) }
+    }
+
+    pub fn token(&mut self, token: metal_ast::SyntaxToken) -> DomNodeBuilder {
+        self.new_node(DomNodeKind::Token(token))
+    }
+
+    pub fn text(&mut self, text: &'static str) -> DomNodeBuilder {
+        self.new_node(DomNodeKind::Text(text))
+    }
+
+    pub fn indent(&mut self) -> DomNodeBuilder {
+        self.new_node(DomNodeKind::Indent)
+    }
+
+    pub fn group(&mut self) -> DomNodeBuilder {
+        self.new_node(DomNodeKind::Group)
+    }
+
+    pub fn finish(mut self) -> Dom {
+        fn set_parent_recursive(node: &mut DomNode, parent: Option<*const DomNode>) {
+            if let Some(parent) = parent {
+                // safety: the dom is read-only, so at this point where we have full ownership
+                // of it and are only modifying .parent the pointers provided here will never
+                // be invalidated without the whole dom (where they are stored) going down
+                unsafe {
+                    node.set_parent(parent);
+                }
+            }
+
+            for child in node.children_mut() {
+                set_parent_recursive(child, Some(node as *const DomNode));
+            }
+        }
+
+        for child in self.dom.children_mut() {
+            set_parent_recursive(child, None);
+        }
+
+        self.dom
+    }
+}
+
+pub struct DomNodeBuilder<'this> {
+    // safety requirement: must be a valid DomNode index in DomBuilder's
+    // Dom for at least as long as this DomNodeBuilder exists (for at least 'this)
+    node_idx: usize,
+    builder: &'this mut DomBuilder,
+}
+
+impl<'builder> DomNodeBuilder<'builder> {
+    // safety requirement: builder must have at least one node
+    unsafe fn from_last_dom_node(builder: &'builder mut DomBuilder) -> Self {
+        // safety: node_idx is a valid index because the caller guaranteed that builder has
+        // at least one node, the dom is append-only and we have exclusive borrow of the dom
+
+        Self {
+            node_idx: builder.dom.nodes.len() - 1,
+            builder,
+        }
+    }
+
+    fn node_mut(&mut self) -> &mut DomNode {
+        // safety: guaranteed to exist by the instantiator of DomNodeBuilder
+        unsafe { self.builder.dom.nodes.get_unchecked_mut(self.node_idx) }
     }
 
     pub fn render_if(mut self, rule: RenderIf) -> Self {
@@ -26,12 +99,19 @@ impl<'dom> DomNodeEdit<'dom> {
         self
     }
 
-    pub fn children(mut self, f: impl FnOnce(&mut Dom) -> Result) -> Result<Self> {
-        let old_len = self.dom.nodes.len();
+    /// # Panics
+    ///
+    /// Panics if the node ends up having more than [isize::MAX] children after the call to `f`.
+    pub fn children(mut self, f: impl FnOnce(&mut DomBuilder) -> Result) -> Result<Self> {
+        let old_len = self.builder.dom.nodes.len();
 
-        f(self.dom)?;
+        f(self.builder)?;
 
-        let new_len = self.dom.nodes.len();
+        let new_len = self.builder.dom.nodes.len();
+
+        let children_added: isize = (new_len - old_len)
+            .try_into()
+            .unwrap_or_else(|_| panic!("nodes cannot have more than isize::MAX children"));
 
         // we use += here to allow multiple consequtive .children calls
         // this relies on obtaining DomNodeBuilders requiring &mut Dom, which
@@ -40,43 +120,8 @@ impl<'dom> DomNodeEdit<'dom> {
         // that, one could've saved the DomNodeBuilder, created some nodes after
         // it, and then tried adding children to it again, which wouldn't work
         // since we're using a flat vec + child count for storing children
-        self.node_mut().len += new_len - old_len;
+        self.node_mut().len += children_added;
 
         Ok(self)
-    }
-}
-
-impl Dom {
-    pub(crate) fn new_node(&mut self, kind: DomNodeKind) -> DomNodeEdit<'_> {
-        let node_idx = self.nodes.len();
-        let node = BareDomNode {
-            kind,
-            render_if: Default::default(),
-            break_if: Default::default(),
-            len: 0,
-        };
-
-        self.nodes.push(node);
-
-        DomNodeEdit {
-            dom: self,
-            node_idx,
-        }
-    }
-
-    pub fn token(&mut self, token: metal_ast::SyntaxToken) -> DomNodeEdit {
-        self.new_node(DomNodeKind::Token(token))
-    }
-
-    pub fn text(&mut self, text: &'static str) -> DomNodeEdit {
-        self.new_node(DomNodeKind::Text(text))
-    }
-
-    pub fn indent(&mut self) -> DomNodeEdit {
-        self.new_node(DomNodeKind::Indent)
-    }
-
-    pub fn group(&mut self) -> DomNodeEdit {
-        self.new_node(DomNodeKind::Group)
     }
 }

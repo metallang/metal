@@ -1,23 +1,21 @@
+use std::fmt::Debug;
+
 pub mod build;
 pub mod children;
 pub mod debug;
 
-#[derive(Default)]
+#[derive(Debug)]
 pub struct Dom {
-    nodes: Vec<BareDomNode>,
+    nodes: Vec<DomNode>,
 }
 
 #[derive(Debug)]
-pub(crate) struct BareDomNode {
+pub struct DomNode {
     kind: DomNodeKind,
-    render_if: RenderIf,
-    break_if: BreakIf,
-    pub(crate) len: usize,
-}
-
-pub struct DomNode<'dom> {
-    pub(crate) bare: &'dom BareDomNode,
-    pub(crate) children: &'dom [BareDomNode],
+    render_if: RenderIf = RenderIf::Always,
+    break_if: BreakIf = BreakIf::ExceedsColumnLimit,
+    parent: Option<*const DomNode> = None,
+    len: isize = 0,
 }
 
 #[derive(Debug)]
@@ -32,32 +30,44 @@ pub enum DomNodeKind {
     Token(metal_ast::SyntaxToken),
 }
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub enum RenderIf {
-    #[default]
     Always,
     Broken,
     Flat,
 }
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub enum BreakIf {
-    #[default]
     ExceedsColumnLimit,
     Never,
     // Always,
 }
 
-impl DomNode<'_> {
+impl DomNode {
+    fn new(kind: DomNodeKind) -> Self {
+        Self { kind, .. }
+    }
+
     pub fn kind(&self) -> &DomNodeKind {
-        &self.bare.kind
+        &self.kind
     }
 
     pub fn render_if(&self) -> &RenderIf {
-        &self.bare.render_if
+        &self.render_if
     }
 
     pub fn break_if(&self) -> &BreakIf {
-        &self.bare.break_if
+        &self.break_if
+    }
+
+    pub fn parent(&self) -> Option<&DomNode> {
+        // safety: guaranteed to be safe by the instantiator
+        self.parent.map(|ptr| unsafe { ptr.as_ref_unchecked() })
+    }
+
+    // safety: new_parent must be valid for immut access for as long as this node is acessible
+    unsafe fn set_parent(&mut self, new_parent: *const DomNode) {
+        self.parent.replace(new_parent);
     }
 }

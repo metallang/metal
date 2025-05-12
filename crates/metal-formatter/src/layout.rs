@@ -4,7 +4,7 @@ const INDENT: &str = "    ";
 const COLUMN_LIMIT: usize = 10;
 
 #[derive(PartialEq, Eq, Hash, Clone)]
-pub(crate) struct NodeId(usize);
+struct NodeId(usize);
 
 #[allow(non_camel_case_types)]
 #[derive(Default, Debug)]
@@ -16,17 +16,17 @@ enum tribool {
 }
 
 #[derive(Debug)]
-struct NodeLayoutInfo {
+struct NodeLayout {
     flat_width: usize,
     should_break: tribool,
 }
 
 #[derive(Default)]
 pub struct LayoutState {
-    pub(crate) nodes: std::collections::HashMap<NodeId, NodeLayoutInfo>,
+    nodes: std::collections::HashMap<NodeId, NodeLayout>,
 }
 
-impl NodeLayoutInfo {
+impl NodeLayout {
     fn new(flat_width: usize) -> Self {
         Self {
             flat_width,
@@ -35,41 +35,7 @@ impl NodeLayoutInfo {
     }
 }
 
-#[extend::ext]
-pub impl DomNode<'_> {
-    fn id(&self) -> NodeId {
-        NodeId(self.children.as_ptr() as usize)
-    }
-}
-
-impl NodeId {
-    unsafe fn get_bare_node(&self) -> &crate::dom::BareDomNode {
-        let ptr = (self.0 as *const crate::dom::BareDomNode).offset(-1);
-
-        ptr.as_ref().unwrap()
-    }
-
-    unsafe fn get_children_slice(&self, len: usize) -> &[crate::dom::BareDomNode] {
-        std::slice::from_raw_parts(self.0 as *const crate::dom::BareDomNode, len)
-    }
-}
-
-impl std::fmt::Debug for NodeId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let bare = unsafe { self.get_bare_node() };
-        let children = unsafe { self.get_children_slice(bare.len) };
-
-        let node = crate::dom::DomNode { bare, children };
-
-        node.fmt(f)
-    }
-}
-
 impl LayoutState {
-    pub fn dbg_nodes(&self) {
-        dbg!(&self.nodes);
-    }
-
     pub fn compute_flat_widths(&mut self, dom: &Dom) {
         for child in dom.children() {
             self.compute_flat_width(&child);
@@ -129,7 +95,7 @@ impl LayoutState {
 
     fn compute_flat_width(&mut self, node: &DomNode<'_>) -> usize {
         if matches!(node.render_if(), RenderIf::Broken) {
-            self.nodes.insert(node.id(), NodeLayoutInfo::new(0));
+            self.nodes.insert(node.id(), NodeLayout::new(0));
             return 0;
         }
 
@@ -147,8 +113,7 @@ impl LayoutState {
 
         let total_width = base_width + children_width;
 
-        self.nodes
-            .insert(node.id(), NodeLayoutInfo::new(total_width));
+        self.nodes.insert(node.id(), NodeLayout::new(total_width));
 
         total_width
     }
