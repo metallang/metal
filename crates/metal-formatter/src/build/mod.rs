@@ -1,7 +1,7 @@
 use metal_ast::T;
 
 use crate::{
-    dom::{BreakIf, Dom, RenderIf as Rule},
+    dom::{BreakIf, Dom, RenderIf},
     helpers::{
         AnnotationNodeExt, AstNodeExt, ImportBranchNodeExt, ImportItemNodeExt, ImportLeafNodeExt,
         ImportLeafRestNodeExt, ItemNodeExt, NameNodeExt, RootNodeExt, StmtNodeExt,
@@ -47,8 +47,9 @@ fn build_stmt_dom(node: metal_ast::StmtNode, dom: &mut Dom) -> crate::Result {
 fn build_item_dom(node: metal_ast::ItemNode, dom: &mut Dom) -> crate::Result {
     for ann in node.try_anns_node()? {
         build_annotation_dom(ann, dom)?;
-        dom.text("\n").render_if(Rule::Broken);
-        dom.text(" ").render_if(Rule::Flat);
+        dom.text("\n").render_if(RenderIf::Broken);
+        dom.indent_slot().render_if(RenderIf::Broken);
+        dom.text(" ").render_if(RenderIf::Flat);
     }
 
     build_vis_dom(node.try_vis_node()?, dom)?;
@@ -125,26 +126,28 @@ fn build_import_leaf_rest_node(
 fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) -> crate::Result {
     dom.group().children(|dom| {
         dom.text("{");
-        dom.text("\n").render_if(Rule::Broken);
+        dom.text("\n").render_if(RenderIf::Broken);
 
         dom.indent().children(|dom| {
             let mut subtrees = node.try_subtrees()?;
 
             if let Some(subtree) = subtrees.next() {
+                dom.indent_slot().render_if(RenderIf::Broken);
                 build_import_tree_node(subtree, dom)?;
             }
 
             for subtree in subtrees {
                 dom.text(",");
-                dom.text(" ").render_if(Rule::Flat);
-                dom.text("\n").render_if(Rule::Broken);
+                dom.text(" ").render_if(RenderIf::Flat);
+                dom.text("\n").render_if(RenderIf::Broken);
+                dom.indent_slot().render_if(RenderIf::Broken);
                 build_import_tree_node(subtree, dom)?;
             }
 
             Ok(())
         })?;
 
-        dom.text("\n").render_if(Rule::Broken);
+        dom.text("\n").render_if(RenderIf::Broken);
         dom.text("}");
 
         Ok(())

@@ -20,14 +20,14 @@ impl tapcli::Command for DevFormatDomCommand {
     }
 
     fn run(self) -> Result<Self::Output, Self::Error> {
-        // let contents = std::fs::read_to_string(self.path).unwrap();
+        let contents = std::fs::read_to_string(self.path).unwrap();
 
-        // let tokens = metal_lexer::Lexer::new(&contents).collect();
-        // let mut parser = metal_parser::Parser::new(tokens, &contents);
+        let tokens = metal_lexer::Lexer::new(&contents).collect();
+        let mut parser = metal_parser::Parser::new(tokens, &contents);
 
-        // metal_parser::parse_root(&mut parser);
+        metal_parser::parse_root(&mut parser);
 
-        // let dom = metal_formatter::Dom::try_from(parser.finish()).unwrap();
+        let dom = metal_formatter::Dom::try_from(parser.finish()).unwrap();
 
         // let mut layout = metal_formatter::LayoutState::default();
 
@@ -36,28 +36,28 @@ impl tapcli::Command for DevFormatDomCommand {
 
         // layout.dbg_nodes();
 
-        let mut dom = metal_formatter::DomBuilder::new();
+        // let mut dom = metal_formatter::Dom::default();
 
-        dom.group()
-            .break_if(BreakIf::Never)
-            .render_if(RenderIf::Flat)
-            .children(|dom| {
-                dom.text("1");
-                dom.group().children(|dom| {
-                    dom.text("2");
-                    dom.text("3");
+        // dom.group()
+        //     .break_if(BreakIf::Never)
+        //     .render_if(RenderIf::Flat)
+        //     .children(|dom| {
+        //         dom.text("1");
+        //         dom.group().children(|dom| {
+        //             dom.text("2");
+        //             dom.text("3");
 
-                    Ok(())
-                })?;
-                dom.text("4");
+        //             Ok(())
+        //         })?;
+        //         dom.text("4");
 
-                Ok(())
-            })
-            .unwrap();
+        //         Ok(())
+        //     })
+        //     .unwrap();
 
-        dom.text("hi");
+        // dom.text("hi");
 
-        eprintln!("{:#?}", dom.finish());
+        dbg!(&dom);
 
         Ok(())
     }

@@ -1,50 +1,46 @@
-use std::fmt::Debug;
-
 pub mod build;
 pub mod children;
 pub mod debug;
 
-#[derive(Debug)]
+#[derive(Default)]
 pub struct Dom {
-    nodes: Vec<DomNode>,
+    nodes: Vec<DomNode<'static>>,
 }
 
-#[derive(Debug)]
-pub struct DomNode {
+pub struct DomNode<'parent> {
     kind: DomNodeKind,
     render_if: RenderIf = RenderIf::Always,
     break_if: BreakIf = BreakIf::ExceedsColumnLimit,
-    parent: Option<*const DomNode> = None,
-    len: isize = 0,
+    parent: Option<&'parent DomNode<'parent>> = None,
+    len: usize = 0,
 }
 
-#[derive(Debug)]
 pub enum DomNodeKind {
     /// A simple node group. Doesn't have any special meaning.
     Group,
-    /// A node group that indents children if the enclosing group is broken.
+    /// A special node group that increases the indentation level if the enclosing group is broken.
     Indent,
+    /// Inserts indentation text based on the enclosing group's indentation level.
+    IndentSlot,
     /// A text node.
     Text(&'static str),
     /// A token node.
     Token(metal_ast::SyntaxToken),
 }
 
-#[derive(Debug)]
 pub enum RenderIf {
     Always,
     Broken,
     Flat,
 }
 
-#[derive(Debug)]
 pub enum BreakIf {
     ExceedsColumnLimit,
     Never,
     // Always,
 }
 
-impl DomNode {
+impl<'parent> DomNode<'parent> {
     fn new(kind: DomNodeKind) -> Self {
         Self { kind, .. }
     }
@@ -62,12 +58,6 @@ impl DomNode {
     }
 
     pub fn parent(&self) -> Option<&DomNode> {
-        // safety: guaranteed to be safe by the instantiator
-        self.parent.map(|ptr| unsafe { ptr.as_ref_unchecked() })
-    }
-
-    // safety: new_parent must be valid for immut access for as long as this node is acessible
-    unsafe fn set_parent(&mut self, new_parent: *const DomNode) {
-        self.parent.replace(new_parent);
+        self.parent
     }
 }
