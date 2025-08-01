@@ -4,11 +4,15 @@ mod build;
 mod dom;
 mod error;
 mod helpers;
-// mod layout;
+mod layout;
 mod render;
 
 pub use crate::{
-    dom::{build::DomNodeBuilder, BreakIf, Dom, DomNode, DomNodeKind, RenderIf},
+    dom::{
+        build::DomNodeBuilder,
+        children::{mut_::DomNodeMut, ref_::DomNode},
+        BreakIf, Dom, DomNodeData, DomNodeKind, RenderIf,
+    },
     error::{Error, Result},
-    // layout::LayoutState,
+    layout::Layout,
 };

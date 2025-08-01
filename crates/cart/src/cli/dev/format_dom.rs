@@ -57,7 +57,14 @@ impl tapcli::Command for DevFormatDomCommand {
 
         // dom.text("hi");
 
-        dbg!(&dom);
+        let mut layout = metal_formatter::Layout::new(&dom);
+
+        layout.compute_flat_widths();
+        layout.compute_should_breaks();
+
+        dbg!(&layout);
+
+        std::fs::write("./test_out.mt", layout.render().unwrap()).unwrap();
 
         Ok(())
     }

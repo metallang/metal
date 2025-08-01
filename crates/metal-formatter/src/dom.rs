@@ -4,17 +4,18 @@ pub mod debug;
 
 #[derive(Default)]
 pub struct Dom {
-    nodes: Vec<DomNode<'static>>,
+    pub(crate) nodes: Vec<DomNodeData>,
 }
 
-pub struct DomNode<'parent> {
-    kind: DomNodeKind,
-    render_if: RenderIf = RenderIf::Always,
-    break_if: BreakIf = BreakIf::ExceedsColumnLimit,
-    parent: Option<&'parent DomNode<'parent>> = None,
+#[derive(Debug)]
+pub struct DomNodeData {
+    pub kind: DomNodeKind,
+    pub render_if: RenderIf = RenderIf::Always,
+    pub break_if: BreakIf = BreakIf::ExceedsColumnLimit,
     len: usize = 0,
 }
 
+#[derive(Debug)]
 pub enum DomNodeKind {
     /// A simple node group. Doesn't have any special meaning.
     Group,
@@ -28,36 +29,17 @@ pub enum DomNodeKind {
     Token(metal_ast::SyntaxToken),
 }
 
+#[derive(Debug)]
 pub enum RenderIf {
     Always,
     Broken,
     Flat,
 }
 
+#[derive(Debug)]
 pub enum BreakIf {
     ExceedsColumnLimit,
     Never,
-    // Always,
-}
-
-impl<'parent> DomNode<'parent> {
-    fn new(kind: DomNodeKind) -> Self {
-        Self { kind, .. }
-    }
-
-    pub fn kind(&self) -> &DomNodeKind {
-        &self.kind
-    }
-
-    pub fn render_if(&self) -> &RenderIf {
-        &self.render_if
-    }
-
-    pub fn break_if(&self) -> &BreakIf {
-        &self.break_if
-    }
-
-    pub fn parent(&self) -> Option<&DomNode> {
-        self.parent
-    }
+    Always,
+    SameAsParent,
 }

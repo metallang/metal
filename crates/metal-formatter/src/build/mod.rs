@@ -48,7 +48,7 @@ fn build_item_dom(node: metal_ast::ItemNode, dom: &mut Dom) -> crate::Result {
     for ann in node.try_anns_node()? {
         build_annotation_dom(ann, dom)?;
         dom.text("\n").render_if(RenderIf::Broken);
-        dom.indent_slot().render_if(RenderIf::Broken);
+        dom.indent_slot();
         dom.text(" ").render_if(RenderIf::Flat);
     }
 
@@ -132,7 +132,7 @@ fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) ->
             let mut subtrees = node.try_subtrees()?;
 
             if let Some(subtree) = subtrees.next() {
-                dom.indent_slot().render_if(RenderIf::Broken);
+                dom.indent_slot();
                 build_import_tree_node(subtree, dom)?;
             }
 
@@ -140,14 +140,17 @@ fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) ->
                 dom.text(",");
                 dom.text(" ").render_if(RenderIf::Flat);
                 dom.text("\n").render_if(RenderIf::Broken);
-                dom.indent_slot().render_if(RenderIf::Broken);
+                dom.indent_slot();
                 build_import_tree_node(subtree, dom)?;
             }
+
+            dom.text(",").render_if(RenderIf::Broken);
 
             Ok(())
         })?;
 
         dom.text("\n").render_if(RenderIf::Broken);
+        dom.indent_slot();
         dom.text("}");
 
         Ok(())
