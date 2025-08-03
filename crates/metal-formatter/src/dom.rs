@@ -1,6 +1,8 @@
 pub mod build;
 pub mod children;
 pub mod debug;
+pub mod layout;
+pub mod render;
 
 #[derive(Default)]
 pub struct Dom {
@@ -9,13 +11,18 @@ pub struct Dom {
 
 #[derive(Debug)]
 pub struct DomNodeData {
+    // data
     pub kind: DomNodeKind,
     pub render_if: RenderIf = RenderIf::Always,
     pub break_if: BreakIf = BreakIf::ExceedsColumnLimit,
+    // structure
     len: usize = 0,
+    // layout
+    pub(crate) broken: bool = false,
+    pub(crate) flat_width: usize = 0,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum DomNodeKind {
     /// A simple node group. Doesn't have any special meaning.
     Group,
@@ -23,20 +30,22 @@ pub enum DomNodeKind {
     Indent,
     /// Inserts indentation text based on the enclosing group's indentation level.
     IndentSlot,
+    /// Inserts a newline.
+    Newline,
     /// A text node.
     Text(&'static str),
     /// A token node.
     Token(metal_ast::SyntaxToken),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum RenderIf {
     Always,
     Broken,
     Flat,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum BreakIf {
     ExceedsColumnLimit,
     Never,

@@ -4,6 +4,10 @@ use crate::{
 };
 
 impl Dom {
+    pub fn newline(&mut self) -> DomNodeBuilder {
+        DomNodeBuilder::new_node(self, DomNodeKind::Newline).render_if(RenderIf::Broken)
+    }
+
     pub fn token(&mut self, token: metal_ast::SyntaxToken) -> DomNodeBuilder {
         DomNodeBuilder::new_node(self, DomNodeKind::Token(token))
     }

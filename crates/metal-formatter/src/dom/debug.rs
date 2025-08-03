@@ -38,6 +38,7 @@ fn debug_node(fmt: &mut std::fmt::Formatter, node: &DomNode, indent_by: usize) -
         DomNodeKind::Group => write!(fmt, "{indent}<group")?,
         DomNodeKind::Indent => write!(fmt, "{indent}<indent")?,
         DomNodeKind::IndentSlot => write!(fmt, "{indent}<indent_slot")?,
+        DomNodeKind::Newline => write!(fmt, "{indent}<newline")?,
         DomNodeKind::Text(content) => write!(fmt, "{indent}<text content={content:?}")?,
         DomNodeKind::Token(token) => write!(fmt, "{indent}<token content=\"{token}\"")?,
     }
@@ -59,7 +60,11 @@ fn debug_node(fmt: &mut std::fmt::Formatter, node: &DomNode, indent_by: usize) -
         write!(fmt, " /")?;
     }
 
-    write!(fmt, ">")?;
+    write!(
+        fmt,
+        "> {{ flat_width={} broken={} }}",
+        node.flat_width, node.broken
+    )?;
 
     for child in node.children() {
         write!(fmt, "\n")?;
@@ -73,6 +78,7 @@ fn debug_node(fmt: &mut std::fmt::Formatter, node: &DomNode, indent_by: usize) -
             DomNodeKind::Group => write!(fmt, "</group>")?,
             DomNodeKind::Indent => write!(fmt, "</indent>")?,
             DomNodeKind::IndentSlot => write!(fmt, "</indent_slot>")?,
+            DomNodeKind::Newline => write!(fmt, "</newline>")?,
             DomNodeKind::Text(_) => write!(fmt, "</text>")?,
             DomNodeKind::Token(_) => write!(fmt, "</token>")?,
         }

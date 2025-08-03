@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-use metal_formatter::{BreakIf, RenderIf};
-
 use crate::error::Error;
 
 pub struct DevFormatDomCommand {
@@ -27,44 +25,16 @@ impl tapcli::Command for DevFormatDomCommand {
 
         metal_parser::parse_root(&mut parser);
 
-        let dom = metal_formatter::Dom::try_from(parser.finish()).unwrap();
+        let mut out = String::new();
+        let mut dom = metal_formatter::Dom::try_from(parser.finish()).unwrap();
 
-        // let mut layout = metal_formatter::LayoutState::default();
+        dom.layout_and_render(String::new()).unwrap();
 
-        // layout.compute_flat_widths(&dom);
-        // layout.compute_should_breaks(&dom);
+        dbg!(&dom);
 
-        // layout.dbg_nodes();
+        dom.render(&mut out).unwrap();
 
-        // let mut dom = metal_formatter::Dom::default();
-
-        // dom.group()
-        //     .break_if(BreakIf::Never)
-        //     .render_if(RenderIf::Flat)
-        //     .children(|dom| {
-        //         dom.text("1");
-        //         dom.group().children(|dom| {
-        //             dom.text("2");
-        //             dom.text("3");
-
-        //             Ok(())
-        //         })?;
-        //         dom.text("4");
-
-        //         Ok(())
-        //     })
-        //     .unwrap();
-
-        // dom.text("hi");
-
-        let mut layout = metal_formatter::Layout::new(&dom);
-
-        layout.compute_flat_widths();
-        layout.compute_should_breaks();
-
-        dbg!(&layout);
-
-        std::fs::write("./test_out.mt", layout.render().unwrap()).unwrap();
+        std::fs::write("./test_out.mt", out).unwrap();
 
         Ok(())
     }

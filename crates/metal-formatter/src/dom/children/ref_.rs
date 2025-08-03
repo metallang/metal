@@ -1,5 +1,6 @@
 use crate::{Dom, DomNodeData};
 
+#[derive(Clone)]
 pub struct DomNode<'parent> {
     pub(super) node: &'parent DomNodeData,
     pub(super) children: &'parent [DomNodeData],

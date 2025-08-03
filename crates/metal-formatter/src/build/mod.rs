@@ -25,7 +25,7 @@ impl TryFrom<metal_ast::RootNode> for Dom {
 fn build_root_dom(node: metal_ast::RootNode, dom: &mut Dom) -> crate::Result {
     for stmt in node.try_stmts()? {
         dom.group().children(|dom| build_stmt_dom(stmt, dom))?;
-        dom.text("\n");
+        dom.newline().render_if(RenderIf::Always);
     }
 
     Ok(())
@@ -47,7 +47,7 @@ fn build_stmt_dom(node: metal_ast::StmtNode, dom: &mut Dom) -> crate::Result {
 fn build_item_dom(node: metal_ast::ItemNode, dom: &mut Dom) -> crate::Result {
     for ann in node.try_anns_node()? {
         build_annotation_dom(ann, dom)?;
-        dom.text("\n").render_if(RenderIf::Broken);
+        dom.newline();
         dom.indent_slot();
         dom.text(" ").render_if(RenderIf::Flat);
     }
@@ -126,7 +126,7 @@ fn build_import_leaf_rest_node(
 fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) -> crate::Result {
     dom.group().children(|dom| {
         dom.text("{");
-        dom.text("\n").render_if(RenderIf::Broken);
+        dom.newline();
 
         dom.indent().children(|dom| {
             let mut subtrees = node.try_subtrees()?;
@@ -139,7 +139,7 @@ fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) ->
             for subtree in subtrees {
                 dom.text(",");
                 dom.text(" ").render_if(RenderIf::Flat);
-                dom.text("\n").render_if(RenderIf::Broken);
+                dom.newline();
                 dom.indent_slot();
                 build_import_tree_node(subtree, dom)?;
             }
@@ -149,7 +149,7 @@ fn build_import_branch_node(node: metal_ast::ImportBranchNode, dom: &mut Dom) ->
             Ok(())
         })?;
 
-        dom.text("\n").render_if(RenderIf::Broken);
+        dom.newline();
         dom.indent_slot();
         dom.text("}");
 
