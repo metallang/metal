@@ -63,7 +63,7 @@ fn debug_node(fmt: &mut std::fmt::Formatter, node: &DomNode, indent_by: usize) -
     write!(
         fmt,
         "> {{ flat_width={} broken={} }}",
-        node.flat_width, node.broken
+        node.width, node.broken
     )?;
 
     for child in node.children() {

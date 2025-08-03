@@ -28,11 +28,9 @@ impl tapcli::Command for DevFormatDomCommand {
         let mut out = String::new();
         let mut dom = metal_formatter::Dom::try_from(parser.finish()).unwrap();
 
-        dom.layout_and_render(String::new()).unwrap();
+        dom.render(&mut out).unwrap();
 
         dbg!(&dom);
-
-        dom.render(&mut out).unwrap();
 
         std::fs::write("./test_out.mt", out).unwrap();
 

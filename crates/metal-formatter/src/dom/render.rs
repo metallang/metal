@@ -1,18 +1,79 @@
-use crate::{utils::PositionTracker, Dom, DomNode, DomNodeKind, RenderIf, NEWLINE};
+use crate::{
+    dom::BreakIf,
+    utils::{PositionTracker, INDENT, NEWLINE},
+    Dom, DomNode, DomNodeKind, DomNodeMut, RenderIf,
+};
 
 impl Dom {
-    pub fn render(&self, to: &mut impl std::fmt::Write) -> std::fmt::Result {
-        let mut pos = PositionTracker::default();
-
-        for child in self.children() {
-            render_node(child, to, &mut pos, false)?;
+    pub fn render(&mut self, to: &mut impl std::fmt::Write) -> std::fmt::Result {
+        for mut child in self.children_mut() {
+            measure(&mut child);
+            break_(&mut child, &mut PositionTracker::default());
+            render(child.as_ref(), to, &mut PositionTracker::default(), false)?;
         }
 
         Ok(())
     }
 }
 
-fn render_node(
+fn measure(node: &mut DomNodeMut) {
+    match &node.render_if {
+        RenderIf::Always | RenderIf::Flat => {
+            match &node.kind {
+                DomNodeKind::Newline => node.width = NEWLINE.len(),
+                DomNodeKind::Text(text) => node.width = text.len(),
+                DomNodeKind::Token(token) => node.width = token.text().len(),
+                DomNodeKind::Group | DomNodeKind::Indent | DomNodeKind::IndentSlot => {}
+            }
+
+            node.width += node
+                .children_mut()
+                .map(|mut child| {
+                    measure(&mut child);
+
+                    child.width
+                })
+                .sum::<usize>();
+        }
+        RenderIf::Broken => {}
+    }
+}
+
+fn break_(node: &mut DomNodeMut, pos: &mut PositionTracker) {
+    match &node.kind {
+        DomNodeKind::Group | DomNodeKind::Indent | DomNodeKind::Text(_) | DomNodeKind::Token(_) => {
+            pos.column += node.width;
+        }
+        DomNodeKind::IndentSlot => pos.column += INDENT.len(),
+        DomNodeKind::Newline => pos.column = pos.indent_level * INDENT.len(),
+    }
+
+    match &node.break_if {
+        BreakIf::ExceedsColumnLimit => node.broken = pos.is_overboard(node.width),
+        BreakIf::Never => node.broken = false,
+        BreakIf::Always => node.broken = true,
+        BreakIf::SameAsParent => {} // filled by the parent
+    }
+
+    if node.kind == DomNodeKind::Indent {
+        pos.indent_level += 1;
+    }
+
+    let node_broken = node.broken;
+    for mut child in node.children_mut() {
+        break_(&mut child, pos /*, fmt, node_broken */);
+
+        if child.break_if == BreakIf::SameAsParent {
+            child.broken = node_broken;
+        }
+    }
+
+    if node.kind == DomNodeKind::Indent {
+        pos.indent_level -= 1;
+    }
+}
+
+fn render(
     node: DomNode,
     to: &mut impl std::fmt::Write,
     pos: &mut PositionTracker,
@@ -41,7 +102,7 @@ fn render_node(
     }
 
     for child in node.children() {
-        render_node(child, to, pos, node.broken)?;
+        render(child, to, pos, node.broken)?;
     }
 
     if node.kind == DomNodeKind::Indent {

@@ -11,10 +11,6 @@ mod error;
 mod helpers;
 mod utils;
 
-const INDENT: &str = "    ";
-const COLUMN_LIMIT: usize = 10;
-const NEWLINE: &str = "\n";
-
 pub use crate::{
     dom::{
         build::DomNodeBuilder,

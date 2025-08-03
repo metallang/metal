@@ -1,4 +1,6 @@
-use crate::{COLUMN_LIMIT, INDENT};
+pub const INDENT: &str = "    ";
+pub const COLUMN_LIMIT: usize = 100;
+pub const NEWLINE: &str = "\n";
 
 #[derive(Default)]
 pub struct PositionTracker {
@@ -11,7 +13,7 @@ impl PositionTracker {
         INDENT.repeat(self.indent_level)
     }
 
-    pub fn is_overboard(&self, flat_width: usize) -> bool {
-        self.column + self.indent_level * INDENT.len() + flat_width > COLUMN_LIMIT
+    pub fn is_overboard(&self, width: usize) -> bool {
+        self.column + self.indent_level * INDENT.len() + width > COLUMN_LIMIT
     }
 }

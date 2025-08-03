@@ -1,7 +1,6 @@
 pub mod build;
 pub mod children;
 pub mod debug;
-pub mod layout;
 pub mod render;
 
 #[derive(Default)]
@@ -19,7 +18,7 @@ pub struct DomNodeData {
     len: usize = 0,
     // layout
     pub(crate) broken: bool = false,
-    pub(crate) flat_width: usize = 0,
+    pub(crate) width: usize = 0,
 }
 
 #[derive(Debug, PartialEq)]
