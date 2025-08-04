@@ -17,8 +17,8 @@ pub struct DomNodeData {
     // structure
     len: usize = 0,
     // layout
-    pub(crate) broken: bool = false,
-    pub(crate) width: usize = 0,
+    broken: bool = false,
+    width: usize = 0,
 }
 
 #[derive(Debug, PartialEq)]

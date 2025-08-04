@@ -8,7 +8,7 @@ impl Dom {
     pub fn render(&mut self, to: &mut impl std::fmt::Write) -> std::fmt::Result {
         for mut child in self.children_mut() {
             measure(&mut child);
-            break_(&mut child, &mut PositionTracker::default());
+            break_(&mut child, &mut PositionTracker::default(), false);
             render(child.as_ref(), to, &mut PositionTracker::default(), false)?;
         }
 
@@ -39,7 +39,7 @@ fn measure(node: &mut DomNodeMut) {
     }
 }
 
-fn break_(node: &mut DomNodeMut, pos: &mut PositionTracker) {
+fn break_(node: &mut DomNodeMut, pos: &mut PositionTracker, is_parent_broken: bool) {
     match &node.kind {
         DomNodeKind::Group | DomNodeKind::Indent | DomNodeKind::Text(_) | DomNodeKind::Token(_) => {
             pos.column += node.width;
@@ -52,7 +52,7 @@ fn break_(node: &mut DomNodeMut, pos: &mut PositionTracker) {
         BreakIf::ExceedsColumnLimit => node.broken = pos.is_overboard(node.width),
         BreakIf::Never => node.broken = false,
         BreakIf::Always => node.broken = true,
-        BreakIf::SameAsParent => {} // filled by the parent
+        BreakIf::SameAsParent => node.broken = is_parent_broken,
     }
 
     if node.kind == DomNodeKind::Indent {
@@ -61,11 +61,7 @@ fn break_(node: &mut DomNodeMut, pos: &mut PositionTracker) {
 
     let node_broken = node.broken;
     for mut child in node.children_mut() {
-        break_(&mut child, pos /*, fmt, node_broken */);
-
-        if child.break_if == BreakIf::SameAsParent {
-            child.broken = node_broken;
-        }
+        break_(&mut child, pos, node_broken);
     }
 
     if node.kind == DomNodeKind::Indent {

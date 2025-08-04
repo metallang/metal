@@ -43,10 +43,8 @@ impl<'parent> Iterator for ChildrenIter<'parent> {
     fn next(&mut self) -> Option<Self::Item> {
         let children = std::mem::take(&mut self.children);
 
-        // eprintln!("{:?}", children);
-
         let (node, rest) = children.split_at_checked(1)?;
-        let node = node.first().unwrap();
+        let node = unsafe { node.first().unwrap_unchecked() };
         let (children, rest) = rest.split_at_checked(node.len)?;
 
         let view = DomNode { node, children };

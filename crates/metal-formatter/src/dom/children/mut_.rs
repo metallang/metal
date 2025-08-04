@@ -63,7 +63,7 @@ impl<'parent> Iterator for ChildrenMutIter<'parent> {
         let children = std::mem::take(&mut self.children);
 
         let (node, rest) = children.split_at_mut_checked(1)?;
-        let node = node.first_mut().unwrap();
+        let node = unsafe { node.first_mut().unwrap_unchecked() };
         let (children, rest) = rest.split_at_mut_checked(node.len)?;
 
         let view = DomNodeMut { node, children };

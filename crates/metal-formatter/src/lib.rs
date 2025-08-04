@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
-#![feature(
-    default_field_values,
-    ptr_as_ref_unchecked,
-    likely_unlikely,
-    decl_macro
-)]
+
+#![feature(default_field_values)]
+
 mod build;
 mod dom;
 mod error;
