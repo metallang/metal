@@ -9,6 +9,7 @@ tapcli = { workspace = true }
 thiserror = { workspace = true }
 metal-lexer = { workspace = true }
 metal-parser = { workspace = true }
+metal-formatter = { workspace = true }
 debug-to-display = { workspace = true }
 serde = { workspace = true }
 semver = { workspace = true }

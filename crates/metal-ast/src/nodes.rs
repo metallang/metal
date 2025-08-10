@@ -1338,8 +1338,8 @@ impl ImportLeafNode {
     pub fn segment_node(&self) -> Option<NameNode> {
         self.syntax.child(0usize)
     }
-    /// Find a child node of type [ImportSegmentNode].
-    pub fn rest_node(&self) -> Option<ImportSegmentNode> {
+    /// Find a child node of type [ImportLeafRestNode].
+    pub fn rest_node(&self) -> Option<ImportLeafRestNode> {
         self.syntax.child(0usize)
     }
 }
@@ -1373,14 +1373,14 @@ impl ImportBranchNode {
         self.syntax.child_token(SyntaxKind::R_BRACE_TOKEN, 0usize)
     }
 }
-/// Represents the `ImportSegment` node.
+/// Represents the `ImportLeafRest` node.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ImportSegmentNode {
+pub struct ImportLeafRestNode {
     syntax: SyntaxNode,
 }
-impl AstNode for ImportSegmentNode {
+impl AstNode for ImportLeafRestNode {
     fn can_cast(kind: SyntaxKind) -> bool {
-        kind == SyntaxKind::IMPORT_SEGMENT_NODE
+        kind == SyntaxKind::IMPORT_LEAF_REST_NODE
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
@@ -1389,7 +1389,7 @@ impl AstNode for ImportSegmentNode {
         &self.syntax
     }
 }
-impl ImportSegmentNode {
+impl ImportLeafRestNode {
     /// Find a child token of variant [SyntaxKind::DOT_TOKEN].
     pub fn dot_token(&self) -> Option<SyntaxToken> {
         self.syntax.child_token(SyntaxKind::DOT_TOKEN, 0usize)
