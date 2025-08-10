@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{Dom, DomNodeData};
 
 #[derive(Clone)]

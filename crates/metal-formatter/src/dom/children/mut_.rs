@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::dom::children::ref_::{ChildrenIter, DomNode};
 use crate::{Dom, DomNodeData};
 

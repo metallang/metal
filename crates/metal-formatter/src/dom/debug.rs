@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use std::fmt::Debug;
 
 use crate::{dom::BreakIf, Dom, DomNode, DomNodeKind, DomNodeMut, RenderIf};

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::{
     dom::{BreakIf, Dom, DomNodeData, DomNodeKind, RenderIf},
     Result,

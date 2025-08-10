@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pub const INDENT: &str = "    ";
 pub const COLUMN_LIMIT: usize = 100;
 pub const NEWLINE: &str = "\n";
