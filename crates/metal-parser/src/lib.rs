@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 #![allow(clippy::wildcard_enum_match_arm)]
-#![feature(decl_macro, let_chains, if_let_guard)]
+#![feature(decl_macro, if_let_guard)]
 
 pub mod block;
 pub mod common;

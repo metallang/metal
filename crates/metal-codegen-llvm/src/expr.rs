@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-use std::ffi::{c_uint, CString};
+use std::ffi::{CString, c_uint};
 
 use llvm_sys::{
+    LLVMRealPredicate,
     core::{
         LLVMBuildAdd, LLVMBuildCall2, LLVMBuildFAdd, LLVMBuildFCmp, LLVMBuildFDiv, LLVMBuildFMul,
         LLVMBuildFRem, LLVMBuildFSub, LLVMBuildLoad2, LLVMBuildMul, LLVMBuildSDiv, LLVMBuildSRem,
@@ -10,10 +11,9 @@ use llvm_sys::{
         LLVMConstStringInContext2, LLVMGetNamedFunction,
     },
     prelude::LLVMValueRef,
-    LLVMRealPredicate,
 };
 use metal_mir::{
-    expr::{literals::Literal, Expr},
+    expr::{Expr, literals::Literal},
     parcel::Module,
     types::primitives::Primitive,
 };

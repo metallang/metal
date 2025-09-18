@@ -3,13 +3,13 @@
 use break_::parse_break_expr;
 use for_::parse_for_expr;
 use loop_::parse_loop_expr;
-use metal_ast::{SyntaxKind, N, T};
+use metal_ast::{N, SyntaxKind, T};
 use metal_lexer::{Span, Token};
 use while_::parse_while_expr;
 
 use crate::block::parse_block;
 use crate::common::parse_name;
-use crate::expr::bp::{binding_power_for, BindingPower, Flavor};
+use crate::expr::bp::{BindingPower, Flavor, binding_power_for};
 use crate::expr::call::parse_call_expr;
 use crate::expr::defer::parse_defer_expr;
 use crate::expr::if_::parse_if_expr;

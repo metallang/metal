@@ -3,14 +3,13 @@
 //! Metal library for compiling to LLVM IR using MIR.
 
 #![feature(string_from_utf8_lossy_owned)]
-#![feature(let_chains)]
 
 use core::StructRepository;
 use std::{collections::BTreeMap, ffi::CString};
 
 use metal_mir::{
     parcel::Module,
-    types::{visibility::Visibility, Type},
+    types::{Type, visibility::Visibility},
 };
 
 pub mod core;
@@ -23,12 +22,12 @@ pub mod stmt;
 pub mod ty;
 
 use llvm_sys::{
+    LLVMLinkage,
     core::{
         LLVMContextCreate, LLVMContextDispose, LLVMCreateBuilder, LLVMDisposeBuilder,
         LLVMDisposeModule, LLVMModuleCreateWithNameInContext,
     },
     prelude::{LLVMBuilderRef, LLVMContextRef, LLVMModuleRef, LLVMTypeRef, LLVMValueRef},
-    LLVMLinkage,
 };
 
 pub struct LLVMRefs {

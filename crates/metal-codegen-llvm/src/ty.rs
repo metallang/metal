@@ -3,7 +3,7 @@
 use llvm_sys::core::{LLVMArrayType2, LLVMStructTypeInContext};
 use metal_mir::types::Type;
 
-use super::{get_types, CodeGenType};
+use super::{CodeGenType, get_types};
 
 pub mod function_signature;
 pub mod struct_;

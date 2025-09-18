@@ -2,7 +2,7 @@
 //! Safe Rust abstractions for several LLVM types
 
 use std::{
-    ffi::{c_char, CStr},
+    ffi::{CStr, c_char},
     slice,
 };
 

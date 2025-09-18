@@ -13,8 +13,8 @@ use llvm_sys::{
 use metal_mir::{parcel::Module, struct_::Struct};
 
 use crate::{
-    safeties::{LLVMErrorMessage, MemoryBuffer},
     CodeGenType, CodeGenValue, LLVMRefs,
+    safeties::{LLVMErrorMessage, MemoryBuffer},
 };
 
 #[derive(Default)]
@@ -124,11 +124,11 @@ mod tests {
 
     use metal_mir::{
         expr::{
-            literals::{Literal, Number},
             Assignment, Expr, MathematicalValue,
+            literals::{Literal, Number},
         },
-        stmt::{constant::Constant, functiondef::FunctionDefinition, Statement},
-        types::{function::FunctionSignature, primitives::Primitive, Type},
+        stmt::{Statement, constant::Constant, functiondef::FunctionDefinition},
+        types::{Type, function::FunctionSignature, primitives::Primitive},
     };
 
     use super::*;
