@@ -3,7 +3,6 @@
 //! Metal library for compiling to LLVM IR using MIR.
 
 #![feature(string_from_utf8_lossy_owned)]
-#![feature(let_chains)]
 
 use core::StructRepository;
 use std::{collections::BTreeMap, ffi::CString};
