@@ -4,7 +4,7 @@ use core::str;
 
 use metal_ast::{SyntaxKind, T};
 
-use crate::{token::Token, Span};
+use crate::{Span, token::Token};
 
 pub struct Lexer<'src> {
     bytes: &'src [u8],

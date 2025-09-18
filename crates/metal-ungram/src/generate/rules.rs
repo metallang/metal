@@ -43,7 +43,10 @@ fn generate_rule(
         } => {
             // provide a more helpful error message than silently ignoring the outer label
             if matches!(new_rule.as_ref(), Rule::Labeled { .. }) {
-                panic!("nested labels detected when evaluating rule {:?}. nested labels have no effect and are not supported", debug_rule(grammar, rule));
+                panic!(
+                    "nested labels detected when evaluating rule {:?}. nested labels have no effect and are not supported",
+                    debug_rule(grammar, rule)
+                );
             }
 
             generate_rule(
@@ -56,7 +59,10 @@ fn generate_rule(
         Rule::Opt(new_rule) => {
             // count this as an error, just for correctness
             if matches!(new_rule.as_ref(), Rule::Opt(_)) {
-                panic!("nested optionals detected when evaluating rule {:?}. nested optionals have no effect and are not supported", debug_rule(grammar, rule))
+                panic!(
+                    "nested optionals detected when evaluating rule {:?}. nested optionals have no effect and are not supported",
+                    debug_rule(grammar, rule)
+                )
             }
 
             generate_rule(grammar, new_rule.as_ref(), label, same_type_item_count)
@@ -220,7 +226,10 @@ fn generate_rep_seq_rule(node: &NodeData, token: &TokenData, label: Option<&str>
 /// Generates a repetition rule.
 fn generate_rep_rule(grammar: &Engram, rule: &Rule, label: Option<&str>) -> TokenStream {
     let Rule::Node(node) = rule else {
-        panic!("token repetition detected when evaluating rule {:?}. token repetition is not supported yet", debug_rule(grammar, rule));
+        panic!(
+            "token repetition detected when evaluating rule {:?}. token repetition is not supported yet",
+            debug_rule(grammar, rule)
+        );
     };
 
     let node = &grammar[node];

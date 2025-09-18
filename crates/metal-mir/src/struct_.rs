@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::types::{visibility::Visibility, Type};
+use crate::types::{Type, visibility::Visibility};
 
 /// Represents the fields of a struct, i.e. `a: B`.
 #[derive(Debug, Clone, Serialize, Deserialize, Hash, PartialEq, Eq)]

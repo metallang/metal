@@ -8,7 +8,7 @@ use llvm_sys::{
 };
 use metal_mir::struct_::{Struct, StructField};
 
-use super::{get_types, CodeGenType};
+use super::{CodeGenType, get_types};
 
 fn get_types_struct(
     llvm: &mut crate::LLVMRefs,

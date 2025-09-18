@@ -3,7 +3,7 @@
 use llvm_sys::core::LLVMFunctionType;
 use metal_mir::types::function::FunctionSignature;
 
-use super::{get_types, CodeGenType};
+use super::{CodeGenType, get_types};
 
 impl CodeGenType for FunctionSignature {
     fn llvm_type(

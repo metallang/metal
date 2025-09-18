@@ -4,7 +4,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 
 use crate::engram::Engram;
-use crate::grammar_item::{GrammarItem, GrammarItemInfo, RuleExt, PAREN_TOKENS};
+use crate::grammar_item::{GrammarItem, GrammarItemInfo, PAREN_TOKENS, RuleExt};
 
 /// Generates the `syntax_kind.rs` file.
 pub fn generate_syntax_kind_file(grammar: &Engram) -> TokenStream {
