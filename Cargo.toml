@@ -5,21 +5,21 @@ resolver = "2"
 [workspace.dependencies]
 tapcli = { git = "https://github.com/elenakrittik/gdtk/", rev = "699bffcd52ae85bd7297dbf552eb010ae9bc1f6e" }
 thiserror = "2.0.3"
-syn = { version = "2.0.85", features = ["full", "visit-mut"] }
+syn = { version = "3.0.2", features = ["full", "visit-mut"] }
 quote = "1.0.37"
 proc-macro2 = "1.0.89"
 llvm-sys = { git = "https://github.com/metallang/llvm-sys.rs", branch = "main", features = ["force-static"] }
 ungrammar = "1.16.1"
 rowan = "0.16.1"
 heck = "0.5.0"
-prettyplease = { version = "0.2.25", features = ["verbatim"] }
+prettyplease = { version = "0.3.0", features = ["verbatim"] }
 extend = "1.2.0"
 either = "1.13.0"
-ron = "0.8"
+ron = "0.12"
 serde = { version = "1", features = ["derive"] }
 salsa = { git = "https://github.com/salsa-rs/salsa", rev = "e68679b3a9c2b5cfd8eab92de89edf4073b03601" }
 semver = "1"
-bincode = "1"
+bincode = "3"
 bitflags = "2.9.0"
 
 cart = { path = "crates/cart" }
